@@ -1,0 +1,39 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #e6f4ea;
+  color: #1b4332;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 700px;
+  margin: auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+h1 {
+  color: #2d6a4f;
+}
+
+input[type="number"] {
+  width: 80px;
+  padding: 5px;
+  margin: 5px;
+}
+
+.button, button {
+  background-color: #2d6a4f;
+  color: white;
+  padding: 10px 20px;
+  margin: 1rem 0;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.button:hover, button:hover {
+  background-color: #1b4332;
+}
