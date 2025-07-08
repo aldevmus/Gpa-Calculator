@@ -1,18 +1,27 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" dir="ltr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Moyenne 1ère Année Médecine</title>
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css"> <!-- Link to external CSS file -->
 </head>
 <body>
+  <h1>🧪 Moyenne - 1ère Année Médecine</h1>
   <div class="container">
-    <h1>🧪 Moyenne - 1ère Année Médecine</h1>
     <form id="gpa-form"></form>
-    <button onclick="calculerMoyenne()">Calculer la Moyenne</button>
+    <button onclick="calculerMoyenne()">Calculer</button>
     <div id="resultat"></div>
   </div>
-  <script src="script.js"></script>
+
+  <!-- Custom error message box -->
+  <div id="customMessageBox" class="message-box">
+    <p id="messageBoxText"></p>
+    <button onclick="hideMessageBox()">OK</button>
+  </div>
+
+  <script src="js/script.js"></script> <!-- Link to external JavaScript file -->
 </body>
 </html>
+
