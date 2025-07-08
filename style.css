@@ -37,3 +37,14 @@ input[type="number"] {
 .button:hover, button:hover {
   background-color: #1b4332;
 }
+.matiere {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  text-align: left;
+}
+
+.note {
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
