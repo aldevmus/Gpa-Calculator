@@ -1,292 +1,306 @@
-    /* General body styling */
-    body {
-      background-color: #e3f6e5; /* Light green background */
-      font-family: 'Inter', sans-serif; /* Modern sans-serif font */
-      margin: 0;
-      padding: 0;
-      direction: ltr; /* Support for left-to-right languages */
-      text-align: left; /* Align text to the left */
-      display: flex; /* Use flexbox for layout */
-      flex-direction: column; /* Stack children vertically */
-      min-height: 100vh; /* Full viewport height */
-      align-items: center; /* Center horizontally */
-      padding-top: 30px; /* Space above the main title */
-      overflow-x: hidden; /* Prevent horizontal scrolling */
-      box-sizing: border-box; /* Ensure padding/border are included in element's total width/height */
-    }
 
-    /* Heading styling (common for all pages) */
-    h1 {
-      text-align: center;
-      color: #225e3b; /* Dark green color */
-      margin: 0 20px 30px 20px; /* Adjust margin to separate from container */
-      font-size: 1.8em; /* Larger font size */
-      font-weight: 700; /* Bold font weight */
-    }
+/* General body styling */
+body {
+  background-color: #e3f6e5; /* Light green background */
+  font-family: 'Inter', sans-serif; /* Modern sans-serif font */
+  margin: 0;
+  padding: 0;
+  direction: ltr; /* Support for left-to-right languages */
+  text-align: left; /* Align text to the left */
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack children vertically */
+  min-height: 100vh; /* Full viewport height */
+  align-items: center; /* Center horizontally */
+  padding-top: 30px; /* Space above the main title */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  box-sizing: border-box; /* Ensure padding/border are included in element's total width/height */
+  width: 100vw; /* Ensure body takes full viewport width */
+}
 
-    /* Main container styling (common for all pages) */
-    .container {
-      background-color: white; /* White background for the card */
-      padding: 30px; /* Ample padding */
-      border-radius: 20px; /* Rounded corners */
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Soft shadow for depth */
-      max-width: 900px; /* Max width for desktop */
-      width: 90%; /* Responsive width for smaller screens */
-      margin: 0 auto; /* Center horizontally by default */
-      box-sizing: border-box; /* Ensure padding/border are included in element's total width/height */
-    }
+/* Heading styling (common for all pages) */
+h1 {
+  text-align: center;
+  color: #225e3b; /* Dark green color */
+  margin: 0 20px 30px 20px; /* Adjust margin to separate from container */
+  font-size: 1.8em; /* Larger font size */
+  font-weight: 700; /* Bold font weight */
+  display: flex; /* Use flexbox for centering content within H1 */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  gap: 10px; /* Space between icon and text */
+  width: calc(100% - 40px); /* Adjust width to account for side margins */
+  max-width: 900px; /* Limit max width */
+}
 
-    /* Specific styling for the index page container */
-    .index-page-container {
-      display: flex; /* Flexbox for internal elements */
-      flex-direction: column; /* Stack elements vertically */
-      gap: 25px; /* Space between elements */
-      padding: 40px 30px; /* More padding for index page */
-      flex-grow: 1; /* Allow container to grow and fill vertical space on mobile */
-      margin-bottom: 0; /* Extend to bottom on mobile */
-      border-bottom-left-radius: 0; /* Remove bottom border radius on mobile */
-      border-bottom-right-radius: 0; /* Remove bottom border radius on mobile */
-    }
+/* Main container styling (common for all pages) */
+.container {
+  background-color: white; /* White background for the card */
+  padding: 30px; /* Ample padding */
+  border-radius: 20px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Soft shadow for depth */
+  max-width: 900px; /* Max width for desktop */
+  width: 90%; /* Responsive width for smaller screens */
+  margin: 0 auto 50px auto; /* Center horizontally by default, add bottom margin */
+  box-sizing: border-box; /* Ensure padding/border are included in element's total width/height */
+}
 
-    /* Paragraph styling (common for all pages) */
-    p {
-      font-size: 1.1em; /* Slightly larger text */
-      line-height: 1.6; /* Good line spacing */
-      color: #555; /* Slightly darker grey for readability */
-      text-align: center; /* Center text within index container */
-    }
+/* Specific styling for the index page container */
+.index-page-container {
+  display: flex; /* Flexbox for internal elements */
+  flex-direction: column; /* Stack elements vertically */
+  gap: 25px; /* Space between elements */
+  padding: 40px 30px; /* More padding for index page */
+  flex-grow: 1; /* Allow container to grow and fill vertical space on mobile */
+  margin-bottom: 0; /* Extend to bottom on mobile */
+  border-bottom-left-radius: 0; /* Remove bottom border radius on mobile */
+  border-bottom-right-radius: 0; /* Remove bottom border radius on mobile */
+  width: 100%; /* Ensure it takes full width of its parent (body) */
+  max-width: unset; /* Remove max-width restriction on mobile for full width */
+}
 
-    /* Button styling (common for all pages) */
-    button, .button { /* Apply to both button tag and .button class */
-      display: block; /* Make it a block element for full width */
-      background-color: #1d7a3c; /* Green button color */
-      color: white; /* White text color */
-      padding: 15px 25px; /* Padding inside the button */
-      border: none; /* Remove default button border */
-      border-radius: 10px; /* Rounded corners for buttons */
-      text-decoration: none; /* Remove underline from links */
-      font-size: 1.1em; /* Larger font size for buttons */
-      font-weight: 600; /* Semi-bold text */
-      transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
-      width: 100%; /* Make buttons take full width of their parent */
-      max-width: 300px; /* Limit max width for larger screens */
-      margin: 0 auto; /* Center the button horizontally */
-      cursor: pointer; /* Indicate clickable */
-    }
+/* Paragraph styling (common for all pages) */
+p {
+  font-size: 1.1em; /* Slightly larger text */
+  line-height: 1.6; /* Good line spacing */
+  color: #555; /* Slightly darker grey for readability */
+  text-align: center; /* Center text within index container */
+}
 
-    .button:hover, button:hover {
-      background-color: #166130; /* Darker green on hover */
-      transform: translateY(-2px); /* Slight lift effect on hover */
-    }
+/* Button styling (common for all pages) */
+button, .button { /* Apply to both button tag and .button class */
+  display: block; /* Make it a block element for full width */
+  background-color: #1d7a3c; /* Green button color */
+  color: white; /* White text color */
+  padding: 15px 25px; /* Padding inside the button */
+  border: none; /* Remove default button border */
+  border-radius: 10px; /* Rounded corners for buttons */
+  text-decoration: none; /* Remove underline from links */
+  font-size: 1.1em; /* Larger font size for buttons */
+  font-weight: 600; /* Semi-bold text */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  width: 100%; /* Make buttons take full width of their parent */
+  max-width: 300px; /* Limit max width for larger screens */
+  margin: 0 auto; /* Center the button horizontally */
+  cursor: pointer; /* Indicate clickable */
+}
 
-    /* Styling for disabled/soon buttons */
-    .button.disabled {
-      background-color: #cccccc; /* Greyed out background */
-      cursor: not-allowed; /* No-drop cursor */
-      opacity: 0.7; /* Slightly transparent */
-      box-shadow: none; /* No shadow */
-      transform: none; /* No transform on hover */
-    }
+.button:hover, button:hover {
+  background-color: #166130; /* Darker green on hover */
+  transform: translateY(-2px); /* Slight lift effect on hover */
+}
 
-    .button.disabled:hover {
-      background-color: #cccccc; /* Keep grey on hover */
-      transform: none; /* No transform on hover */
-    }
+/* Styling for disabled/soon buttons */
+.button.disabled {
+  background-color: #cccccc; /* Greyed out background */
+  cursor: not-allowed; /* No-drop cursor */
+  opacity: 0.7; /* Slightly transparent */
+  box-shadow: none; /* No shadow */
+  transform: none; /* No transform on hover */
+}
 
-    /* Subject (matiere) block styling (only for calculator pages) */
-    .matiere {
-      background-color: #d7f2dc;
-      padding: 20px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      display: flex;
-      flex-direction: column; /* Vertical by default for mobile */
-      gap: 15px;
-    }
+.button.disabled:hover {
+  background-color: #cccccc; /* Keep grey on hover */
+  transform: none; /* No transform on hover */
+}
 
-    /* Subject heading styling */
-    .matiere h3 {
-      margin-top: 0;
-      color: #134c2e;
-      margin-bottom: 0; /* Remove bottom margin */
-      font-weight: 600;
-      flex-shrink: 0; /* Prevent title from shrinking */
-    }
+/* Subject (matiere) block styling (only for calculator pages) */
+.matiere {
+  background-color: #d7f2dc;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column; /* Vertical by default for mobile */
+  gap: 15px;
+}
 
-    /* Input group styling for aligning labels and inputs */
-    .input-group {
-      display: flex;
-      flex-wrap: wrap; /* Allow elements to wrap */
-      gap: 10px; /* Space between input fields */
-      justify-content: flex-start; /* Align to the left */
-      flex-grow: 1; /* Allow input group to grow */
-      align-items: center; /* Added for consistent alignment */
-    }
+/* Subject heading styling */
+.matiere h3 {
+  margin-top: 0;
+  color: #134c2e;
+  margin-bottom: 0; /* Remove bottom margin */
+  font-weight: 600;
+  flex-shrink: 0; /* Prevent title from shrinking */
+}
 
-    /* Label styling for input fields */
-    .input-group label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.9em;
-      color: #333;
-      min-width: 80px; /* Adjust as needed for consistent label width */
-    }
+/* Input group styling for aligning labels and inputs */
+/* Adjusted for mobile to allow wrapping while maintaining alignment */
+.input-group {
+  display: flex;
+  flex-wrap: wrap; /* Allow elements to wrap */
+  gap: 10px; /* Space between input fields */
+  justify-content: flex-start; /* Align to the left */
+  flex-grow: 1; /* Allow input group to grow */
+  align-items: center; /* Added for consistent vertical alignment */
+}
 
-    /* Input field styling */
-    .input-group input {
-      width: 60px; /* Smaller width for input fields */
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-      text-align: center;
-      transition: border-color 0.3s ease;
-    }
+/* Label styling for input fields */
+.input-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9em;
+  color: #333;
+  /* Removed min-width for mobile to allow more flexible wrapping */
+  /* min-width: 80px; */
+}
 
-    /* Input field focus state */
-    .input-group input:focus {
-      outline: none;
-      border-color: #1d7a3c;
-      box-shadow: 0 0 0 2px rgba(29, 122, 60, 0.2);
-    }
+/* Input field styling */
+.input-group input {
+  width: 60px; /* Smaller width for input fields */
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
 
-    /* Invalid input field styling */
-    .input-group input.invalid {
-      border-color: red;
-    }
+/* Input field focus state */
+.input-group input:focus {
+  outline: none;
+  border-color: #1d7a3c;
+  box-shadow: 0 0 0 2px rgba(29, 122, 60, 0.2);
+}
 
-    /* Result section styling */
-    #resultat {
-      margin-top: 30px;
-      text-align: center;
-      font-size: 1.2em;
-      line-height: 1.6;
-    }
+/* Invalid input field styling */
+.input-group input.invalid {
+  border-color: red;
+}
 
-    /* Paragraphs within result section */
-    #resultat p {
-      margin-bottom: 8px;
-    }
+/* Result section styling */
+#resultat {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 1.2em;
+  line-height: 1.6;
+}
 
-    /* Individual subject note styling */
-    .note {
-      margin-top: 5px;
-      font-weight: bold;
-      text-align: left; /* Align subject note to the left */
-      min-width: 100px; /* Ensure enough space for the note */
-    }
+/* Paragraphs within result section */
+#resultat p {
+  margin-bottom: 8px;
+}
 
-    /* Custom error message box styling */
-    .message-box {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #fff;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-      display: none; /* Hidden by default */
-      text-align: center;
-      max-width: 300px;
-      border: 1px solid #ddd;
-    }
+/* Individual subject note styling */
+.note {
+  margin-top: 5px;
+  font-weight: bold;
+  text-align: left; /* Align subject note to the left */
+  min-width: 100px; /* Ensure enough space for the note */
+}
 
-    /* Paragraphs within message box */
-    .message-box p {
-      margin-bottom: 20px;
-      font-size: 1.1em;
-      color: #333;
-    }
+/* Custom error message box styling */
+.message-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: none; /* Hidden by default */
+  text-align: center;
+  max-width: 300px;
+  border: 1px solid #ddd;
+}
 
-    /* Button within message box */
-    .message-box button {
-      margin: 0 auto;
-      padding: 8px 20px;
-      font-size: 15px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+/* Paragraphs within message box */
+.message-box p {
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  color: #333;
+}
 
-    /* Button hover state within message box */
-    .message-box button:hover {
-      background-color: #0056b3;
-    }
+/* Button within message box */
+.message-box button {
+  margin: 0 auto;
+  padding: 8px 20px;
+  font-size: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-    /* Desktop layout adjustments (media queries) */
-    @media (min-width: 768px) { /* Change breakpoint to suit larger screens */
-      /* Common body adjustments for desktop */
-      body {
-        padding-top: 30px; /* Keep consistent padding */
-        justify-content: center; /* Center content vertically on desktop */
-      }
+/* Button hover state within message box */
+.message-box button:hover {
+  background-color: #0056b3;
+}
 
-      /* Common container adjustments for desktop */
-      .container {
-        margin-bottom: 50px; /* Restore default margin for calculator page on desktop */
-        border-bottom-left-radius: 20px; /* Restore border radius on desktop */
-        border-bottom-right-radius: 20px; /* Restore border radius on desktop */
-      }
+/* Desktop layout adjustments (media queries) */
+@media (min-width: 768px) { /* Change breakpoint to suit larger screens */
+  /* Common body adjustments for desktop */
+  body {
+    padding-top: 30px; /* Keep consistent padding */
+    justify-content: center; /* Center content vertically on desktop */
+  }
 
-      /* Index page container specific adjustments for desktop */
-      .index-page-container {
-        padding: 50px 60px; /* More padding on desktop */
-        flex-grow: 0; /* Don't grow to fill height on desktop */
-        margin: 30px auto 50px auto; /* Center with margins on desktop */
-        border-radius: 20px; /* Restore full border radius on desktop */
-      }
+  /* Common container adjustments for desktop */
+  .container {
+    margin-bottom: 50px; /* Restore default margin for calculator page on desktop */
+    border-bottom-left-radius: 20px; /* Restore border radius on desktop */
+    border-bottom-right-radius: 20px; /* Restore border radius on desktop */
+    width: 90%; /* Restore 90% width for desktop */
+    max-width: 900px; /* Restore max-width for desktop */
+  }
 
-      /* Heading adjustments for desktop */
-      h1 {
-        font-size: 2.5em; /* Larger heading on desktop */
-      }
+  /* Index page container specific adjustments for desktop */
+  .index-page-container {
+    padding: 50px 60px; /* More padding on desktop */
+    flex-grow: 0; /* Don't grow to fill height on desktop */
+    margin: 30px auto 50px auto; /* Center with margins on desktop */
+    border-radius: 20px; /* Restore full border radius on desktop */
+    max-width: 500px; /* Restore max-width for index page on desktop */
+  }
 
-      /* Button adjustments for desktop */
-      .button {
-        max-width: 300px; /* Max width for buttons on desktop */
-      }
+  /* Heading adjustments for desktop */
+  h1 {
+    font-size: 2.5em; /* Larger heading on desktop */
+  }
 
-      /* Subject block adjustments for desktop */
-      .matiere {
-        flex-direction: row; /* Horizontal for desktop */
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-      }
+  /* Button adjustments for desktop */
+  .button {
+    max-width: 300px; /* Max width for buttons on desktop */
+  }
 
-      /* Subject heading adjustments for desktop */
-      .matiere h3 {
-        min-width: 160px;
-        text-align: left; /* Align to the left */
-      }
+  /* Subject block adjustments for desktop */
+  .matiere {
+    flex-direction: row; /* Horizontal for desktop */
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
 
-      /* Input group adjustments for desktop */
-      .input-group {
-        flex-wrap: nowrap; /* Prevent wrapping */
-        justify-content: flex-start; /* Align to the left */
-      }
+  /* Subject heading adjustments for desktop */
+  .matiere h3 {
+    min-width: 160px;
+    text-align: left; /* Align to the left */
+  }
 
-      /* Input label adjustments for desktop */
-      .input-group label {
-        min-width: unset; /* Reset min-width for desktop, let content dictate */
-      }
+  /* Input group adjustments for desktop */
+  .input-group {
+    flex-wrap: nowrap; /* Prevent wrapping */
+    justify-content: flex-start; /* Align to the left */
+  }
 
-      /* Input field adjustments for desktop */
-      .input-group input {
-        width: 80px; /* Wider input fields on desktop */
-      }
+  /* Input label adjustments for desktop */
+  .input-group label {
+    min-width: unset; /* Reset min-width for desktop, let content dictate */
+  }
 
-      /* Subject note adjustments for desktop */
-      .note {
-        text-align: left; /* Align subject note to the left on desktop */
-      }
-    }
-    ```
+  /* Input field adjustments for desktop */
+  .input-group input {
+    width: 80px; /* Wider input fields on desktop */
+  }
+
+  /* Subject note adjustments for desktop */
+  .note {
+    text-align: left; /* Align subject note to the left on desktop */
+  }
+}
 
