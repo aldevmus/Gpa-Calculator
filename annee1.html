@@ -5,7 +5,273 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Moyenne 1ère Année Médecine</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css"> <!-- Link to external CSS file -->
+  <style>
+    /* Ensure HTML and Body take full height for background to extend */
+    html, body {
+      height: 100%; /* Make html and body fill the entire viewport height */
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #e3f6e5; /* Green background for the entire page */
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      direction: ltr;
+      text-align: left;
+      display: flex; /* Use flexbox for overall page layout */
+      flex-direction: column; /* Stack children vertically */
+      min-height: 100vh; /* Ensure body is at least viewport height */
+      align-items: center; /* Center content horizontally */
+      padding-top: 30px; /* Space above the main title */
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+      box-sizing: border-box; /* Include padding/border in element's total width/height */
+    }
+
+    h1 {
+      text-align: center;
+      color: #225e3b; /* Dark green color */
+      margin: 0 20px 30px 20px; /* Adjust margin to separate from container */
+      font-size: 1.8em; /* Larger font size */
+      font-weight: 700; /* Bold font weight */
+      display: flex; /* Use flexbox for centering content within H1 (icon + text) */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      gap: 10px; /* Space between icon and text */
+      width: calc(100% - 40px); /* Adjust width to account for side margins */
+      max-width: 900px; /* Limit max width */
+    }
+
+    .container {
+      background-color: white; /* White background for the card */
+      padding: 30px; /* Ample padding */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Soft shadow for depth */
+      max-width: 900px; /* Max width for desktop */
+      width: 100%; /* Take full width of parent (body) on mobile */
+      margin: 30px auto 0 auto; /* Top margin, auto horizontal, ZERO bottom margin for mobile */
+      border-radius: 20px; /* Default rounded corners */
+      border-bottom-left-radius: 0; /* Remove bottom left radius for mobile */
+      border-bottom-right-radius: 0; /* Remove bottom right radius for mobile */
+      box-sizing: border-box; /* Ensure padding/border are included in element's total width/height */
+      flex-grow: 1; /* Allow container to grow and fill remaining vertical space on mobile */
+      display: flex; /* Make container a flex container */
+      flex-direction: column; /* Stack content inside container vertically */
+    }
+
+    /* This rule makes the area below the container white on mobile */
+    body::after {
+      content: '';
+      display: block;
+      flex-grow: 1; /* Make it fill remaining vertical space */
+      background-color: white; /* White background for the bottom part */
+      width: 100%; /* Take full width */
+      /* Only apply on mobile */
+      @media (max-width: 767px) {
+        margin-top: -1px; /* To ensure it connects seamlessly with the container */
+      }
+    }
+
+    .matiere {
+      background-color: #d7f2dc;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column; /* Vertical by default for mobile */
+      gap: 15px;
+    }
+
+    .matiere h3 {
+      margin-top: 0;
+      color: #134c2e;
+      margin-bottom: 0;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* New wrapper for inputs and note */
+    .content-wrap {
+      display: flex;
+      flex-direction: column; /* Stack inputs and note vertically by default (mobile) */
+      flex-grow: 1; /* Allow it to grow in column direction */
+      gap: 10px; /* Space between input-group and note */
+    }
+
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-start;
+      flex-grow: 1; /* Allow input-group to take horizontal space if needed within content-wrap */
+      align-items: center;
+    }
+
+    .input-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    .input-group input {
+      width: 60px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      text-align: center;
+      transition: border-color 0.3s ease;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #1d7a3c;
+      box-shadow: 0 0 0 2px rgba(29, 122, 60, 0.2);
+    }
+
+    .input-group input.invalid {
+      border-color: red;
+    }
+
+    #resultat {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 1.2em;
+      line-height: 1.6;
+    }
+
+    #resultat p {
+      margin-bottom: 8px;
+    }
+
+    button {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 30px;
+      font-size: 16px;
+      background-color: #1d7a3c;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #166130;
+      transform: translateY(-2px);
+    }
+
+    .note {
+      margin-top: 5px; /* Adjust or remove depending on gap from content-wrap */
+      font-weight: bold;
+      text-align: left;
+      min-width: 100px;
+    }
+
+    /* Custom error message box */
+    .message-box {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      display: none;
+      text-align: center;
+      max-width: 300px;
+      border: 1px solid #ddd;
+    }
+
+    .message-box p {
+      margin-bottom: 20px;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    .message-box button {
+      margin: 0 auto;
+      padding: 8px 20px;
+      font-size: 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .message-box button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Desktop layout adjustments (media queries) */
+    @media (min-width: 768px) {
+      body {
+        justify-content: flex-start;
+        padding-top: 30px;
+      }
+
+      .container {
+        margin: 30px auto 50px auto;
+        border-radius: 20px;
+        flex-grow: 0;
+        width: 90%;
+        max-width: 900px;
+      }
+
+      body::after {
+        display: none;
+      }
+
+      .matiere {
+        flex-direction: row; /* H3 and content-wrap side-by-side */
+        align-items: center; /* Vertically align h3 and content-wrap */
+        gap: 20px;
+      }
+
+      .matiere h3 {
+        min-width: 160px;
+        text-align: left;
+        flex-shrink: 0;
+      }
+
+      .content-wrap {
+        flex-direction: column; /* Inputs and note stacked vertically */
+        flex-grow: 1; /* Allow content-wrap to take remaining horizontal space */
+        min-width: 0; /* Allow it to shrink if needed */
+        gap: 5px; /* Smaller gap between input row and note */
+      }
+
+      .input-group {
+        flex-wrap: nowrap; /* Keep inputs on one line for desktop */
+        justify-content: flex-start;
+        flex-grow: 1; /* Still allow input-group to fill space within content-wrap */
+        min-width: 0; /* Ensure it can shrink */
+      }
+
+      .input-group label {
+        min-width: unset;
+      }
+
+      .input-group input {
+        width: 80px;
+      }
+
+      .note {
+        text-align: left;
+        flex-shrink: 0; /* Prevent the note from shrinking */
+        /* No need for margin-left: auto here, as it's stacked vertically within content-wrap */
+        margin-top: 0; /* Reset margin from mobile default */
+      }
+    }
+  </style>
 </head>
 <body>
   <h1>🧪 Moyenne - 1ère Année Médecine</h1>
@@ -15,13 +281,264 @@
     <div id="resultat"></div>
   </div>
 
-  <!-- Custom error message box -->
   <div id="customMessageBox" class="message-box">
     <p id="messageBoxText"></p>
     <button onclick="hideMessageBox()">OK</button>
   </div>
 
-  <script src="js/script.js"></script> <!-- Link to external JavaScript file -->
+  <script>
+    // Définition des matières, de leurs coefficients et types
+    const matieres = {
+      anatomy: { label: "Anatomie", coeff: 2, type: "tp" },
+      biophysique: { label: "Biophysique", coeff: 2, type: "tp" },
+      chimie: { label: "Chimie", coeff: 2, type: "tp" },
+      biochimie: { label: "Biochimie", coeff: 2, type: "emd" },
+      biostatistiques: { label: "Biostatistiques", coeff: 2, type: "emd_tp2" },
+      cytologie: { label: "Cytologie", coeff: 2, type: "emd_tp2" },
+      histologie: { label: "Histologie", coeff: 1, type: "emd1" },
+      embryologie: { label: "Embryologie", coeff: 1, type: "emd1" },
+      physiologie: { label: "Physiologie", coeff: 1, type: "emd2" },
+      ssh: { label: "SSH", coeff: 1, type: "ssh" },
+    };
+
+    /**
+     * Affiche un message personnalisé au lieu d'une alerte().
+     * @param {string} message - Le message à afficher.
+     */
+    function showMessageBox(message) {
+      const messageBox = document.getElementById("customMessageBox");
+      const messageBoxText = document.getElementById("messageBoxText");
+      messageBoxText.textContent = message;
+      messageBox.style.display = "block";
+    }
+
+    /**
+     * Masque la boîte de message d'erreur personnalisée.
+     */
+    function hideMessageBox() {
+      document.getElementById("customMessageBox").style.display = "none";
+    }
+
+    /**
+     * Cette fonction est exécutée au chargement de la page pour créer dynamiquement les champs de saisie.
+     */
+    window.onload = () => {
+      const form = document.getElementById("gpa-form");
+      for (const [key, mat] of Object.entries(matieres)) {
+        const div = document.createElement("div");
+        div.classList.add("matiere");
+
+        const h3 = document.createElement("h3");
+        h3.textContent = mat.label;
+        div.appendChild(h3);
+
+        // START NEW WRAPPER
+        const contentWrap = document.createElement("div");
+        contentWrap.classList.add("content-wrap");
+
+        const inputGroup = document.createElement("div");
+        inputGroup.classList.add("input-group");
+
+        // Fonction d'aide pour créer un champ de saisie et attacher des écouteurs d'événements
+        const createInputField = (id, labelText) => {
+          const label = document.createElement('label');
+          label.textContent = labelText + ': ';
+          const input = document.createElement('input');
+          input.type = "number";
+          input.id = id;
+          input.min = "0";
+          input.max = "20";
+          input.step = "0.01";
+          input.setAttribute('autocomplete', 'off'); // Désactiver l'autocomplétion pour le comportement du clavier
+
+          // Charger la valeur enregistrée depuis localStorage
+          const savedValue = localStorage.getItem(id);
+          if (savedValue !== null) {
+            input.value = savedValue;
+          }
+
+          // Enregistrer la valeur dans localStorage lors du changement de l'input
+          input.addEventListener('input', (event) => {
+            localStorage.setItem(id, event.target.value);
+          });
+
+          label.appendChild(input);
+          return label;
+        };
+
+        // Construction des champs de saisie en fonction du type de matière
+        if (mat.type === "tp") {
+          inputGroup.appendChild(createInputField(`${key}_emd1`, 'EMD1'));
+          inputGroup.appendChild(createInputField(`${key}_tp1`, 'TP1'));
+          inputGroup.appendChild(createInputField(`${key}_emd2`, 'EMD2'));
+          inputGroup.appendChild(createInputField(`${key}_tp2`, 'TP2'));
+        } else if (mat.type === "emd") {
+          inputGroup.appendChild(createInputField(`${key}_emd1`, 'EMD1'));
+          inputGroup.appendChild(createInputField(`${key}_emd2`, 'EMD2'));
+        } else if (mat.type === "emd_tp2") {
+          inputGroup.appendChild(createInputField(`${key}_emd1`, 'EMD1'));
+          inputGroup.appendChild(createInputField(`${key}_emd2`, 'EMD2'));
+          inputGroup.appendChild(createInputField(`${key}_tp2`, 'TP2'));
+        } else if (mat.type === "emd1") {
+          inputGroup.appendChild(createInputField(`${key}_emd1`, 'EMD1'));
+        } else if (mat.type === "emd2") {
+          inputGroup.appendChild(createInputField(`${key}_emd2`, 'EMD2'));
+        } else if (mat.type === "ssh") {
+          inputGroup.appendChild(createInputField(`${key}_emd2`, 'EMD2'));
+          inputGroup.appendChild(createInputField(`${key}_td`, 'TD'));
+        }
+
+        contentWrap.appendChild(inputGroup); // Append inputGroup to contentWrap
+
+        const noteDiv = document.createElement("div");
+        noteDiv.id = `note_${key}`;
+        noteDiv.classList.add("note");
+        contentWrap.appendChild(noteDiv); // Append noteDiv to contentWrap
+
+        div.appendChild(contentWrap); // Append contentWrap to the matiere div
+        // END NEW WRAPPER
+
+        form.appendChild(div);
+      }
+
+      // Après la création de tous les inputs, ajouter un écouteur d'événements au dernier
+      const inputElements = form.querySelectorAll('input:not([type="button"])');
+      if (inputElements.length > 0) {
+        const lastInput = inputElements.length > 0 ? inputElements.item(inputElements.length - 1) : null;
+        if (lastInput) {
+          lastInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault(); // Empêcher la soumission du formulaire par défaut (si existant)
+              calculerMoyenne();
+            }
+          });
+        }
+      }
+    };
+
+    /**
+     * Récupère la valeur d'un champ de saisie et vérifie sa validité.
+     * @param {string} id - L'ID du champ de saisie.
+     * @returns {number|null} La valeur numérique ou null si invalide.
+     */
+    function val(id) {
+      const inputElement = document.getElementById(id);
+      if (!inputElement) return null; // Pour s'assurer que l'élément existe
+
+      const v = inputElement.value;
+      const parsedValue = parseFloat(v);
+
+      if (v === "" || isNaN(parsedValue) || parsedValue < 0 || parsedValue > 20) {
+        inputElement.classList.add("invalid"); // Ajouter une classe pour indiquer visuellement l'erreur
+        return null;
+      }
+      inputElement.classList.remove("invalid"); // Supprimer la classe d'erreur si la valeur est valide
+      return parsedValue;
+    }
+
+    /**
+     * Calcule la note de la matière en fonction de son type et des champs de saisie.
+     * @param {string} key - La clé de la matière.
+     * @param {object} mat - L'objet matière.
+     * @returns {number|null} La note de la matière ou null s'il manque des champs/sont invalides.
+     */
+    function calculateMatiereNote(key, mat) {
+      let note = null;
+      let champs = [];
+
+      if (mat.type === "tp") {
+        champs = [val(key + "_emd1"), val(key + "_tp1"), val(key + "_emd2"), val(key + "_tp2")];
+        if (champs.includes(null)) return null;
+        note = ((champs[0] * 0.8 + champs[1] * 0.2) + (champs[2] * 0.8 + champs[3] * 0.2)) / 2;
+      } else if (mat.type === "emd") {
+        champs = [val(key + "_emd1"), val(key + "_emd2")];
+        if (champs.includes(null)) return null;
+        note = (champs[0] + champs[1]) / 2;
+      } else if (mat.type === "emd_tp2") {
+        champs = [val(key + "_emd1"), val(key + "_emd2"), val(key + "_tp2")];
+        if (champs.includes(null)) return null;
+        const moyenne = (champs[0] + champs[1]) / 2;
+        note = moyenne * 0.8 + champs[2] * 0.2;
+      } else if (mat.type === "emd1") {
+        note = val(key + "_emd1");
+        if (note === null) return null;
+      } else if (mat.type === "emd2") {
+        note = val(key + "_emd2");
+        if (note === null) return null;
+      } else if (mat.type === "ssh") {
+        champs = [val(key + "_emd2"), val(key + "_td")];
+        if (champs.includes(null)) return null;
+        note = champs[0] * 0.6 + champs[1] * 0.4;
+      }
+      return note;
+    }
+
+    /**
+     * Calcule la moyenne générale et met à jour les résultats dans l'interface.
+     */
+    function calculerMoyenne() {
+      let total = 0;
+      let coeffTotal = 0;
+      let sous10 = 0;
+      let matiereSous5Count = 0; // Compte les matières avec une note inférieure à 5
+      let matiereRattrapageList = []; // Liste des matières nécessitant un rattrapage
+
+      let erreur = false;
+
+      for (const [key, mat] of Object.entries(matieres)) {
+        const note = calculateMatiereNote(key, mat);
+
+        if (note === null) {
+          erreur = true;
+          // Nous ne rompons pas la boucle ici, nous continuons pour identifier tous les champs erronés
+        } else {
+          if (note < 10) sous10++;
+          if (note < 5) {
+            matiereSous5Count++;
+            matiereRattrapageList.push(mat.label); // Ajouter la matière à la liste de rattrapage
+          }
+
+          total += note * mat.coeff;
+          coeffTotal += mat.coeff;
+
+          const noteDiv = document.getElementById("note_" + key);
+          noteDiv.textContent = `Note: ${note.toFixed(2)}`;
+          noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
+        }
+      }
+
+      if (erreur) {
+        showMessageBox("Veuillez remplir tous les champs avec des valeurs valides (entre 0 et 20) avant de calculer.");
+        return;
+      }
+
+      const moyenne = total / coeffTotal;
+      const points = total;
+      const pointsTotalMax = 20 * coeffTotal;
+      const manquePourValidation = Math.max(0, (10 * coeffTotal) - total);
+
+      let validationMessage = '';
+      if (moyenne >= 10 && matiereSous5Count === 0) {
+        validationMessage = '<p style="color:green;">✅ Félicitations ! Vous avez validé cette année 🎉</p>';
+      } else if (moyenne < 10) {
+        validationMessage = `<p style="color:red;">⚠️ Vous n'avez pas encore validé. Il vous manque ${manquePourValidation.toFixed(2)} points supplémentaires pour valider.</p>`;
+      } else if (matiereSous5Count > 0) {
+        // Si la moyenne est >= 10 mais qu'il y a des matières en dessous de 5, c'est toujours un problème de validation
+        validationMessage = `<p style="color:red;">⚠️ Vous n'avez pas validé à cause de matières avec une note inférieure à 5.</p>`;
+      }
+
+      const resultat = `
+        <p>Moyenne générale: <strong>${moyenne.toFixed(2)}</strong></p>
+        <p>Total des points: ${points.toFixed(2)} / ${pointsTotalMax.toFixed(2)}</p>
+        ${matiereRattrapageList.length > 0 ? `<p style="color:red;">⚠️ Matière(s) en rattrapage (note < 5): ${matiereRattrapageList.join(", ")}</p>` : ''}
+        ${sous10 > 0 && moyenne < 10 ? `<p>${sous10} matière(s) avec moins de 10.</p>` : ''}
+        ${validationMessage}
+      `;
+      document.getElementById("resultat").innerHTML = resultat;
+
+      // Faire défiler en douceur jusqu'à la section des résultats
+      document.getElementById("resultat").scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
 </body>
 </html>
-
