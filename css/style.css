@@ -1,50 +1,208 @@
+/* General body styling */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #e6f4ea;
-  color: #1b4332;
+  background-color: #e3f6e5;
+  font-family: 'Inter', sans-serif; /* Using Inter font */
   margin: 0;
   padding: 0;
+  direction: ltr; /* Support for left-to-right languages */
+  text-align: left; /* Align text to the left */
 }
 
-.container {
-  max-width: 700px;
-  margin: auto;
-  padding: 2rem;
-  text-align: center;
-}
-
+/* Heading styling */
 h1 {
-  color: #2d6a4f;
+  text-align: center;
+  color: #225e3b;
+  margin: 30px 20px 0 20px;
+  font-size: 1.8em;
+  font-weight: 700;
 }
 
-input[type="number"] {
-  width: 80px;
-  padding: 5px;
-  margin: 5px;
+/* Main container styling */
+.container {
+  max-width: 900px;
+  margin: 30px auto 50px auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.button, button {
-  background-color: #2d6a4f;
+/* Subject (matiere) block styling */
+.matiere {
+  background-color: #d7f2dc;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column; /* Vertical by default for mobile */
+  gap: 15px;
+}
+
+/* Subject heading styling */
+.matiere h3 {
+  margin-top: 0;
+  color: #134c2e;
+  margin-bottom: 0; /* Remove bottom margin */
+  font-weight: 600;
+  flex-shrink: 0; /* Prevent title from shrinking */
+}
+
+/* Input group styling for aligning labels and inputs */
+.input-group {
+  display: flex;
+  flex-wrap: wrap; /* Allow elements to wrap */
+  gap: 10px; /* Space between input fields */
+  justify-content: flex-start; /* Align to the left */
+  flex-grow: 1; /* Allow input group to grow */
+  align-items: center; /* Added for consistent alignment */
+}
+
+/* Label styling for input fields */
+.input-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9em;
+  color: #333;
+  min-width: 80px; /* Adjust as needed for consistent label width */
+}
+
+/* Input field styling */
+.input-group input {
+  width: 60px; /* Smaller width for input fields */
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
+
+/* Input field focus state */
+.input-group input:focus {
+  outline: none;
+  border-color: #1d7a3c;
+  box-shadow: 0 0 0 2px rgba(29, 122, 60, 0.2);
+}
+
+/* Invalid input field styling */
+.input-group input.invalid {
+  border-color: red;
+}
+
+/* Result section styling */
+#resultat {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 1.2em;
+  line-height: 1.6;
+}
+
+/* Paragraphs within result section */
+#resultat p {
+  margin-bottom: 8px;
+}
+
+/* Button styling */
+button {
+  display: block;
+  margin: 30px auto;
+  padding: 12px 30px;
+  font-size: 16px;
+  background-color: #1d7a3c;
   color: white;
-  padding: 10px 20px;
-  margin: 1rem 0;
-  text-decoration: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Button hover state */
+button:hover {
+  background-color: #166130;
+  transform: translateY(-2px);
+}
+
+/* Individual subject note styling */
+.note {
+  margin-top: 5px;
+  font-weight: bold;
+  text-align: left; /* Align subject note to the left */
+  min-width: 100px; /* Ensure enough space for the note */
+}
+
+/* Custom error message box styling */
+.message-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: none; /* Hidden by default */
+  text-align: center;
+  max-width: 300px;
+  border: 1px solid #ddd;
+}
+
+/* Paragraphs within message box */
+.message-box p {
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  color: #333;
+}
+
+/* Button within message box */
+.message-box button {
+  margin: 0 auto;
+  padding: 8px 20px;
+  font-size: 15px;
+  background-color: #007bff;
+  color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.button:hover, button:hover {
-  background-color: #1b4332;
-}
-.matiere {
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  text-align: left;
+/* Button hover state within message box */
+.message-box button:hover {
+  background-color: #0056b3;
 }
 
-.note {
-  font-weight: bold;
-  margin-top: 0.5rem;
+/* Desktop layout adjustments (media queries) */
+@media (min-width: 768px) { /* Change breakpoint to suit larger screens */
+  .matiere {
+    flex-direction: row; /* Horizontal for desktop */
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .matiere h3 {
+    min-width: 160px;
+    text-align: left; /* Align to the left */
+  }
+
+  .input-group {
+    flex-wrap: nowrap; /* Prevent wrapping */
+    justify-content: flex-start; /* Align to the left */
+  }
+
+  .input-group label {
+    min-width: unset; /* Reset min-width for desktop, let content dictate */
+  }
+
+  .input-group input {
+    width: 80px; /* Wider input fields on desktop */
+  }
+
+  .note {
+    text-align: left; /* Align subject note to the left on desktop */
+  }
 }
+
