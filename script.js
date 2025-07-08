@@ -1,5 +1,16 @@
 
-// script.js const matieres = { anatomy: { label: "Anatomie", coeff: 2, type: "tp" }, biophysique: { label: "Biophysique", coeff: 2, type: "tp" }, chimie: { label: "Chimie", coeff: 2, type: "tp" }, biochimie: { label: "Biochimie", coeff: 2, type: "emd" }, biostatistiques: { label: "Biostatistiques", coeff: 2, type: "emd_tp2" }, cytologie: { label: "Cytologie", coeff: 2, type: "emd_tp2" }, histologie: { label: "Histologie", coeff: 1, type: "emd1" }, embryologie: { label: "Embryologie", coeff: 1, type: "emd1" }, physiologie: { label: "Physiologie", coeff: 1, type: "emd2" }, ssh: { label: "SSH", coeff: 1, type: "ssh" }, };
+const matieres = { 
+anatomy: { label: "Anatomie", coeff: 2, type: "tp" }, 
+biophysique: { label: "Biophysique", coeff: 2, type: "tp" }, 
+  chimie: { label: "Chimie", coeff: 2, type: "tp" }, 
+  biochimie: { label: "Biochimie", coeff: 2, type: "emd" }, 
+  biostatistiques: { label: "Biostatistiques", coeff: 2, type: "emd_tp2" }, 
+  cytologie: { label: "Cytologie", coeff: 2, type: "emd_tp2" }, 
+  histologie: { label: "Histologie", coeff: 1, type: "emd1" }, 
+  embryologie: { label: "Embryologie", coeff: 1, type: "emd1" }, 
+  physiologie: { label: "Physiologie", coeff: 1, type: "emd2" }, 
+  ssh: { label: "SSH", coeff: 1, type: "ssh" },
+};
 
 window.onload = () => { const form = document.getElementById("gpa-form"); for (const [key, mat] of Object.entries(matieres)) { const div = document.createElement("div"); div.innerHTML = <h3>${mat.label}</h3>; div.classList.add("matiere"); if (mat.type === "tp") { div.innerHTML += EMD1: <input type="number" id="${key}_emd1" min="0" max="20"> TP1: <input type="number" id="${key}_tp1" min="0" max="20"><br> EMD2: <input type="number" id="${key}_emd2" min="0" max="20"> TP2: <input type="number" id="${key}_tp2" min="0" max="20">; } else if (mat.type === "emd") { div.innerHTML += EMD1: <input type="number" id="${key}_emd1" min="0" max="20"> EMD2: <input type="number" id="${key}_emd2" min="0" max="20">; } else if (mat.type === "emd_tp2") { div.innerHTML += EMD1: <input type="number" id="${key}_emd1" min="0" max="20"> EMD2: <input type="number" id="${key}_emd2" min="0" max="20"> TP2: <input type="number" id="${key}_tp2" min="0" max="20">; } else if (mat.type === "emd1") { div.innerHTML += EMD1: <input type="number" id="${key}_emd1" min="0" max="20">; } else if (mat.type === "emd2") { div.innerHTML += EMD2: <input type="number" id="${key}_emd2" min="0" max="20">; } else if (mat.type === "ssh") { div.innerHTML += EMD2: <input type="number" id="${key}_emd2" min="0" max="20"> TD: <input type="number" id="${key}_td" min="0" max="20">; } div.innerHTML += <div id="note_${key}" class="note"></div>; form.appendChild(div); } };
 
