@@ -269,13 +269,44 @@
         transform: translateY(-2px);
     }
     .google-play {
-        background-color: #4CAF50; /* Google Play green */
+        background-color: #4CAF50;
         color: white;
     }
     .google-play:hover {
         background-color: #449D48;
         transform: translateY(-2px);
     }
+    .container-footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    }
+.copyright-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.copyright-info p {
+    margin: 0;
+}
+
+.footer-logo {
+    width: 30px;
+    height: 30px;
+    -webkit-user-drag: none;
+    user-drag: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+}
+
+.container-footer-content p:nth-child(2) {
+    margin: 0;
+    text-align: center;
+}
 
     /* Desktop layout adjustments (media queries) */
     @media (min-width: 768px) {
