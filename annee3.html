@@ -792,8 +792,14 @@
 
         const moyenne = total / coeffTotal;
         
+        // --- NEW POINTS CALCULATION AND DISPLAY ---
+        const pointsToValidate = 10 * coeffTotal; // Points needed to validate (average of 10 * total coefficients)
+        const totalPoints = moyenne * coeffTotal; 
+        const maxPossiblePoints = 20 * coeffTotal; // Maximum possible points (20 * total coefficients)
+        
         let validationMessage = '';
         let rattrapageDetails = '';
+        let pointsMessage = `<p>Points totaux: <strong>${totalPoints.toFixed(2)} / ${maxPossiblePoints}</strong></p>`; // Display total points out of max possible
 
         // Determine main validation message
         if (moyenne >= 10 && matieresRattrapageList_moins5.length === 0) { 
@@ -814,10 +820,17 @@
           if (moyenne < 10 && matieresRattrapageList_entre5et10.length > 0) {
               rattrapageDetails += `<p class="rattrapage-orange">⚠️ Matière(s) en rattrapage (note < 10): ${matieresRattrapageList_entre5et10.join(", ")}</p>`;
           }
+
+          // Add points needed message if not validated (based on pointsToValidate threshold)
+          if (totalPoints < pointsToValidate) {
+              const pointsNeeded = pointsToValidate - totalPoints;
+              pointsMessage += `<p style="color:red;">Il vous manque <strong>${pointsNeeded.toFixed(2)}</strong> points pour valider l'année.</p>`;
+          }
         }
 
         const resultatContent = `
           <p>Moyenne générale: <strong>${moyenne.toFixed(2)}</strong></p>
+          ${pointsMessage}
           ${rattrapageDetails}
           ${validationMessage}
         `;
