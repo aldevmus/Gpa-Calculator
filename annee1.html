@@ -534,9 +534,9 @@
     }
 
     /**
-     * Met à jour lانفيديو لمعدل المادة الفردية.
-     * يتم استدعاء هذه الدالة عندما تتغير مدخلات EMD أو TP.
-     * @param {string} key - مفتاح المادة.
+     * Met à jour l'affichage de la note individuelle de la matière.
+     * Cette fonction est appelée lorsque les entrées EMD ou TP changent.
+     * @param {string} key - La clé de la matière.
      */
     function updateMatiereNote(key) {
       const mat = matieres[key];
@@ -549,7 +549,7 @@
         noteDiv.textContent = `Note: ${note.toFixed(2)}`;
         noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
       } else {
-        noteDiv.textContent = ''; // مسح الملاحظة إذا كانت المدخلات غير مكتملة أو غير صالحة
+        noteDiv.textContent = ''; // Effacer la note si les entrées sont incomplètes ou invalides
       }
     }
 
@@ -579,7 +579,7 @@
     }
 
     /**
-     * هذه الدالة يتم تنفيذها عند تحميل الصفحة لإنشاء حقول الإدخال ديناميكياً.
+     * Cette fonction est exécutée au chargement de la page pour créer dynamiquement les champs de saisie.
      */
     window.onload = () => {
       const form = document.getElementById("gpa-form");
@@ -665,19 +665,23 @@
         updateMatiereNote(key);
       }
 
-      // Après la création de tous les inputs, ajouter un écouteur d'événements au dernier
-      const inputElements = form.querySelectorAll('input:not([type="button"])');
-      if (inputElements.length > 0) {
-        const lastInput = inputElements.length > 0 ? inputElements.item(inputElements.length - 1) : null;
-        if (lastInput) {
-          lastInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault(); // Empêcher la soumission du formulaire par défaut (si existant)
+      // NEW LOGIC FOR ENTER KEY NAVIGATION
+      const allInputElements = form.querySelectorAll('input[type="number"]'); // Select all number inputs
+      allInputElements.forEach((input, index) => {
+        input.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form submission
+
+            if (index < allInputElements.length - 1) {
+              // If not the last input, move focus to the next one
+              allInputElements[index + 1].focus();
+            } else {
+              // If it's the last input, trigger calculation
               calculerMoyenne();
             }
-          });
-        }
-      }
+          }
+        });
+      });
     };
 
     /**
@@ -883,3 +887,4 @@
   </script>
 </body>
 </html>
+
