@@ -140,10 +140,83 @@
       text-align: center;
       font-size: 1.2em;
       line-height: 1.6;
+      display: none; /* Initially hidden */
+      min-height: 150px; /* Ensure space for results or spinner */
+      position: relative; /* Crucial for positioning the spinner inside */
     }
 
     #resultat p {
       margin-bottom: 8px;
+    }
+
+    /* Multi-dot Loading Spinner within #resultat (from annee4 and annee1 design) */
+    .dot-spinner-in-results {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%; /* Take full height of #resultat */
+      width: 100%; /* Take full width of #resultat */
+      position: absolute; /* Position relative to #resultat */
+      top: 0;
+      left: 0;
+      background-color: rgba(255, 255, 255, 0.9); /* Opaque white background for spinner area */
+      z-index: 5; /* Above results content */
+      display: none; /* Hidden by default */
+      opacity: 0; /* For fade transition */
+      transition: opacity 0.3s ease;
+    }
+
+    .dot-spinner-in-results.visible {
+      opacity: 1;
+    }
+
+    .dot {
+      width: 20px; /* Size of each dot */
+      height: 20px; /* Size of each dot */
+      border-radius: 50%;
+      margin: 0 6px; /* Space between dots */
+      animation: bounce 0.8s infinite ease-in-out; /* Bounce animation */
+    }
+
+    /* Specific dot colors and animation delays (using blue tones from annee3) */
+    .dot:nth-child(1) { background-color: #3366FF; /* Main Blue */ animation-delay: 0s; }
+    .dot:nth-child(2) { background-color: #5C85FF; /* Lighter Blue */ animation-delay: 0.1s; }
+    .dot:nth-child(3) { background-color: #85A3FF; /* Even Lighter Blue */ animation-delay: 0.2s; }
+    .dot:nth-child(4) { background-color: #ADD1FF; /* Lighter Still Blue */ animation-delay: 0.3s; }
+    .dot:nth-child(5) { background-color: #E8EDF8; /* Lightest Blue (body background) */ animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); } /* Bounce height */
+    }
+
+    /* Animation for success message (from annee4) */
+    @keyframes pulse-success {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-animation {
+      animation: pulse-success 0.8s ease-out;
+      color: #28A745 !important; /* Brighter green for success (standard green) */
+    }
+
+    /* Animation for failure message (from annee4) */
+    @keyframes shake-failure {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    .failure-animation {
+      animation: shake-failure 0.5s ease-in-out;
+      color: #DC3545 !important; /* Brighter red for failure (standard red) */
+    }
+
+    /* Style for rattrapage list with note < 10 (from annee4) */
+    .rattrapage-orange {
+        color: orange;
     }
 
     button {
@@ -385,7 +458,17 @@
     </header>
     <form id="gpa-form"></form>
     <button onclick="calculerMoyenne()">Calculer</button>
-    <div id="resultat"></div>
+    <div id="resultat">
+      <div id="dotSpinnerInResults" class="dot-spinner-in-results">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div id="actualResultsContent" style="display: none;">
+        </div>
+    </div>
 
     <div class="app-links">
         <p>Connectez-vous et téléchargez notre application :</p>
@@ -448,6 +531,51 @@
     }
 
     /**
+     * Updates the individual subject note display.
+     * This function is called when EMD or TP inputs change.
+     * @param {string} key - The subject key.
+     */
+    function updateMatiereNote(key) {
+      const mat = matieres[key];
+      if (!mat) return;
+
+      const noteDiv = document.getElementById("note_" + key);
+      const note = calculateMatiereNote(key, mat);
+
+      if (note !== null) {
+        noteDiv.textContent = `Note: ${note.toFixed(2)}`;
+        noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
+      } else {
+        noteDiv.textContent = ''; // Clear note if inputs are incomplete or invalid
+      }
+    }
+
+    /**
+     * Shows the multi-dot loading spinner within the results div.
+     */
+    function showMultiDotLoadingSpinnerInResults() {
+      const resultatDiv = document.getElementById("resultat");
+      const dotSpinner = document.getElementById("dotSpinnerInResults");
+      const actualResultsContent = document.getElementById("actualResultsContent");
+
+      actualResultsContent.style.display = "none"; // Hide actual results content
+      resultatDiv.style.display = "flex"; // Show #resultat as flex container to center spinner
+      dotSpinner.style.display = "flex"; // Show the spinner
+      dotSpinner.classList.add("visible"); // For fade transition
+    }
+
+    /**
+     * Hides the multi-dot loading spinner within the results div.
+     */
+    function hideMultiDotLoadingSpinnerInResults() {
+      const dotSpinner = document.getElementById("dotSpinnerInResults");
+      dotSpinner.classList.remove("visible");
+      setTimeout(() => {
+        dotSpinner.style.display = "none"; // Hide after transition
+      }, 300); // Match CSS transition duration
+    }
+
+    /**
      * This function is executed when the page loads to dynamically create the input fields.
      */
     window.onload = () => {
@@ -467,7 +595,7 @@
         inputGroup.classList.add("input-group");
 
         // Helper function to create an input field and attach event listeners
-        const createInputField = (id, labelText) => {
+        const createInputField = (id, labelText, matiereKey) => { // Added matiereKey parameter
           const label = document.createElement('label');
           label.textContent = labelText + ': ';
           const input = document.createElement('input');
@@ -484,9 +612,11 @@
             input.value = savedValue;
           }
 
-          // Save value to localStorage when input changes
+          // Save value to localStorage when input changes and update the note
           input.addEventListener('input', (event) => {
             localStorage.setItem(id, event.target.value);
+            updateMatiereNote(matiereKey); // Call updateMatiereNote here
+            event.target.classList.remove("invalid"); // Remove invalid class on input
           });
 
           label.appendChild(input);
@@ -495,10 +625,10 @@
 
         // Build input fields based on subject type
         if (mat.type === "emd_tp") {
-          inputGroup.appendChild(createInputField(`${key}_emd`, 'EMD'));
-          inputGroup.appendChild(createInputField(`${key}_tp`, 'TP'));
+          inputGroup.appendChild(createInputField(`${key}_emd`, 'EMD', key));
+          inputGroup.appendChild(createInputField(`${key}_tp`, 'TP', key));
         } else if (mat.type === "emd_only") {
-          inputGroup.appendChild(createInputField(`${key}_emd`, 'EMD'));
+          inputGroup.appendChild(createInputField(`${key}_emd`, 'EMD', key));
         }
         
         contentWrap.appendChild(inputGroup); // Append inputGroup to contentWrap
@@ -511,6 +641,11 @@
         div.appendChild(contentWrap); // Append contentWrap to the matiere div
 
         form.appendChild(div);
+      }
+
+      // Initialize individual matiere notes on load
+      for (const key of Object.keys(matieres)) {
+        updateMatiereNote(key);
       }
 
       // After creating all inputs, add event listener to the last one
@@ -541,10 +676,8 @@
       const parsedValue = parseFloat(v);
 
       if (v === "" || isNaN(parsedValue) || parsedValue < 0 || parsedValue > 20) {
-        inputElement.classList.add("invalid"); // Add a class to visually indicate the error
-        return null;
+        return null; // Return null for invalid values (error class handled by input listener now)
       }
-      inputElement.classList.remove("invalid"); // Remove the error class if the value is valid
       return parsedValue;
     }
 
@@ -560,11 +693,14 @@
 
       if (mat.type === "emd_tp") {
         champs = [val(key + "_emd"), val(key + "_tp")];
-        if (champs.includes(null)) return null;
-        note = (champs[0] * 0.8 + champs[1] * 0.2); // Average for EMD and TP (80% EMD, 20% TP)
+        if (!champs.includes(null)) { // Check if all required fields are valid
+          note = (champs[0] * 0.8 + champs[1] * 0.2); // Average for EMD and TP (80% EMD, 20% TP)
+        } else {
+          return null;
+        }
       } else if (mat.type === "emd_only") {
         note = val(key + "_emd");
-        if (note === null) return null;
+        // No need for 'if (note === null) return null;' here, as val() already returns null if invalid.
       }
       return note;
     }
@@ -573,34 +709,37 @@
      * Calculates the general average and updates the results in the interface.
      */
     function calculerMoyenne() {
-      let total = 0;
-      let coeffTotal = 0;
-      let sous10 = 0;
-      let matiereSous5Count = 0; // Counts subjects with a grade less than 5
-      let matiereRattrapageList = []; // List of subjects requiring re-sit
+      const resultatDiv = document.getElementById("resultat");
+      const actualResultsContent = document.getElementById("actualResultsContent");
+      
+      actualResultsContent.style.display = "none"; // Ensure results content is hidden
+      resultatDiv.style.display = "none"; // Hide the entire resultat div initially
+      
+      // Clear all invalid classes before re-validation
+      document.querySelectorAll('.input-group input').forEach(input => {
+        input.classList.remove("invalid");
+      });
 
+      // First, check for errors and mark invalid fields
       let erreur = false;
-
       for (const [key, mat] of Object.entries(matieres)) {
-        const note = calculateMatiereNote(key, mat);
-
-        if (note === null) {
-          erreur = true;
-          // We don't break the loop here, we continue to identify all erroneous fields
-        } else {
-          if (note < 10) sous10++;
-          if (note < 5) {
-            matiereSous5Count++;
-            matiereRattrapageList.push(mat.label); // Add the subject to the re-sit list
-          }
-
-          total += note * mat.coeff;
-          coeffTotal += mat.coeff;
-
-          const noteDiv = document.getElementById("note_" + key);
-          noteDiv.textContent = `Note: ${note.toFixed(2)}`;
-          noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
+        let inputIdsToValidate = [];
+        if (mat.type === "emd_tp") {
+          inputIdsToValidate = [`${key}_emd`, `${key}_tp`];
+        } else if (mat.type === "emd_only") {
+          inputIdsToValidate = [`${key}_emd`];
         }
+
+        inputIdsToValidate.forEach(id => {
+          const inputElement = document.getElementById(id);
+          const parsedValue = parseFloat(inputElement.value);
+
+          // Mark as invalid if empty or outside 0-20 range
+          if (inputElement.value === "" || isNaN(parsedValue) || parsedValue < 0 || parsedValue > 20) {
+            inputElement.classList.add("invalid");
+            erreur = true;
+          }
+        });
       }
 
       if (erreur) {
@@ -608,34 +747,88 @@
         return;
       }
 
-      const moyenne = total / coeffTotal;
-      const points = total;
-      const pointsTotalMax = 20 * coeffTotal;
-      const manquePourValidation = Math.max(0, (10 * coeffTotal) - total);
+      // If no errors, scroll to results div (only on small screens), show loading spinner, and proceed with calculation after delay
+      resultatDiv.style.display = "flex"; 
+      if (window.innerWidth <= 768) { 
+        resultatDiv.scrollIntoView({ behavior: 'smooth' }); 
+      }
+      
+      showMultiDotLoadingSpinnerInResults(); 
 
-      let validationMessage = '';
-      if (moyenne >= 10 && matiereSous5Count === 0) {
-        validationMessage = '<p style="color:green;">✅ Félicitations ! Vous avez validé cette année 🎉</p>';
-      } else if (moyenne < 10) {
-        validationMessage = `<p style="color:red;">⚠️ Vous n'avez pas encore validé. Il vous manque ${manquePourValidation.toFixed(2)} points supplémentaires pour valider.</p>`;
-      } else if (matiereSous5Count > 0) {
-        // If the average is >= 10 but there are subjects below 5, it's still a validation issue
-        validationMessage = `<p style="color:red;">⚠️ Vous n'avez pas validé à cause de matières avec une note inférieure à 5.</p>`;
+      // Dismiss the keyboard
+      if (document.activeElement && document.activeElement.blur) {
+        document.activeElement.blur();
       }
 
-      const resultat = `
-        <p>Moyenne générale: <strong>${moyenne.toFixed(2)}</strong></p>
-        <p>Total des points: ${points.toFixed(2)} / ${pointsTotalMax.toFixed(2)}</p>
-        ${matiereRattrapageList.length > 0 ? `<p style="color:red;">⚠️ Matière(s) en rattrapage (note < 5): ${matiereRattrapageList.join(", ")}</p>` : ''}
-        ${sous10 > 0 && moyenne < 10 ? `<p>${sous10} matière(s) avec moins de 10.</p>` : ''}
-        ${validationMessage}
-      `;
-      document.getElementById("resultat").innerHTML = resultat;
+      setTimeout(() => {
+        let total = 0;
+        let coeffTotal = 0;
+        let matieresRattrapageList_moins5 = [];
+        let matieresRattrapageList_entre5et10 = [];
 
-      // Smooth scroll to the results section
-      document.getElementById("resultat").scrollIntoView({ behavior: 'smooth' });
+        // Recalculate notes and populate rattrapage lists
+        for (const [key, mat] of Object.entries(matieres)) {
+          const note = calculateMatiereNote(key, mat);
+
+          if (note < 5) {
+              matieresRattrapageList_moins5.push(mat.label);
+          } else if (note < 10) { 
+              matieresRattrapageList_entre5et10.push(mat.label);
+          }
+
+          total += note * mat.coeff;
+          coeffTotal += mat.coeff;
+
+          // Update individual matiere note display with final colors
+          const noteDiv = document.getElementById("note_" + key);
+          noteDiv.textContent = `Note: ${note.toFixed(2)}`;
+          noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
+        }
+
+        hideMultiDotLoadingSpinnerInResults(); // Hide spinner after calculation is done
+
+        const moyenne = total / coeffTotal;
+        
+        let validationMessage = '';
+        let rattrapageDetails = '';
+
+        // Determine main validation message
+        if (moyenne >= 10 && matieresRattrapageList_moins5.length === 0) { 
+          validationMessage = '<p class="success-animation">✅ Félicitations ! Vous avez validé cette année 🎉</p>';
+        } else { 
+          // Specific message if average >= 10 but failed due to modules < 5
+          if (moyenne >= 10 && matieresRattrapageList_moins5.length > 0) {
+              validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année à cause de matière(s) avec une note inférieure à 5. Vous allez entrer en rattrapage.</p>`;
+          } else { // Average < 10
+              validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année. Vous allez entrer en rattrapage.</p>`;
+          }
+          
+          // Determine rattrapage details based on conditions
+          if (matieresRattrapageList_moins5.length > 0) {
+              rattrapageDetails += `<p style="color:red;">⚠️ Matière(s) en rattrapage (note < 5): ${matieresRattrapageList_moins5.join(", ")}</p>`;
+          }
+          // This part only appears if overall average < 10 AND there are modules between 5 and 10
+          if (moyenne < 10 && matieresRattrapageList_entre5et10.length > 0) {
+              rattrapageDetails += `<p class="rattrapage-orange">⚠️ Matière(s) en rattrapage (note < 10): ${matieresRattrapageList_entre5et10.join(", ")}</p>`;
+          }
+        }
+
+        const resultatContent = `
+          <p>Moyenne générale: <strong>${moyenne.toFixed(2)}</strong></p>
+          ${rattrapageDetails}
+          ${validationMessage}
+        `;
+        
+        actualResultsContent.innerHTML = resultatContent; // Set results HTML
+        actualResultsContent.style.display = "block"; // Show actual results content
+        resultatDiv.style.display = "block"; // Show results div container (ensure it's block for content flow)
+
+        // Smooth scroll to the results section (again, to ensure it's visible after content change)
+        if (window.innerWidth <= 768) { 
+          resultatDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 1000); // 1 second delay
     }
   </script>
 </body>
 </html>
-
