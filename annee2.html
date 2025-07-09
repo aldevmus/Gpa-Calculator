@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedCalculator - 2ème Année Médecine</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    /* Ensure HTML and Body take full height for background to extend */
+    html, body {
+      height: 100%; /* Make html and body fill the entire viewport height */
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #E0D9F0; /* Cool Green -> Cool Purple */
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      direction: ltr;
+      text-align: left;
+      display: flex; /* Use flexbox for overall page layout */
+      flex-direction: column; /* Stack children vertically */
+      min-height: 100vh; /* Ensure body is at least viewport height */
+      align-items: center; /* Center content horizontally */
+      padding-top: 30px; /* Space above the main title */
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+      box-sizing: border-box; /* Include padding/border in element's total width/height */
+    }
+
+    h1 {
+      text-align: center;
+      color: #5C4B8C; /* Bright Green -> Bright Purple */
+      margin: 0 20px 30px 20px; /* Adjust margin to separate from container */
+      font-size: 1.8em; /* Larger font size */
+      font-weight: 700; /* Bold font weight */
+      display: flex; /* Use flexbox for centering content within H1 (icon + text) */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      gap: 10px; /* Space between icon and text */
+      width: calc(100% - 40px); /* Adjust width to account for side margins */
+      max-width: 900px; /* Limit max width */
+    }
+
+    .container {
+      background-color: white; /* White background for the card */
+      padding: 30px; /* Ample padding */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Soft shadow for depth */
+      max-width: 900px; /* Max width for desktop */
+      width: 100%; /* Take full width of parent (body) on mobile */
+      margin: 30px auto 0 auto; /* Top margin, auto horizontal, ZERO bottom margin for mobile */
+      border-radius: 20px; /* Default rounded corners */
+      border-bottom-left-radius: 0; /* Remove bottom left radius for mobile */
+      border-bottom-right-radius: 0; /* Remove bottom right radius for mobile */
+      box-sizing: border-box; /* Ensure padding/border are included in element's total width/height */
+      flex-grow: 1; /* Allow container to grow and fill remaining vertical space on mobile */
+      display: flex; /* Make container a flex container */
+      flex-direction: column; /* Stack content inside container vertically */
+    }
+
+    /* This rule makes the area below the container white on mobile */
+    body::after {
+      content: '';
+      display: block;
+      flex-grow: 1; /* Make it fill remaining vertical space */
+      background-color: white; /* White background for the bottom part */
+      width: 100%; /* Take full width */
+      /* Only apply on mobile */
+      @media (max-width: 767px) {
+        margin-top: -1px; /* To ensure it connects seamlessly with the container */
+      }
+    }
+
+    .matiere {
+      background-color: #EDEAF5; /* Cool Green -> Cool Purple (slightly lighter) */
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column; /* Vertical by default for mobile */
+      gap: 15px;
+    }
+
+    .matiere h3 {
+      margin-top: 0;
+      color: #5C4B8C; /* Bright Green -> Bright Purple */
+      margin-bottom: 0;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* New wrapper for inputs and note */
+    .content-wrap {
+      display: flex;
+      flex-direction: column; /* Stack inputs and note vertically by default (mobile) */
+      flex-grow: 1; /* Allow it to grow in column direction */
+      gap: 10px; /* Space between input-group and note */
+    }
+
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-start;
+      flex-grow: 1; /* Allow input-group to take horizontal space if needed within content-wrap */
+      align-items: center;
+    }
+
+    .input-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    .input-group input {
+      width: 60px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      text-align: center;
+      transition: border-color 0.3s ease;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #5C4B8C; /* Bright Green -> Bright Purple */
+      box-shadow: 0 0 0 2px rgba(92, 75, 140, 0.2); /* Shadow consistent with new color */
+    }
+
+    .input-group input.invalid {
+      border-color: red;
+    }
+
+    #resultat {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 1.2em;
+      line-height: 1.6;
+    }
+
+    #resultat p {
+      margin-bottom: 8px;
+    }
+
+    button {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 30px;
+      font-size: 16px;
+      background-color: #5C4B8C; /* Bright Green -> Bright Purple */
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #4A3E70; /* Darker shade of purple on hover */
+      transform: translateY(-2px);
+    }
+
+    .note {
+      margin-top: 5px; /* Adjust or remove depending on gap from content-wrap */
+      font-weight: bold;
+      text-align: left;
+      min-width: 100px;
+    }
+
+    /* Custom error message box */
+    .message-box {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      display: none;
+      text-align: center;
+      max-width: 300px;
+      border: 1px solid #ddd;
+    }
+
+    .message-box p {
+      margin-bottom: 20px;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    .message-box button {
+      margin: 0 auto;
+      padding: 8px 20px;
+      font-size: 15px;
+      background-color: #5C4B8C; /* Button color in message box */
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .message-box button:hover {
+      background-color: #4A3E70; /* Darker shade on hover */
+    }
+
+    /* New styles for app links section */
+    .app-links {
+        margin-top: 30px;
+        text-align: center;
+        width: 100%;
+        padding-top: 20px;
+        border-top: 1px solid #eee; /* A subtle separator */
+    }
+    .app-links p {
+        color: #333;
+        font-size: 1.1em;
+        margin-bottom: 15px;
+    }
+    .links-group {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    .social-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1em;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        width: 100%; /* Full width on mobile */
+        max-width: 300px; /* Max width for consistency */
+        justify-content: center; /* Center content within the button */
+    }
+    /* SVG icon styling within links */
+    .social-link svg {
+        width: 1.3em; /* Match font-size of text */
+        height: 1.3em;
+        fill: currentColor; /* Inherit color from parent link */
+    }
+
+    .instagram {
+        background-color: #E1306C; /* Instagram brand color */
+        color: white;
+    }
+    .instagram:hover {
+        background-color: #C13584;
+        transform: translateY(-2px);
+    }
+    .google-play {
+        background-color: #5C4B8C; /* Bright Green -> Bright Purple */
+        color: white;
+    }
+    .google-play:hover {
+        background-color: #4A3E70; /* Darker shade of purple on hover */
+        transform: translateY(-2px);
+    }
+    .container-footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    }
+    .copyright-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    }
+
+    .copyright-info p {
+    margin: 0;
+    }
+
+    .footer-logo {
+    width: 30px;
+    height: 30px;
+    -webkit-user-drag: none;
+    user-drag: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+    }
+
+    .container-footer-content p:nth-child(2) {
+    margin: 0;
+    text-align: center;
+    }
+   .container-footer-content a {
+  color: #5C4B8C; /* Bright Green -> Bright Purple */
+  text-decoration: none;
+  font-weight: bold;
+    }
+    /* Desktop layout adjustments (media queries) */
+    @media (min-width: 768px) {
+      body {
+        justify-content: flex-start;
+        padding-top: 30px;
+      }
+
+      .container {
+        margin: 30px auto 50px auto;
+        border-radius: 20px;
+        flex-grow: 0;
+        width: 90%;
+        max-width: 900px;
+      }
+
+      body::after {
+        display: none;
+      }
+
+      .matiere {
+        flex-direction: row;
+        align-items: center; /* ALIGN VERTICALLY: This ensures all items are centered along the cross-axis (vertically in a row) */
+        gap: 20px; /* Maintain consistent gap between elements */
+      }
+
+      .matiere h3 {
+        min-width: 160px;
+        text-align: left;
+        flex-shrink: 0; /* Prevent h3 from shrinking too much */
+      }
+
+      .input-group {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        flex-grow: 1; /* Allow input-group to take available space */
+        min-width: 0; /* Allow it to shrink if needed */
+      }
+
+      .input-group label {
+        min-width: unset;
+      }
+
+      .input-group input {
+        width: 80px;
+      }
+
+      .note {
+        text-align: left;
+        flex-shrink: 0; /* Prevent the note from shrinking */
+        margin-top: 0; /* Reset margin from mobile default */
+      }
+
+      .links-group {
+          flex-direction: row; /* Display side-by-side on desktop */
+          gap: 20px;
+      }
+      .social-link {
+          width: auto; /* Let content determine width */
+          padding: 12px 25px; /* Adjust padding for desktop */
+      }
+      .container-footer-content {
+        flex-direction: column;
+      }
+
+      .copyright-info {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🩺 MedCalculator - 2ème Année Médecine</h1>
+    </header>
+    <form id="gpa-form"></form>
+    <button onclick="calculerMoyenne()">Calculer</button>
+    <div id="resultat"></div>
+
+    <div class="app-links">
+        <p>Connectez-vous et téléchargez notre application :</p>
+        <div class="links-group">
+            <a href="https://www.instagram.com/aldevmus/profilecard/?igsh=b2M5azVpb2d1b2Fn" target="_blank" class="social-link instagram">
+                <svg viewBox="0 0 448 512" fill="currentColor" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram"><path d="M224.1 12.6C100.9 12.6 0 113.5 0 236.8 0 358.1 98.9 457 220.2 457h.3c123.3 0 224.1-100.9 224.1-224.1 0-123.3-100.9-224.1-224.1-224.1zm127.3 359.3c-23.2 23.2-56.1 36-90.7 36s-67.5-12.8-90.7-36c-23.2-23.2-36-56.1-36-90.7s12.8-67.5 36-90.7c23.2-23.2 56.1-36 90.7-36s67.5 12.8 90.7 36c23.2 23.2 36 56.1 36 90.7s-12.8 67.5-36 90.7zM185 236.8c0-21.7 17.6-39.3 39.3-39.3s39.3 17.6 39.3 39.3c0 21.7-17.6 39.3-39.3 39.3s-39.3-17.6-39.3-39.3zM372.4 135.5c-15.6 0-28.3-12.7-28.3-28.3s12.7-28.3 28.3-28.3 28.3 12.7 28.3 28.3-12.7 28.3-28.3 28.3z"/></svg>
+                Instagram
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.medcalculator.aldevmus" target="_blank" class="social-link google-play">
+                <svg viewBox="0 0 512 512" fill="currentColor" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google-play"><path d="M325.3 234.3l-105.4 61.2c-5.1 3-11.3-.2-11.3-6.1V169.8c0-5.9 6.2-9.1 11.3-6.1l105.4 61.2c5.1 3.1 5.1 9.2 0 12.3zM454.4 126.3l-34.4-19.9c-11-6.4-24.5-5.2-34.4 3.2L249.2 249.1l-105.7-61.4c-9.9-5.7-22.6-5.8-32.5-.1L8.6 206.5c-8.9 5.2-9.7 17.7-1.7 26l119.7 122.9c8 8.2 20.9 9.3 30.6 2.4l105.7-61.4 136.4 137.9c9.9 10 23.4 11.2 34.4 3.2l34.4-19.9c11-6.4 12.2-20 3.2-30l-136.4-137.9 136.4-137.9c8.9-10.1 7.7-23.7-3.2-30.1z"/></svg>
+                Télécharger MedCalculator
+            </a>
+        </div>
+    </div>
+    <div class="container-footer-content">
+    <div class="copyright-info">
+        <img src="Images/logo.png" alt="Logo MedCalculator" class="footer-logo">
+        <p>© 2025 Tous droits réservés par MedCalculator.</p>
+    </div>
+    <p>Réalisé par <a href="https://www.instagram.com/aldevmus/profilecard/?igsh=b2M5azVpb2d1b2Fn" target="_blank">aldevmus</a></p>
+      <script>
+  document.addEventListener('contextmenu', event => event.preventDefault());
+</script>
+      </div>
+  </div>
+  <div id="customMessageBox" class="message-box">
+    <p id="messageBoxText"></p>
+    <button onclick="hideMessageBox()">OK</button>
+  </div>
+  <script>
+    // Definition of subjects, their coefficients, and types for the 2nd year
+    const matieres = {
+      neurologie: { label: "Neurologie", coeff: 4, type: "emd_tp" },
+      cardiologie: { label: "Cardiologie", coeff: 4, type: "emd_tp" },
+      digestif: { label: "Digestif", coeff: 4, type: "emd_tp" },
+      urinaire: { label: "Urinaire", coeff: 4, type: "emd_tp" },
+      endocrinologie: { label: "Endocrinologie", coeff: 4, type: "emd_tp" },
+      genetique: { label: "Génétique", coeff: 2, type: "emd_only" },
+      immunologie: { label: "Immunologie", coeff: 2, type: "emd_only" },
+    };
+
+    /**
+     * Displays a custom message instead of alert().
+     * @param {string} message - The message to display.
+     */
+    function showMessageBox(message) {
+      const messageBox = document.getElementById("customMessageBox");
+      const messageBoxText = document.getElementById("messageBoxText");
+      messageBoxText.textContent = message;
+      messageBox.style.display = "block";
+    }
+
+    /**
+     * Hides the custom error message box.
+     */
+    function hideMessageBox() {
+      document.getElementById("customMessageBox").style.display = "none";
+    }
+
+    /**
+     * This function is executed when the page loads to dynamically create the input fields.
+     */
+    window.onload = () => {
+      const form = document.getElementById("gpa-form");
+      for (const [key, mat] of Object.entries(matieres)) {
+        const div = document.createElement("div");
+        div.classList.add("matiere");
+
+        const h3 = document.createElement("h3");
+        h3.textContent = mat.label;
+        div.appendChild(h3);
+
+        const contentWrap = document.createElement("div");
+        contentWrap.classList.add("content-wrap");
+
+        const inputGroup = document.createElement("div");
+        inputGroup.classList.add("input-group");
+
+        // Helper function to create an input field and attach event listeners
+        const createInputField = (id, labelText) => {
+          const label = document.createElement('label');
+          label.textContent = labelText + ': ';
+          const input = document.createElement('input');
+          input.type = "number";
+          input.id = id;
+          input.min = "0";
+          input.max = "20";
+          input.step = "0.01";
+          input.setAttribute('autocomplete', 'off'); // Disable autocomplete for keyboard behavior
+
+          // Load saved value from localStorage
+          const savedValue = localStorage.getItem(id);
+          if (savedValue !== null) {
+            input.value = savedValue;
+          }
+
+          // Save value to localStorage when input changes
+          input.addEventListener('input', (event) => {
+            localStorage.setItem(id, event.target.value);
+          });
+
+          label.appendChild(input);
+          return label;
+        };
+
+        // Build input fields based on subject type
+        if (mat.type === "emd_tp") {
+          inputGroup.appendChild(createInputField(`${key}_emd`, 'EMD'));
+          inputGroup.appendChild(createInputField(`${key}_tp`, 'TP'));
+        } else if (mat.type === "emd_only") {
+          inputGroup.appendChild(createInputField(`${key}_emd`, 'EMD'));
+        }
+        
+        contentWrap.appendChild(inputGroup); // Append inputGroup to contentWrap
+
+        const noteDiv = document.createElement("div");
+        noteDiv.id = `note_${key}`;
+        noteDiv.classList.add("note");
+        contentWrap.appendChild(noteDiv); // Append noteDiv to contentWrap
+
+        div.appendChild(contentWrap); // Append contentWrap to the matiere div
+
+        form.appendChild(div);
+      }
+
+      // After creating all inputs, add event listener to the last one
+      const inputElements = form.querySelectorAll('input:not([type="button"])');
+      if (inputElements.length > 0) {
+        const lastInput = inputElements.length > 0 ? inputElements.item(inputElements.length - 1) : null;
+        if (lastInput) {
+          lastInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault(); // Prevent default form submission (if any)
+              calculerMoyenne();
+            }
+          });
+        }
+      }
+    };
+
+    /**
+     * Gets the value of an input field and checks its validity.
+     * @param {string} id - The ID of the input field.
+     * @returns {number|null} The numeric value or null if invalid.
+     */
+    function val(id) {
+      const inputElement = document.getElementById(id);
+      if (!inputElement) return null; // To ensure the element exists
+
+      const v = inputElement.value;
+      const parsedValue = parseFloat(v);
+
+      if (v === "" || isNaN(parsedValue) || parsedValue < 0 || parsedValue > 20) {
+        inputElement.classList.add("invalid"); // Add a class to visually indicate the error
+        return null;
+      }
+      inputElement.classList.remove("invalid"); // Remove the error class if the value is valid
+      return parsedValue;
+    }
+
+    /**
+     * Calculates the subject's grade based on its type and input fields.
+     * @param {string} key - The subject key.
+     * @param {object} mat - The subject object.
+     * @returns {number|null} The subject's grade or null if fields are missing/invalid.
+     */
+    function calculateMatiereNote(key, mat) {
+      let note = null;
+      let champs = [];
+
+      if (mat.type === "emd_tp") {
+        champs = [val(key + "_emd"), val(key + "_tp")];
+        if (champs.includes(null)) return null;
+        note = (champs[0] * 0.8 + champs[1] * 0.2); // Average for EMD and TP (80% EMD, 20% TP)
+      } else if (mat.type === "emd_only") {
+        note = val(key + "_emd");
+        if (note === null) return null;
+      }
+      return note;
+    }
+
+    /**
+     * Calculates the general average and updates the results in the interface.
+     */
+    function calculerMoyenne() {
+      let total = 0;
+      let coeffTotal = 0;
+      let sous10 = 0;
+      let matiereSous5Count = 0; // Counts subjects with a grade less than 5
+      let matiereRattrapageList = []; // List of subjects requiring re-sit
+
+      let erreur = false;
+
+      for (const [key, mat] of Object.entries(matieres)) {
+        const note = calculateMatiereNote(key, mat);
+
+        if (note === null) {
+          erreur = true;
+          // We don't break the loop here, we continue to identify all erroneous fields
+        } else {
+          if (note < 10) sous10++;
+          if (note < 5) {
+            matiereSous5Count++;
+            matiereRattrapageList.push(mat.label); // Add the subject to the re-sit list
+          }
+
+          total += note * mat.coeff;
+          coeffTotal += mat.coeff;
+
+          const noteDiv = document.getElementById("note_" + key);
+          noteDiv.textContent = `Note: ${note.toFixed(2)}`;
+          noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
+        }
+      }
+
+      if (erreur) {
+        showMessageBox("Veuillez remplir tous les champs avec des valeurs valides (entre 0 et 20) avant de calculer.");
+        return;
+      }
+
+      const moyenne = total / coeffTotal;
+      const points = total;
+      const pointsTotalMax = 20 * coeffTotal;
+      const manquePourValidation = Math.max(0, (10 * coeffTotal) - total);
+
+      let validationMessage = '';
+      if (moyenne >= 10 && matiereSous5Count === 0) {
+        validationMessage = '<p style="color:green;">✅ Félicitations ! Vous avez validé cette année 🎉</p>';
+      } else if (moyenne < 10) {
+        validationMessage = `<p style="color:red;">⚠️ Vous n'avez pas encore validé. Il vous manque ${manquePourValidation.toFixed(2)} points supplémentaires pour valider.</p>`;
+      } else if (matiereSous5Count > 0) {
+        // If the average is >= 10 but there are subjects below 5, it's still a validation issue
+        validationMessage = `<p style="color:red;">⚠️ Vous n'avez pas validé à cause de matières avec une note inférieure à 5.</p>`;
+      }
+
+      const resultat = `
+        <p>Moyenne générale: <strong>${moyenne.toFixed(2)}</strong></p>
+        <p>Total des points: ${points.toFixed(2)} / ${pointsTotalMax.toFixed(2)}</p>
+        ${matiereRattrapageList.length > 0 ? `<p style="color:red;">⚠️ Matière(s) en rattrapage (note < 5): ${matiereRattrapageList.join(", ")}</p>` : ''}
+        ${sous10 > 0 && moyenne < 10 ? `<p>${sous10} matière(s) avec moins de 10.</p>` : ''}
+        ${validationMessage}
+      `;
+      document.getElementById("resultat").innerHTML = resultat;
+
+      // Smooth scroll to the results section
+      document.getElementById("resultat").scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
