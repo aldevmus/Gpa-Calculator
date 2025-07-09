@@ -648,19 +648,23 @@
         updateMatiereNote(key);
       }
 
-      // After creating all inputs, add event listener to the last one
-      const inputElements = form.querySelectorAll('input:not([type="button"])');
-      if (inputElements.length > 0) {
-        const lastInput = inputElements.length > 0 ? inputElements.item(inputElements.length - 1) : null;
-        if (lastInput) {
-          lastInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault(); // Prevent default form submission (if any)
+      // NEW LOGIC FOR ENTER KEY NAVIGATION
+      const allInputElements = form.querySelectorAll('input[type="number"]'); // Select all number inputs
+      allInputElements.forEach((input, index) => {
+        input.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form submission
+
+            if (index < allInputElements.length - 1) {
+              // If not the last input, move focus to the next one
+              allInputElements[index + 1].focus();
+            } else {
+              // If it's the last input, trigger calculation
               calculerMoyenne();
             }
-          });
-        }
-      }
+          }
+        });
+      });
     };
 
     /**
@@ -832,3 +836,4 @@
   </script>
 </body>
 </html>
+
