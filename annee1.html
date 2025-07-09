@@ -510,7 +510,7 @@
       biostatistiques: { label: "Biostatistiques", coeff: 2, type: "emd_tp2" },
       cytologie: { label: "Cytologie", coeff: 2, type: "emd_tp2" },
       histologie: { label: "Histologie", coeff: 1, type: "emd1" },
-      embryologie: { label: "Embryologie", coeff: 1, type: "emd1" }, // Corrected missing label value
+      embryologie: { label: "Embryologie", coeff: 1, type: "emd1" }, 
       physiologie: { label: "Physiologie", coeff: 1, type: "emd2" },
       ssh: { label: "SSH", coeff: 1, type: "ssh" },
     };
@@ -598,7 +598,7 @@
         inputGroup.classList.add("input-group");
 
         // Fonction d'aide pour créer un champ de saisie et attacher des écouteurs d'événements
-        const createInputField = (id, labelText, matiereKey) => { // Added matiereKey parameter
+        const createInputField = (id, labelText, matiereKey) => { 
           const label = document.createElement('label');
           label.textContent = labelText + ': ';
           const input = document.createElement('input');
@@ -618,7 +618,7 @@
           // Enregistrer la valeur dans localStorage lors du changement de l'input et mettre à jour la note
           input.addEventListener('input', (event) => {
             localStorage.setItem(id, event.target.value);
-            updateMatiereNote(matiereKey); // Call updateMatiereNote here
+            updateMatiereNote(matiereKey); 
             event.target.classList.remove("invalid"); // Remove invalid class on input
           });
 
@@ -803,9 +803,8 @@
       }
 
       // If no errors, scroll to results div, show loading spinner, and proceed with calculation after delay
-      resultatDiv.style.display = "flex"; // Show resultatDiv as flex container first to ensure it takes space for scrolling and spinner
-      // Removed the window.innerWidth condition to ensure scrolling on all screen sizes
-      resultatDiv.scrollIntoView({ behavior: 'smooth' }); // Scroll to results div
+      resultatDiv.style.display = "flex"; 
+      resultatDiv.scrollIntoView({ behavior: 'smooth' }); 
       
       showMultiDotLoadingSpinnerInResults();
 
@@ -842,9 +841,13 @@
         hideMultiDotLoadingSpinnerInResults(); // Hide spinner after calculation is done
 
         const moyenne = total / coeffTotal;
+        const totalPoints = moyenne * 20; // Corrected: Calculate total points based on average * 20
+        const pointsToValidate = 160; // Validation threshold remains 160
+        const maxPossiblePoints = 320; // Maximum possible points (20 * 16 coefficients)
         
         let validationMessage = '';
         let rattrapageDetails = '';
+        let pointsMessage = `<p>Points totaux: <strong>${totalPoints.toFixed(2)} / ${maxPossiblePoints}</strong></p>`; // Display total points out of 320
 
         // Determine main validation message
         if (moyenne >= 10 && matieresRattrapageList_moins5.length === 0) { // Validated if average >= 10 AND no modules below 5
@@ -865,10 +868,17 @@
           if (moyenne < 10 && matieresRattrapageList_entre5et10.length > 0) {
               rattrapageDetails += `<p class="rattrapage-orange">⚠️ Matière(s) en rattrapage (note < 10): ${matieresRattrapageList_entre5et10.join(", ")}</p>`;
           }
+
+          // Add points needed message if not validated (based on 160 threshold)
+          if (totalPoints < pointsToValidate) {
+              const pointsNeeded = pointsToValidate - totalPoints;
+              pointsMessage += `<p style="color:red;">Il vous manque <strong>${pointsNeeded.toFixed(2)}</strong> points pour valider l'année.</p>`;
+          }
         }
 
         const resultatContent = `
           <p>Moyenne générale: <strong>${moyenne.toFixed(2)}</strong></p>
+          ${pointsMessage}
           ${rattrapageDetails}
           ${validationMessage}
         `;
@@ -877,11 +887,10 @@
         actualResultsContent.style.display = "block"; // Show actual results content
         resultatDiv.style.display = "block"; // Show results div container (ensure it's block for content flow)
 
-        // Smooth scroll to the results section (again, to ensure it's visible after content change)
-        // Removed the window.innerWidth condition to ensure scrolling on all screen sizes
-        resultatDiv.scrollIntoView({ behavior: 'smooth' });
+        resultatDiv.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll to the results section (always scroll)
       }, 1000); // 1 second delay
     }
   </script>
 </body>
 </html>
+
