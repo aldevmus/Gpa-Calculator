@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MedCalculator - 4ème Année Médecine</title>
+  <title>MedCalculator</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
@@ -15,7 +15,7 @@
     }
 
     body {
-      background-color: #FCE8E8; /* Light, soft red background */
+      background-color: #e3f6e5; /* Green background for the entire page */
       font-family: 'Inter', sans-serif;
       margin: 0;
       padding: 0;
@@ -32,7 +32,7 @@
 
     h1 {
       text-align: center;
-      color: #CC3333; /* Strong, clear red for headings */
+      color: #225e3b; /* Dark green color */
       margin: 0 20px 30px 20px; /* Adjust margin to separate from container */
       font-size: 1.8em; /* Larger font size */
       font-weight: 700; /* Bold font weight */
@@ -73,8 +73,8 @@
       }
     }
 
-    .module { /* Changed from .matiere */
-      background-color: #FFF5F5; /* Even lighter red, almost white for subject containers */
+    .matiere {
+      background-color: #d7f2dc;
       padding: 20px;
       border-radius: 15px;
       margin-bottom: 20px;
@@ -83,9 +83,9 @@
       gap: 15px;
     }
 
-    .module h3 { /* Changed from .matiere h3 */
+    .matiere h3 {
       margin-top: 0;
-      color: #CC3333; /* Strong, clear red for subject headings */
+      color: #134c2e;
       margin-bottom: 0;
       font-weight: 600;
       flex-shrink: 0;
@@ -104,6 +104,7 @@
       flex-wrap: wrap;
       gap: 10px;
       justify-content: flex-start;
+      flex-grow: 1; /* Allow input-group to take horizontal space if needed within content-wrap */
       align-items: center;
     }
 
@@ -119,7 +120,7 @@
       width: 60px;
       padding: 8px 10px;
       border-radius: 12px;
-      border: 1px solid #ccc; /* Default neutral border */
+      border: 1px solid #ccc;
       font-size: 14px;
       text-align: center;
       transition: border-color 0.3s ease;
@@ -127,12 +128,12 @@
 
     .input-group input:focus {
       outline: none;
-      border-color: #CC3333; /* Red border on focus */
-      box-shadow: 0 0 0 2px rgba(204, 51, 51, 0.2); /* Red shadow on focus */
+      border-color: #1d7a3c;
+      box-shadow: 0 0 0 2px rgba(29, 122, 60, 0.2);
     }
 
     .input-group input.invalid {
-      border-color: red; /* Red border for invalid state */
+      border-color: red;
     }
 
     #resultat {
@@ -149,7 +150,7 @@
       margin-bottom: 8px;
     }
 
-    /* Multi-dot Loading Spinner within #resultat */
+    /* Multi-dot Loading Spinner within #resultat (from annee4) */
     .dot-spinner-in-results {
       display: flex;
       justify-content: center;
@@ -178,19 +179,19 @@
       animation: bounce 0.8s infinite ease-in-out; /* Bounce animation */
     }
 
-    /* Specific dot colors and animation delays (using the red tones from annee4) */
-    .dot:nth-child(1) { background-color: #CC3333; /* Strong red from annee4 H1 */ animation-delay: 0s; }
-    .dot:nth-child(2) { background-color: #D9534F; /* Slightly lighter red */ animation-delay: 0.1s; }
-    .dot:nth-child(3) { background-color: #E6736F; /* Even lighter red */ animation-delay: 0.2s; }
-    .dot:nth-child(4) { background-color: #F0A09E; /* Light red */ animation-delay: 0.3s; }
-    .dot:nth-child(5) { background-color: #F7CDC9; /* Very light red */ animation-delay: 0.4s; }
+    /* Specific dot colors and animation delays (using heading colors from annee4 but adapting them) */
+    .dot:nth-child(1) { background-color: #225e3b; /* Dark Green from annee1 H1 */ animation-delay: 0s; }
+    .dot:nth-child(2) { background-color: #1d7a3c; /* Green from annee1 button */ animation-delay: 0.1s; }
+    .dot:nth-child(3) { background-color: #4CAF50; /* Google Play green from annee1 */ animation-delay: 0.2s; }
+    .dot:nth-child(4) { background-color: #66BB6A; /* Lighter Green (new heading-like) */ animation-delay: 0.3s; }
+    .dot:nth-child(5) { background-color: #81C784; /* Even lighter Green (new heading-like) */ animation-delay: 0.4s; }
 
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-20px); } /* Updated: Bounce height to match new dot size */
     }
 
-    /* Animation for success message */
+    /* Animation for success message (from annee4) */
     @keyframes pulse-success {
       0% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.05); opacity: 0.9; }
@@ -199,10 +200,10 @@
 
     .success-animation {
       animation: pulse-success 0.8s ease-out;
-      color: #28A745 !important; /* Brighter green for success */
+      color: #28A745 !important; /* Brighter green for success (standard green) */
     }
 
-    /* Animation for failure message */
+    /* Animation for failure message (from annee4) */
     @keyframes shake-failure {
       0%, 100% { transform: translateX(0); }
       10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
@@ -211,10 +212,10 @@
 
     .failure-animation {
       animation: shake-failure 0.5s ease-in-out;
-      color: #DC3545 !important; /* Brighter red for failure */
+      color: #DC3545 !important; /* Brighter red for failure (standard red) */
     }
 
-    /* Style for rattrapage list with note < 10 */
+    /* Style for rattrapage list with note < 10 (from annee4) */
     .rattrapage-orange {
         color: orange;
     }
@@ -224,7 +225,7 @@
       margin: 30px auto;
       padding: 12px 30px;
       font-size: 16px;
-      background-color: #CC3333; /* Red button */
+      background-color: #1d7a3c;
       color: white;
       border: none;
       border-radius: 10px;
@@ -234,7 +235,7 @@
     }
 
     button:hover {
-      background-color: #A02020; /* Darker red on hover */
+      background-color: #166130;
       transform: translateY(-2px);
     }
 
@@ -272,7 +273,7 @@
       margin: 0 auto;
       padding: 8px 20px;
       font-size: 15px;
-      background-color: #CC3333; /* Red button in message box */
+      background-color: #007bff;
       color: white;
       border: none;
       border-radius: 8px;
@@ -281,7 +282,7 @@
     }
 
     .message-box button:hover {
-      background-color: #A02020; /* Darker red on hover */
+      background-color: #0056b3;
     }
 
     /* New styles for app links section */
@@ -336,11 +337,11 @@
         transform: translateY(-2px);
     }
     .google-play {
-        background-color: #CC3333; /* Red for Google Play button */
+        background-color: #4CAF50; /* Google Play green */
         color: white;
     }
     .google-play:hover {
-        background-color: #A02020; /* Darker red on hover */
+        background-color: #449D48;
         transform: translateY(-2px);
     }
     .container-footer-content {
@@ -378,7 +379,7 @@
     text-align: center;
     }
    .container-footer-content a {
-  color: #CC3333; /* Red for footer link */
+  color: #1d7a3c;
   text-decoration: none;
   font-weight: bold;
     }
@@ -401,13 +402,13 @@
         display: none;
       }
 
-      .module { /* Changed from .matiere */
+      .matiere {
         flex-direction: row;
         align-items: center; /* ALIGN VERTICALLY: This ensures all items are centered along the cross-axis (vertically in a row) */
         gap: 20px; /* Maintain consistent gap between elements */
       }
 
-      .module h3 { /* Changed from .matiere h3 */
+      .matiere h3 {
         min-width: 160px;
         text-align: left;
         flex-shrink: 0; /* Prevent h3 from shrinking too much */
@@ -416,7 +417,8 @@
       .input-group {
         flex-wrap: nowrap;
         justify-content: flex-start;
-        align-items: center;
+        flex-grow: 1; /* Allow input-group to take available space */
+        min-width: 0; /* Allow it to shrink if needed */
       }
 
       .input-group label {
@@ -454,7 +456,7 @@
 <body>
   <div class="container">
     <header>
-      <h1>🩺 MedCalculator - 4ème Année Médecine</h1>
+      <h1>🩺 MedCalculator - 1ère Année Médecine</h1>
     </header>
     <form id="gpa-form"></form>
     <button onclick="calculerMoyenne()">Calculer</button>
@@ -494,27 +496,28 @@
 </script>
       </div>
   </div>
-
   <div id="customMessageBox" class="message-box">
     <p id="messageBoxText"></p>
     <button onclick="hideMessageBox()">OK</button>
   </div>
-
   <script>
-    // Definition of modules, their coefficients, and types for the 4th year
-    // All modules now have a coefficient of 1 as requested.
-    const modules = { /* Changed from matieres */
-      cardio: { label: "Cardio", coeff: 1, type: "emd_ecos" },
-      pneumo: { label: "Pneumo", coeff: 1, type: "emd_ecos" },
-      neuro: { label: "Neuro", coeff: 1, type: "emd_ecos" },
-      hemato: { label: "Hémato", coeff: 1, type: "emd_ecos" },
-      gastro: { label: "Gastro", coeff: 1, type: "emd_ecos" },
-      maladie_infectieuses: { label: "Maladie infectieuses", coeff: 1, type: "emd_ecos" },
+    // Définition des matières, de leurs coefficients et types
+    const matieres = {
+      anatomy: { label: "Anatomie", coeff: 2, type: "tp" },
+      biophysique: { label: "Biophysique", coeff: 2, type: "tp" },
+      chimie: { label: "Chimie", coeff: 2, type: "tp" },
+      biochimie: { label: "Biochimie", coeff: 2, type: "emd" },
+      biostatistiques: { label: "Biostatistiques", coeff: 2, type: "emd_tp2" },
+      cytologie: { label: "Cytologie", coeff: 2, type: "emd_tp2" },
+      histologie: { label: "Histologie", coeff: 1, type: "emd1" },
+      embryologie: { label: "Embryologie", coeff: 1, type: "emd1" }, // Corrected missing label value
+      physiologie: { label: "Physiologie", coeff: 1, type: "emd2" },
+      ssh: { label: "SSH", coeff: 1, type: "ssh" },
     };
 
     /**
-     * Displays a custom message instead of alert().
-     * @param {string} message - The message to display.
+     * Affiche un message personnalisé au lieu d'une alerte().
+     * @param {string} message - Le message à afficher.
      */
     function showMessageBox(message) {
       const messageBox = document.getElementById("customMessageBox");
@@ -524,30 +527,29 @@
     }
 
     /**
-     * Hides the custom error message box.
+     * Masque la boîte de message d'erreur personnalisée.
      */
     function hideMessageBox() {
       document.getElementById("customMessageBox").style.display = "none";
     }
 
     /**
-     * Updates the individual module note display.
-     * This function is called when EMD or Écos inputs change.
-     * @param {string} key - The module key.
+     * Met à jour l'affichage de la note individuelle de la matière.
+     * Cette fonction est appelée lorsque les entrées EMD ou TP changent.
+     * @param {string} key - La clé de la matière.
      */
-    function updateModuleNote(key) {
-      const mod = modules[key];
-      if (!mod) return;
+    function updateMatiereNote(key) {
+      const mat = matieres[key];
+      if (!mat) return;
 
       const noteDiv = document.getElementById("note_" + key);
-      const note = calculateModuleNote(key, mod);
+      const note = calculateMatiereNote(key, mat);
 
       if (note !== null) {
         noteDiv.textContent = `Note: ${note.toFixed(2)}`;
-        // Keeping colors as per annee4 design, but updated based on average for visibility
         noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
       } else {
-        noteDiv.textContent = ''; // Clear note if inputs are incomplete or invalid
+        noteDiv.textContent = ''; // Effacer la note si les entrées sont incomplètes ou invalides
       }
     }
 
@@ -577,16 +579,16 @@
     }
 
     /**
-     * This function is executed when the page loads to dynamically create the input fields.
+     * Cette fonction est exécutée au chargement de la page pour créer dynamiquement les champs de saisie.
      */
     window.onload = () => {
       const form = document.getElementById("gpa-form");
-      for (const [key, mod] of Object.entries(modules)) {
+      for (const [key, mat] of Object.entries(matieres)) {
         const div = document.createElement("div");
-        div.classList.add("module");
+        div.classList.add("matiere");
 
         const h3 = document.createElement("h3");
-        h3.textContent = mod.label;
+        h3.textContent = mat.label;
         div.appendChild(h3);
 
         const contentWrap = document.createElement("div");
@@ -595,8 +597,8 @@
         const inputGroup = document.createElement("div");
         inputGroup.classList.add("input-group");
 
-        // Helper function to create an input field and attach event listeners
-        const createInputField = (id, labelText, moduleKey) => {
+        // Fonction d'aide pour créer un champ de saisie et attacher des écouteurs d'événements
+        const createInputField = (id, labelText, matiereKey) => { // Added matiereKey parameter
           const label = document.createElement('label');
           label.textContent = labelText + ': ';
           const input = document.createElement('input');
@@ -605,32 +607,47 @@
           input.min = "0";
           input.max = "20";
           input.step = "0.01";
-          input.setAttribute('autocomplete', 'off'); // Disable autocomplete for keyboard behavior
+          input.setAttribute('autocomplete', 'off'); // Désactiver l'autocomplétion pour le comportement du clavier
 
-          // Load saved value from localStorage
+          // Charger la valeur enregistrée depuis localStorage
           const savedValue = localStorage.getItem(id);
           if (savedValue !== null) {
             input.value = savedValue;
           }
 
-          // Save value to localStorage and update individual module note on input
+          // Enregistrer la valeur dans localStorage lors du changement de l'input et mettre à jour la note
           input.addEventListener('input', (event) => {
             localStorage.setItem(id, event.target.value);
-            updateModuleNote(moduleKey);
-            // Remove invalid class on input change
-            event.target.classList.remove("invalid");
+            updateMatiereNote(matiereKey); // Call updateMatiereNote here
+            event.target.classList.remove("invalid"); // Remove invalid class on input
           });
 
           label.appendChild(input);
           return label;
         };
 
-        // Build input fields based on module type
-        if (mod.type === "emd_ecos") {
-          inputGroup.appendChild(createInputField(`${key}_emd`, 'EMD', key));
-          inputGroup.appendChild(createInputField(`${key}_ecos`, 'Écos', key));
+        // Construction des champs de saisie en fonction du type de matière
+        if (mat.type === "tp") {
+          inputGroup.appendChild(createInputField(`${key}_emd1`, 'EMD1', key));
+          inputGroup.appendChild(createInputField(`${key}_tp1`, 'TP1', key));
+          inputGroup.appendChild(createInputField(`${key}_emd2`, 'EMD2', key));
+          inputGroup.appendChild(createInputField(`${key}_tp2`, 'TP2', key));
+        } else if (mat.type === "emd") {
+          inputGroup.appendChild(createInputField(`${key}_emd1`, 'EMD1', key));
+          inputGroup.appendChild(createInputField(`${key}_emd2`, 'EMD2', key));
+        } else if (mat.type === "emd_tp2") {
+          inputGroup.appendChild(createInputField(`${key}_emd1`, 'EMD1', key));
+          inputGroup.appendChild(createInputField(`${key}_emd2`, 'EMD2', key));
+          inputGroup.appendChild(createInputField(`${key}_tp2`, 'TP2', key));
+        } else if (mat.type === "emd1") {
+          inputGroup.appendChild(createInputField(`${key}_emd1`, 'EMD1', key));
+        } else if (mat.type === "emd2") {
+          inputGroup.appendChild(createInputField(`${key}_emd2`, 'EMD2', key));
+        } else if (mat.type === "ssh") {
+          inputGroup.appendChild(createInputField(`${key}_emd2`, 'EMD2', key));
+          inputGroup.appendChild(createInputField(`${key}_td`, 'TD', key));
         }
-        
+
         contentWrap.appendChild(inputGroup); // Append inputGroup to contentWrap
 
         const noteDiv = document.createElement("div");
@@ -638,14 +655,14 @@
         noteDiv.classList.add("note");
         contentWrap.appendChild(noteDiv); // Append noteDiv to contentWrap
 
-        div.appendChild(contentWrap); // Append contentWrap to the module div
+        div.appendChild(contentWrap); // Append contentWrap to the matiere div
 
         form.appendChild(div);
       }
 
-      // Initialize individual module notes on load
-      for (const key of Object.keys(modules)) {
-        updateModuleNote(key);
+      // Initialize individual matiere notes on load
+      for (const key of Object.keys(matieres)) {
+        updateMatiereNote(key);
       }
 
       // NEW LOGIC FOR ENTER KEY NAVIGATION
@@ -668,13 +685,13 @@
     };
 
     /**
-     * Gets the value of an input field and checks its validity.
-     * @param {string} id - The ID of the input field.
-     * @returns {number|null} The numeric value or null if invalid.
+     * Récupère la valeur d'un champ de saisie et vérifie sa validité.
+     * @param {string} id - L'ID du champ de saisie.
+     * @returns {number|null} La valeur numérique ou null si invalide.
      */
     function val(id) {
       const inputElement = document.getElementById(id);
-      if (!inputElement) return null; // To ensure the element exists
+      if (!inputElement) return null; // Pour s'assurer que l'élément existe
 
       const v = inputElement.value;
       const parsedValue = parseFloat(v);
@@ -687,29 +704,55 @@
     }
 
     /**
-     * Calculates the module's note based on its type and input fields.
-     * @param {string} key - The module key.
-     * @param {object} mod - The module object.
-     * @returns {number|null} The module's note or null if fields are missing/are invalid.
+     * Calcule la note de la matière en fonction de son type et des champs de saisie.
+     * @param {string} key - La clé de la matière.
+     * @param {object} mat - L'objet matière.
+     * @returns {number|null} La note de la matière ou null s'il manque des champs/sont invalides.
      */
-    function calculateModuleNote(key, mod) {
+    function calculateMatiereNote(key, mat) {
       let note = null;
       let champs = [];
 
-      if (mod.type === "emd_ecos") {
-        champs = [val(key + "_emd"), val(key + "_ecos")];
-        // Only calculate if both EMD and Écos are valid numbers
-        if (champs[0] !== null && champs[1] !== null) {
-          note = (champs[0] * 0.7 + champs[1] * 0.3); // Calculation for EMD and Écos (70% EMD, 30% Écos)
+      if (mat.type === "tp") {
+        champs = [val(key + "_emd1"), val(key + "_tp1"), val(key + "_emd2"), val(key + "_tp2")];
+        // Only calculate if all TP fields are valid numbers
+        if (!champs.includes(null)) {
+          note = ((champs[0] * 0.8 + champs[1] * 0.2) + (champs[2] * 0.8 + champs[3] * 0.2)) / 2;
         } else {
-          return null; // Return null if any input is invalid or missing
+          return null;
+        }
+      } else if (mat.type === "emd") {
+        champs = [val(key + "_emd1"), val(key + "_emd2")];
+        if (!champs.includes(null)) {
+          note = (champs[0] + champs[1]) / 2;
+        } else {
+          return null;
+        }
+      } else if (mat.type === "emd_tp2") {
+        champs = [val(key + "_emd1"), val(key + "_emd2"), val(key + "_tp2")];
+        if (!champs.includes(null)) {
+          const moyenne = (champs[0] + champs[1]) / 2;
+          note = moyenne * 0.8 + champs[2] * 0.2;
+        } else {
+          return null;
+        }
+      } else if (mat.type === "emd1") {
+        note = val(key + "_emd1");
+      } else if (mat.type === "emd2") {
+        note = val(key + "_emd2");
+      } else if (mat.type === "ssh") {
+        champs = [val(key + "_emd2"), val(key + "_td")];
+        if (!champs.includes(null)) {
+          note = champs[0] * 0.6 + champs[1] * 0.4;
+        } else {
+          return null;
         }
       }
       return note;
     }
 
     /**
-     * Calculates the general average and updates the results in the interface.
+     * Calcule la moyenne générale et met à jour les résultats dans l'interface.
      */
     function calculerMoyenne() {
       const resultatDiv = document.getElementById("resultat");
@@ -725,13 +768,22 @@
 
       // First, check for errors and mark invalid fields
       let erreur = false;
-      for (const [key, mod] of Object.entries(modules)) {
-        // Collect all relevant input IDs for the current module based on its type
+      for (const [key, mat] of Object.entries(matieres)) {
+        // Collect all relevant input IDs for the current matière based on its type
         let inputIdsToValidate = [];
-        if (mod.type === "emd_ecos") {
-          inputIdsToValidate = [`${key}_emd`, `${key}_ecos`];
+        if (mat.type === "tp") {
+          inputIdsToValidate = [`${key}_emd1`, `${key}_tp1`, `${key}_emd2`, `${key}_tp2`];
+        } else if (mat.type === "emd") {
+          inputIdsToValidate = [`${key}_emd1`, `${key}_emd2`];
+        } else if (mat.type === "emd_tp2") {
+          inputIdsToValidate = [`${key}_emd1`, `${key}_emd2`, `${key}_tp2`];
+        } else if (mat.type === "emd1") {
+          inputIdsToValidate = [`${key}_emd1`];
+        } else if (mat.type === "emd2") {
+          inputIdsToValidate = [`${key}_emd2`];
+        } else if (mat.type === "ssh") {
+          inputIdsToValidate = [`${key}_emd2`, `${key}_td`];
         }
-        // Add similar checks for other types if they exist (e.g., tp, ssh etc.)
 
         inputIdsToValidate.forEach(id => {
           const inputElement = document.getElementById(id);
@@ -746,18 +798,16 @@
       }
 
       if (erreur) {
-        // If there's an error, just show the message box and return
         showMessageBox("Veuillez remplir tous les champs avec des valeurs valides (entre 0 et 20) avant de calculer.");
-        return; 
+        return;
       }
 
       // If no errors, scroll to results div, show loading spinner, and proceed with calculation after delay
-      // Show resultatDiv as flex container first to ensure it takes space for scrolling and spinner
-      resultatDiv.style.display = "flex"; 
+      resultatDiv.style.display = "flex"; // Show resultatDiv as flex container first to ensure it takes space for scrolling and spinner
       // Removed the window.innerWidth condition to ensure scrolling on all screen sizes
-      resultatDiv.scrollIntoView({ behavior: 'smooth' }); 
+      resultatDiv.scrollIntoView({ behavior: 'smooth' }); // Scroll to results div
       
-      showMultiDotLoadingSpinnerInResults(); 
+      showMultiDotLoadingSpinnerInResults();
 
       // Dismiss the keyboard
       if (document.activeElement && document.activeElement.blur) {
@@ -767,23 +817,23 @@
       setTimeout(() => {
         let total = 0;
         let coeffTotal = 0;
-        let modulesRattrapageList_moins5 = [];
-        let modulesRattrapageList_entre5et10 = [];
+        let matieresRattrapageList_moins5 = [];
+        let matieresRattrapageList_entre5et10 = [];
 
         // Recalculate notes and populate rattrapage lists
-        for (const [key, mod] of Object.entries(modules)) {
-          const note = calculateModuleNote(key, mod);
+        for (const [key, mat] of Object.entries(matieres)) {
+          const note = calculateMatiereNote(key, mat);
 
           if (note < 5) {
-              modulesRattrapageList_moins5.push(mod.label);
+              matieresRattrapageList_moins5.push(mat.label);
           } else if (note < 10) { // Note is between 5 and 10
-              modulesRattrapageList_entre5et10.push(mod.label);
+              matieresRattrapageList_entre5et10.push(mat.label);
           }
 
-          total += note * mod.coeff;
-          coeffTotal += mod.coeff;
+          total += note * mat.coeff;
+          coeffTotal += mat.coeff;
 
-          // Update individual module note display with final colors (from previous logic)
+          // Update individual matiere note display with final colors (from previous logic)
           const noteDiv = document.getElementById("note_" + key);
           noteDiv.textContent = `Note: ${note.toFixed(2)}`;
           noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
@@ -797,23 +847,23 @@
         let rattrapageDetails = '';
 
         // Determine main validation message
-        if (moyenne >= 10 && modulesRattrapageList_moins5.length === 0) { // Validated if average >= 10 AND no modules below 5
+        if (moyenne >= 10 && matieresRattrapageList_moins5.length === 0) { // Validated if average >= 10 AND no modules below 5
           validationMessage = '<p class="success-animation">✅ Félicitations ! Vous avez validé cette année 🎉</p>';
         } else { // Goes to rattrapage if average < 10 OR any module < 5
           // Specific message if average >= 10 but failed due to modules < 5
-          if (moyenne >= 10 && modulesRattrapageList_moins5.length > 0) {
-              validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année à cause de module(s) avec une note inférieure à 5. Vous allez entrer en rattrapage.</p>`;
+          if (moyenne >= 10 && matieresRattrapageList_moins5.length > 0) {
+              validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année à cause de matière(s) avec une note inférieure à 5. Vous allez entrer en rattrapage.</p>`;
           } else { // Average < 10
               validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année. Vous allez entrer en rattrapage.</p>`;
           }
           
           // Determine rattrapage details based on conditions
-          if (modulesRattrapageList_moins5.length > 0) {
-              rattrapageDetails += `<p style="color:red;">⚠️ Module(s) en rattrapage (note < 5): ${modulesRattrapageList_moins5.join(", ")}</p>`;
+          if (matieresRattrapageList_moins5.length > 0) {
+              rattrapageDetails += `<p style="color:red;">⚠️ Matière(s) en rattrapage (note < 5): ${matieresRattrapageList_moins5.join(", ")}</p>`;
           }
           // This part only appears if overall average < 10 AND there are modules between 5 and 10
-          if (moyenne < 10 && modulesRattrapageList_entre5et10.length > 0) {
-              rattrapageDetails += `<p class="rattrapage-orange">⚠️ Module(s) en rattrapage (note < 10): ${modulesRattrapageList_entre5et10.join(", ")}</p>`;
+          if (moyenne < 10 && matieresRattrapageList_entre5et10.length > 0) {
+              rattrapageDetails += `<p class="rattrapage-orange">⚠️ Matière(s) en rattrapage (note < 10): ${matieresRattrapageList_entre5et10.join(", ")}</p>`;
           }
         }
 
