@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedCalculator - 5ème Année Médecine</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    /* Ensure HTML and Body take full height for background to extend */
+    html, body {
+      height: 100%; /* Make html and body fill the entire viewport height */
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #FFF8E1; /* Very light yellow background */
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      direction: ltr;
+      text-align: left;
+      display: flex; /* Use flexbox for overall page layout */
+      flex-direction: column; /* Stack children vertically */
+      min-height: 100vh; /* Ensure body is at least viewport height */
+      align-items: center; /* Center content horizontally */
+      padding-top: 30px; /* Space above the main title */
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+      box-sizing: border-box; /* Include padding/border in element's total width/height */
+    }
+
+    h1 {
+      text-align: center;
+      color: #FFC107; /* Amber/Golden Yellow for headings */
+      margin: 0 20px 30px 20px; /* Adjust margin to separate from container */
+      font-size: 1.8em; /* Larger font size */
+      font-weight: 700; /* Bold font weight */
+      display: flex; /* Use flexbox for centering content within H1 (icon + text) */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      gap: 10px; /* Space between icon and text */
+      width: calc(100% - 40px); /* Adjust width to account for side margins */
+      max-width: 900px; /* Limit max width */
+    }
+
+    .container {
+      background-color: white; /* White background for the card */
+      padding: 30px; /* Ample padding */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Soft shadow for depth */
+      max-width: 900px; /* Max width for desktop */
+      width: 100%; /* Take full width of parent (body) on mobile */
+      margin: 30px auto 0 auto; /* Top margin, auto horizontal, ZERO bottom margin for mobile */
+      border-radius: 20px; /* Default rounded corners */
+      border-bottom-left-radius: 0; /* Remove bottom left radius for mobile */
+      border-bottom-right-radius: 0; /* Remove bottom right radius for mobile */
+      box-sizing: border-box; /* Ensure padding/border are included in element's total width/height */
+      flex-grow: 1; /* Allow container to grow and fill remaining vertical space on mobile */
+      display: flex; /* Make container a flex container */
+      flex-direction: column; /* Stack content inside container vertically */
+    }
+
+    /* This rule makes the area below the container white on mobile */
+    body::after {
+      content: '';
+      display: block;
+      flex-grow: 1; /* Make it fill remaining vertical space */
+      background-color: white; /* White background for the bottom part */
+      width: 100%; /* Take full width */
+      /* Only apply on mobile */
+      @media (max-width: 767px) {
+        margin-top: -1px; /* To ensure it connects seamlessly with the container */
+      }
+    }
+
+    .module { /* Changed from .matiere */
+      background-color: #FFFDE7; /* Even lighter yellow for subject containers */
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column; /* Vertical by default for mobile */
+      gap: 15px;
+    }
+
+    .module h3 { /* Changed from .matiere h3 */
+      margin-top: 0;
+      color: #FFB300; /* Slightly darker amber for subject headings */
+      margin-bottom: 0;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* New wrapper for inputs and note */
+    .content-wrap {
+      display: flex;
+      flex-direction: column; /* Stack inputs and note vertically by default (mobile) */
+      flex-grow: 1; /* Allow it to grow in column direction */
+      gap: 10px; /* Space between input-group and note */
+    }
+
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .input-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    .input-group input {
+      width: 60px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid #ccc; /* Default neutral border */
+      font-size: 14px;
+      text-align: center;
+      transition: border-color 0.3s ease;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #FFC107; /* Golden Yellow border on focus */
+      box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.2); /* Golden Yellow shadow on focus */
+    }
+
+    .input-group input.invalid {
+      border-color: red; /* Red border for invalid state */
+    }
+
+    #resultat {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 1.2em;
+      line-height: 1.6;
+      display: none; /* Initially hidden */
+      min-height: 150px; /* Ensure space for results or spinner */
+      position: relative; /* Crucial for positioning the spinner inside */
+    }
+
+    #resultat p {
+      margin-bottom: 8px;
+    }
+
+    /* Multi-dot Loading Spinner within #resultat */
+    .dot-spinner-in-results {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%; /* Take full height of #resultat */
+      width: 100%; /* Take full width of #resultat */
+      position: absolute; /* Position relative to #resultat */
+      top: 0;
+      left: 0;
+      background-color: rgba(255, 255, 255, 0.9); /* Opaque white background for spinner area */
+      z-index: 5; /* Above results content */
+      display: none; /* Hidden by default */
+      opacity: 0; /* For fade transition */
+      transition: opacity 0.3s ease;
+    }
+
+    .dot-spinner-in-results.visible {
+      opacity: 1;
+    }
+
+    .dot {
+      width: 20px; /* Size of each dot */
+      height: 20px; /* Size of each dot */
+      border-radius: 50%;
+      margin: 0 6px; /* Space between dots */
+      animation: bounce 0.8s infinite ease-in-out; /* Bounce animation */
+    }
+
+    /* Specific dot colors and animation delays (using the golden yellow tones) */
+    .dot:nth-child(1) { background-color: #FFC107; /* Main Golden Yellow */ animation-delay: 0s; }
+    .dot:nth-child(2) { background-color: #FFD54F; /* Lighter Golden Yellow */ animation-delay: 0.1s; }
+    .dot:nth-child(3) { background-color: #FFE082; /* Even Lighter Golden Yellow */ animation-delay: 0.2s; }
+    .dot:nth-child(4) { background-color: #FFECB3; /* Lighter Still Golden Yellow */ animation-delay: 0.3s; }
+    .dot:nth-child(5) { background-color: #FFF8E1; /* Lightest Golden Yellow (body background) */ animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); } /* Updated: Bounce height to match new dot size */
+    }
+
+    /* Animation for success message */
+    @keyframes pulse-success {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-animation {
+      animation: pulse-success 0.8s ease-out;
+      color: #28A745 !important; /* Brighter green for success */
+    }
+
+    /* Animation for failure message */
+    @keyframes shake-failure {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    .failure-animation {
+      animation: shake-failure 0.5s ease-in-out;
+      color: #DC3545 !important; /* Brighter red for failure */
+    }
+
+    /* Style for rattrapage list with note < 10 */
+    .rattrapage-orange {
+        color: orange;
+    }
+
+    button {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 30px;
+      font-size: 16px;
+      background-color: #FFC107; /* Golden Yellow button */
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #FFA000; /* Darker Golden Yellow on hover */
+      transform: translateY(-2px);
+    }
+
+    .note {
+      margin-top: 5px; /* Adjust or remove depending on gap from content-wrap */
+      font-weight: bold;
+      text-align: left;
+      min-width: 100px;
+    }
+
+    /* Custom error message box */
+    .message-box {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      display: none;
+      text-align: center;
+      max-width: 300px;
+      border: 1px solid #ddd;
+    }
+
+    .message-box p {
+      margin-bottom: 20px;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    .message-box button {
+      margin: 0 auto;
+      padding: 8px 20px;
+      font-size: 15px;
+      background-color: #FFC107; /* Golden Yellow button in message box */
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .message-box button:hover {
+      background-color: #FFA000; /* Darker Golden Yellow on hover */
+    }
+
+    /* New styles for app links section */
+    .app-links {
+        margin-top: 30px;
+        text-align: center;
+        width: 100%;
+        padding-top: 20px;
+        border-top: 1px solid #eee; /* A subtle separator */
+    }
+    .app-links p {
+        color: #333;
+        font-size: 1.1em;
+        margin-bottom: 15px;
+    }
+    .links-group {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    .social-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1em;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        width: 100%; /* Full width on mobile */
+        max-width: 300px; /* Max width for consistency */
+        justify-content: center; /* Center content within the button */
+    }
+    /* SVG icon styling within links */
+    .social-link svg {
+        width: 1.3em; /* Match font-size of text */
+        height: 1.3em;
+        fill: currentColor; /* Inherit color from parent link */
+    }
+
+    .instagram {
+        background-color: #E1306C; /* Instagram brand color */
+        color: white;
+    }
+    .instagram:hover {
+        background-color: #C13584;
+        transform: translateY(-2px);
+    }
+    .google-play {
+        background-color: #FFC107; /* Golden Yellow for Google Play button */
+        color: white;
+    }
+    .google-play:hover {
+        background-color: #FFA000; /* Darker Golden Yellow on hover */
+        transform: translateY(-2px);
+    }
+    .container-footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    }
+    .copyright-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    }
+
+    .copyright-info p {
+    margin: 0;
+    }
+
+    .footer-logo {
+    width: 30px;
+    height: 30px;
+    -webkit-user-drag: none;
+    user-drag: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+    }
+
+    .container-footer-content p:nth-child(2) {
+    margin: 0;
+    text-align: center;
+    }
+   .container-footer-content a {
+  color: #FFC107; /* Golden Yellow for footer link */
+  text-decoration: none;
+  font-weight: bold;
+    }
+    /* Desktop layout adjustments (media queries) */
+    @media (min-width: 768px) {
+      body {
+        justify-content: flex-start;
+        padding-top: 30px;
+      }
+
+      .container {
+        margin: 30px auto 50px auto;
+        border-radius: 20px;
+        flex-grow: 0;
+        width: 90%;
+        max-width: 900px;
+      }
+
+      body::after {
+        display: none;
+      }
+
+      .module { /* Changed from .matiere */
+        flex-direction: row;
+        align-items: center; /* ALIGN VERTICALLY: This ensures all items are centered along the cross-axis (vertically in a row) */
+        gap: 20px; /* Maintain consistent gap between elements */
+      }
+
+      .module h3 { /* Changed from .matiere h3 */
+        min-width: 160px;
+        text-align: left;
+        flex-shrink: 0; /* Prevent h3 from shrinking too much */
+      }
+
+      .input-group {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      .input-group label {
+        min-width: unset;
+      }
+
+      .input-group input {
+        width: 80px;
+      }
+
+      .note {
+        text-align: left;
+        flex-shrink: 0; /* Prevent the note from shrinking */
+        margin-top: 0; /* Reset margin from mobile default */
+      }
+
+      .links-group {
+          flex-direction: row; /* Display side-by-side on desktop */
+          gap: 20px;
+      }
+      .social-link {
+          width: auto; /* Let content determine width */
+          padding: 12px 25px; /* Adjust padding for desktop */
+      }
+      .container-footer-content {
+        flex-direction: column;
+      }
+
+      .copyright-info {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🩺 MedCalculator - 5ème Année Médecine</h1>
+    </header>
+    <form id="gpa-form"></form>
+    <button onclick="calculerMoyenne()">Calculer</button>
+    <div id="resultat">
+      <div id="dotSpinnerInResults" class="dot-spinner-in-results">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div id="actualResultsContent" style="display: none;">
+        </div>
+    </div>
+
+    <div class="app-links">
+        <p>Connectez-vous et téléchargez notre application :</p>
+        <div class="links-group">
+            <a href="https://www.instagram.com/aldevmus/profilecard/?igsh=b2M5azVpb2d1b2Fn" target="_blank" class="social-link instagram">
+                <svg viewBox="0 0 448 512" fill="currentColor" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram"><path d="M224.1 12.6C100.9 12.6 0 113.5 0 236.8 0 358.1 98.9 457 220.2 457h.3c123.3 0 224.1-100.9 224.1-224.1 0-123.3-100.9-224.1-224.1-224.1zm127.3 359.3c-23.2 23.2-56.1 36-90.7 36s-67.5-12.8-90.7-36c-23.2-23.2-36-56.1-36-90.7s12.8-67.5 36-90.7c23.2-23.2 56.1-36 90.7-36s67.5 12.8 90.7 36c23.2 23.2 36 56.1 36 90.7s-12.8 67.5-36 90.7zM185 236.8c0-21.7 17.6-39.3 39.3-39.3s39.3 17.6 39.3 39.3c0 21.7-17.6 39.3-39.3 39.3s-39.3-17.6-39.3-39.3zM372.4 135.5c-15.6 0-28.3-12.7-28.3-28.3s12.7-28.3 28.3-28.3 28.3 12.7 28.3 28.3-12.7 28.3-28.3 28.3z"/></svg>
+                Instagram
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.medcalculator.aldevmus" target="_blank" class="social-link google-play">
+                <svg viewBox="0 0 512 512" fill="currentColor" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google-play"><path d="M325.3 234.3l-105.4 61.2c-5.1 3-11.3-.2-11.3-6.1V169.8c0-5.9 6.2-9.1 11.3-6.1l105.4 61.2c5.1 3.1 5.1 9.2 0 12.3zM454.4 126.3l-34.4-19.9c-11-6.4-24.5-5.2-34.4 3.2L249.2 249.1l-105.7-61.4c-9.9-5.7-22.6-5.8-32.5-.1L8.6 206.5c-8.9 5.2-9.7 17.7-1.7 26l119.7 122.9c8 8.2 20.9 9.3 30.6 2.4l105.7-61.4 136.4 137.9c9.9 10 23.4 11.2 34.4 3.2l34.4-19.9c11-6.4 12.2-20 3.2-30l-136.4-137.9 136.4-137.9c8.9-10.1 7.7-23.7-3.2-30.1z"/></svg>
+                Télécharger MedCalculator
+            </a>
+        </div>
+    </div>
+    <div class="container-footer-content">
+    <div class="copyright-info">
+        <img src="Images/logo.png" alt="Logo MedCalculator" class="footer-logo">
+        <p>© 2025 Tous droits réservés par MedCalculator.</p>
+    </div>
+    <p>Réalisé par <a href="https://www.instagram.com/aldevmus/profilecard/?igsh=b2M5azVpb2d1b2Fn" target="_blank">aldevmus</a></p>
+      <script>
+  document.addEventListener('contextmenu', event => event.preventDefault());
+</script>
+      </div>
+  </div>
+
+  <div id="customMessageBox" class="message-box">
+    <p id="messageBoxText"></p>
+    <button onclick="hideMessageBox()">OK</button>
+  </div>
+
+  <script>
+    // Definition of modules, their coefficients, and types for the 5th year
+    const modules = {
+      orthopedie_traumatologie_reeducation: { label: "Orthopédie-Traumato-Rééduc.", coeff: 1, type: "emd_ecos" },
+      urologie_nephrologie: { label: "Urologie-Néphrologie", coeff: 1, type: "emd_ecos" },
+      pediatrie: { label: "Pédiatrie", coeff: 1, type: "emd_ecos" },
+      sante_mentale: { label: "Santé mentale", coeff: 1, type: "emd_ecos" },
+      gynecologie_obstetrique: { label: "Gynécologie - Obstétrique", coeff: 1, type: "emd_ecos" },
+      endocrinologie_maladies_metaboliques: { label: "Endocrinologie-maladies métaboliques", coeff: 1, type: "emd_ecos" },
+    };
+
+    /**
+     * Displays a custom message instead of alert().
+     * @param {string} message - The message to display.
+     */
+    function showMessageBox(message) {
+      const messageBox = document.getElementById("customMessageBox");
+      const messageBoxText = document.getElementById("messageBoxText");
+      messageBoxText.textContent = message;
+      messageBox.style.display = "block";
+    }
+
+    /**
+     * Hides the custom error message box.
+     */
+    function hideMessageBox() {
+      document.getElementById("customMessageBox").style.display = "none";
+    }
+
+    /**
+     * Updates the individual module note display.
+     * This function is called when EMD or Écos inputs change.
+     * @param {string} key - The module key.
+     */
+    function updateModuleNote(key) {
+      const mod = modules[key];
+      if (!mod) return;
+
+      const noteDiv = document.getElementById("note_" + key);
+      const note = calculateModuleNote(key, mod);
+
+      if (note !== null) {
+        noteDiv.textContent = `Note: ${note.toFixed(2)}`;
+        noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
+      } else {
+        noteDiv.textContent = ''; // Clear note if inputs are incomplete or invalid
+      }
+    }
+
+    /**
+     * Shows the multi-dot loading spinner within the results div.
+     */
+    function showMultiDotLoadingSpinnerInResults() {
+      const resultatDiv = document.getElementById("resultat");
+      const dotSpinner = document.getElementById("dotSpinnerInResults");
+      const actualResultsContent = document.getElementById("actualResultsContent");
+
+      actualResultsContent.style.display = "none"; // Hide actual results content
+      resultatDiv.style.display = "flex"; // Show #resultat as flex container to center spinner
+      dotSpinner.style.display = "flex"; // Show the spinner
+      dotSpinner.classList.add("visible"); // For fade transition
+    }
+
+    /**
+     * Hides the multi-dot loading spinner within the results div.
+     */
+    function hideMultiDotLoadingSpinnerInResults() {
+      const dotSpinner = document.getElementById("dotSpinnerInResults");
+      dotSpinner.classList.remove("visible");
+      setTimeout(() => {
+        dotSpinner.style.display = "none"; // Hide after transition
+      }, 300); // Match CSS transition duration
+    }
+
+    /**
+     * This function is executed when the page loads to dynamically create the input fields.
+     */
+    window.onload = () => {
+      const form = document.getElementById("gpa-form");
+      for (const [key, mod] of Object.entries(modules)) {
+        const div = document.createElement("div");
+        div.classList.add("module");
+
+        const h3 = document.createElement("h3");
+        h3.textContent = mod.label;
+        div.appendChild(h3);
+
+        const contentWrap = document.createElement("div");
+        contentWrap.classList.add("content-wrap");
+
+        const inputGroup = document.createElement("div");
+        inputGroup.classList.add("input-group");
+
+        // Helper function to create an input field and attach event listeners
+        const createInputField = (id, labelText, moduleKey) => {
+          const label = document.createElement('label');
+          label.textContent = labelText + ': ';
+          const input = document.createElement('input');
+          input.type = "number";
+          input.id = id;
+          input.min = "0";
+          input.max = "20";
+          input.step = "0.01";
+          input.setAttribute('autocomplete', 'off'); // Disable autocomplete for keyboard behavior
+
+          // Load saved value from localStorage
+          const savedValue = localStorage.getItem(id);
+          if (savedValue !== null) {
+            input.value = savedValue;
+          }
+
+          // Save value to localStorage and update individual module note on input
+          input.addEventListener('input', (event) => {
+            localStorage.setItem(id, event.target.value);
+            updateModuleNote(moduleKey);
+            // Remove invalid class on input change
+            event.target.classList.remove("invalid");
+          });
+
+          label.appendChild(input);
+          return label;
+        };
+
+        // Build input fields based on module type
+        if (mod.type === "emd_ecos") {
+          inputGroup.appendChild(createInputField(`${key}_emd`, 'EMD', key));
+          inputGroup.appendChild(createInputField(`${key}_ecos`, 'Écos', key));
+        }
+        
+        contentWrap.appendChild(inputGroup); // Append inputGroup to contentWrap
+
+        const noteDiv = document.createElement("div");
+        noteDiv.id = `note_${key}`;
+        noteDiv.classList.add("note");
+        contentWrap.appendChild(noteDiv); // Append noteDiv to contentWrap
+
+        div.appendChild(contentWrap); // Append contentWrap to the module div
+
+        form.appendChild(div);
+      }
+
+      // Initialize individual module notes on load
+      for (const key of Object.keys(modules)) {
+        updateModuleNote(key);
+      }
+
+      // NEW LOGIC FOR ENTER KEY NAVIGATION
+      const allInputElements = form.querySelectorAll('input[type="number"]'); // Select all number inputs
+      allInputElements.forEach((input, index) => {
+        input.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form submission
+
+            if (index < allInputElements.length - 1) {
+              // If not the last input, move focus to the next one
+              allInputElements[index + 1].focus();
+            } else {
+              // If it's the last input, trigger calculation
+              calculerMoyenne();
+            }
+          }
+        });
+      });
+    };
+
+    /**
+     * Gets the value of an input field and checks its validity.
+     * @param {string} id - The ID of the input field.
+     * @returns {number|null} The numeric value or null if invalid.
+     */
+    function val(id) {
+      const inputElement = document.getElementById(id);
+      if (!inputElement) return null; // To ensure the element exists
+
+      const v = inputElement.value;
+      const parsedValue = parseFloat(v);
+
+      // Check for invalidity
+      if (v === "" || isNaN(parsedValue) || parsedValue < 0 || parsedValue > 20) {
+        return null; // Return null for invalid values
+      }
+      return parsedValue;
+    }
+
+    /**
+     * Calculates the module's note based on its type and input fields.
+     * @param {string} key - The module key.
+     * @param {object} mod - The module object.
+     * @returns {number|null} The module's note or null if fields are missing/are invalid.
+     */
+    function calculateModuleNote(key, mod) {
+      let note = null;
+      let champs = [];
+
+      if (mod.type === "emd_ecos") {
+        champs = [val(key + "_emd"), val(key + "_ecos")];
+        // Only calculate if both EMD and Écos are valid numbers
+        if (champs[0] !== null && champs[1] !== null) {
+          note = (champs[0] * 0.7 + champs[1] * 0.3); // Calculation for EMD and Écos (70% EMD, 30% Écos)
+        } else {
+          return null; // Return null if any input is invalid or missing
+        }
+      }
+      return note;
+    }
+
+    /**
+     * Calculates the general average and updates the results in the interface.
+     */
+    function calculerMoyenne() {
+      const resultatDiv = document.getElementById("resultat");
+      const actualResultsContent = document.getElementById("actualResultsContent");
+      
+      actualResultsContent.style.display = "none"; // Ensure results content is hidden
+      resultatDiv.style.display = "none"; // Hide the entire resultat div initially
+      
+      // Clear all invalid classes before re-validation
+      document.querySelectorAll('.input-group input').forEach(input => {
+        input.classList.remove("invalid");
+      });
+
+      // First, check for errors and mark invalid fields
+      let erreur = false;
+      for (const [key, mod] of Object.entries(modules)) {
+        // Collect all relevant input IDs for the current module based on its type
+        let inputIdsToValidate = [];
+        if (mod.type === "emd_ecos") {
+          inputIdsToValidate = [`${key}_emd`, `${key}_ecos`];
+        }
+        // Add similar checks for other types if they exist (e.g., tp, ssh etc.)
+
+        inputIdsToValidate.forEach(id => {
+          const inputElement = document.getElementById(id);
+          const parsedValue = parseFloat(inputElement.value);
+
+          // Mark as invalid if empty or outside 0-20 range
+          if (inputElement.value === "" || isNaN(parsedValue) || parsedValue < 0 || parsedValue > 20) {
+            inputElement.classList.add("invalid");
+            erreur = true;
+          }
+        });
+      }
+
+      if (erreur) {
+        // If there's an error, just show the message box and return
+        showMessageBox("Veuillez remplir tous les champs avec des valeurs valides (entre 0 et 20) avant de calculer.");
+        return; 
+      }
+
+      // If no errors, scroll to results div, show loading spinner, and proceed with calculation after delay
+      // Show resultatDiv as flex container first to ensure it takes space for scrolling and spinner
+      resultatDiv.style.display = "flex"; 
+      resultatDiv.scrollIntoView({ behavior: 'smooth' }); // Scroll to results div (always scroll)
+      
+      showMultiDotLoadingSpinnerInResults(); 
+
+      // Dismiss the keyboard
+      if (document.activeElement && document.activeElement.blur) {
+        document.activeElement.blur();
+      }
+
+      setTimeout(() => {
+        let total = 0;
+        let coeffTotal = 0;
+        let modulesRattrapageList_moins5 = [];
+        let modulesRattrapageList_entre5et10 = [];
+
+        // Recalculate notes and populate rattrapage lists
+        for (const [key, mod] of Object.entries(modules)) {
+          const note = calculateModuleNote(key, mod);
+
+          if (note < 5) {
+              modulesRattrapageList_moins5.push(mod.label);
+          } else if (note < 10) { // Note is between 5 and 10
+              modulesRattrapageList_entre5et10.push(mod.label);
+          }
+
+          total += note * mod.coeff;
+          coeffTotal += mod.coeff;
+
+          // Update individual module note display with final colors (from previous logic)
+          const noteDiv = document.getElementById("note_" + key);
+          noteDiv.textContent = `Note: ${note.toFixed(2)}`;
+          noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
+        }
+
+        hideMultiDotLoadingSpinnerInResults(); // Hide spinner after calculation is done
+
+        const moyenne = total / coeffTotal;
+        
+        let validationMessage = '';
+        let rattrapageDetails = '';
+
+        // Determine main validation message
+        if (moyenne >= 10 && modulesRattrapageList_moins5.length === 0) { // Validated if average >= 10 AND no modules below 5
+          validationMessage = '<p class="success-animation">✅ Félicitations ! Vous avez validé cette année 🎉</p>';
+        } else { // Goes to rattrapage if average < 10 OR any module < 5
+          // Specific message if average >= 10 but failed due to modules < 5
+          if (moyenne >= 10 && modulesRattrapageList_moins5.length > 0) {
+              validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année à cause de module(s) avec une note inférieure à 5. Vous allez entrer en rattrapage.</p>`;
+          } else { // Average < 10
+              validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année. Vous allez entrer en rattrapage.</p>`;
+          }
+          
+          // Determine rattrapage details based on conditions
+          if (modulesRattrapageList_moins5.length > 0) {
+              rattrapageDetails += `<p style="color:red;">⚠️ Module(s) en rattrapage (note < 5): ${modulesRattrapageList_moins5.join(", ")}</p>`;
+          }
+          // This part only appears if overall average < 10 AND there are modules between 5 and 10
+          if (moyenne < 10 && modulesRattrapageList_entre5et10.length > 0) {
+              rattrapageDetails += `<p class="rattrapage-orange">⚠️ Module(s) en rattrapage (note < 10): ${modulesRattrapageList_entre5et10.join(", ")}</p>`;
+          }
+        }
+
+        const resultatContent = `
+          <p>Moyenne générale: <strong>${moyenne.toFixed(2)}</strong></p>
+          ${rattrapageDetails}
+          ${validationMessage}
+        `;
+        
+        actualResultsContent.innerHTML = resultatContent; // Set results HTML
+        actualResultsContent.style.display = "block"; // Show actual results content
+        resultatDiv.style.display = "block"; // Show results div container (ensure it's block for content flow)
+
+        resultatDiv.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll to the results section (always scroll)
+      }, 1000); // 1 second delay
+    }
+  </script>
+</body>
+</html>
