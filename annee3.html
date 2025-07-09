@@ -58,6 +58,9 @@
       flex-grow: 1; /* Allow container to grow and fill remaining vertical space on mobile */
       display: flex; /* Make container a flex container */
       flex-direction: column; /* Stack content inside container vertically */
+      /* Added for desktop screen fit */
+      max-height: calc(100vh - 60px); /* Adjust height to fit screen with top/bottom margin */
+      overflow-y: auto; /* Enable vertical scrolling if content overflows */
     }
 
     /* This rule makes the area below the container white on mobile */
@@ -149,7 +152,7 @@
       margin-bottom: 8px;
     }
 
-    /* Multi-dot Loading Spinner within #resultat (from annee4 and annee1 design) */
+    /* Multi-dot Loading Spinner within #resultat */
     .dot-spinner-in-results {
       display: flex;
       justify-content: center;
@@ -544,6 +547,7 @@
 
       if (note !== null) {
         noteDiv.textContent = `Note: ${note.toFixed(2)}`;
+        // Keeping colors consistent with validation messages (red for <5, orange for <10, green for >=10)
         noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
       } else {
         noteDiv.textContent = ''; // Clear note if inputs are incomplete or invalid
@@ -619,6 +623,21 @@
             event.target.classList.remove("invalid"); // Remove invalid class on input
           });
 
+          // Handle Enter key to move to the next input or trigger calculation
+          input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault(); // Prevent default Enter behavior (e.g., form submission)
+              const formInputs = Array.from(document.querySelectorAll('#gpa-form input[type="number"]'));
+              const currentIndex = formInputs.indexOf(event.target);
+              if (currentIndex > -1 && currentIndex < formInputs.length - 1) {
+                formInputs[currentIndex + 1].focus(); // Move focus to the next input
+              } else {
+                // If it's the last input, trigger the calculation
+                calculerMoyenne();
+              }
+            }
+          });
+
           label.appendChild(input);
           return label;
         };
@@ -648,19 +667,7 @@
         updateMatiereNote(key);
       }
 
-      // After creating all inputs, add event listener to the last one
-      const inputElements = form.querySelectorAll('input:not([type="button"])');
-      if (inputElements.length > 0) {
-        const lastInput = inputElements.length > 0 ? inputElements.item(inputElements.length - 1) : null;
-        if (lastInput) {
-          lastInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault(); // Prevent default form submission (if any)
-              calculerMoyenne();
-            }
-          });
-        }
-      }
+      // No need for a separate last input listener if handled by createInputField's keydown
     };
 
     /**
@@ -700,7 +707,6 @@
         }
       } else if (mat.type === "emd_only") {
         note = val(key + "_emd");
-        // No need for 'if (note === null) return null;' here, as val() already returns null if invalid.
       }
       return note;
     }
