@@ -841,7 +841,8 @@
         hideMultiDotLoadingSpinnerInResults(); // Hide spinner after calculation is done
 
         const moyenne = total / coeffTotal;
-        const totalPoints = moyenne * 20; // Corrected: Calculate total points based on average * 20
+        // CORRECTED LINE: Calculate total points based on average * total coefficients (which is 16)
+        const totalPoints = moyenne * coeffTotal; 
         const pointsToValidate = 160; // Validation threshold remains 160
         const maxPossiblePoints = 320; // Maximum possible points (20 * 16 coefficients)
         
