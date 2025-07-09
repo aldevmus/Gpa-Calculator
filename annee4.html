@@ -178,12 +178,12 @@
       animation: bounce 0.8s infinite ease-in-out; /* Bounce animation */
     }
 
-    /* Specific dot colors and animation delays (using heading colors from previous designs) */
-    .dot:nth-child(1) { background-color: #5C4B8C; /* Purple Heading from Anne 1 */ animation-delay: 0s; }
-    .dot:nth-child(2) { background-color: #2C7DA0; /* Blue-Greenish Heading from Anne 3 */ animation-delay: 0.1s; }
-    .dot:nth-child(3) { background-color: #CC3333; /* Red Heading from Anne 4 */ animation-delay: 0.2s; }
-    .dot:nth-child(4) { background-color: #3D8C40; /* Dark Green (new heading-like) */ animation-delay: 0.3s; }
-    .dot:nth-child(5) { background-color: #D4AC0D; /* Dark Gold (new heading-like) */ animation-delay: 0.4s; }
+    /* Specific dot colors and animation delays (using the red tones from annee4) */
+    .dot:nth-child(1) { background-color: #CC3333; /* Strong red from annee4 H1 */ animation-delay: 0s; }
+    .dot:nth-child(2) { background-color: #D9534F; /* Slightly lighter red */ animation-delay: 0.1s; }
+    .dot:nth-child(3) { background-color: #E6736F; /* Even lighter red */ animation-delay: 0.2s; }
+    .dot:nth-child(4) { background-color: #F0A09E; /* Light red */ animation-delay: 0.3s; }
+    .dot:nth-child(5) { background-color: #F7CDC9; /* Very light red */ animation-delay: 0.4s; }
 
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
@@ -459,7 +459,6 @@
     <form id="gpa-form"></form>
     <button onclick="calculerMoyenne()">Calculer</button>
     <div id="resultat">
-      <!-- Multi-dot Loading Spinner will appear here -->
       <div id="dotSpinnerInResults" class="dot-spinner-in-results">
         <div class="dot"></div>
         <div class="dot"></div>
@@ -467,10 +466,8 @@
         <div class="dot"></div>
         <div class="dot"></div>
       </div>
-      <!-- Results will be displayed here dynamically -->
       <div id="actualResultsContent" style="display: none;">
-        <!-- This div will hold the actual results HTML -->
-      </div>
+        </div>
     </div>
 
     <div class="app-links">
@@ -538,15 +535,16 @@
      * This function is called when EMD or Écos inputs change.
      * @param {string} key - The module key.
      */
-    function updateModuleNote(key) { /* Changed from updateMatiereNote */
-      const mod = modules[key]; /* Changed from mat */
+    function updateModuleNote(key) {
+      const mod = modules[key];
       if (!mod) return;
 
       const noteDiv = document.getElementById("note_" + key);
-      const note = calculateModuleNote(key, mod); /* Changed from calculateMatiereNote */
+      const note = calculateModuleNote(key, mod);
 
       if (note !== null) {
         noteDiv.textContent = `Note: ${note.toFixed(2)}`;
+        // Keeping colors as per annee4 design, but updated based on average for visibility
         noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
       } else {
         noteDiv.textContent = ''; // Clear note if inputs are incomplete or invalid
@@ -583,12 +581,12 @@
      */
     window.onload = () => {
       const form = document.getElementById("gpa-form");
-      for (const [key, mod] of Object.entries(modules)) { /* Changed from matieres */
+      for (const [key, mod] of Object.entries(modules)) {
         const div = document.createElement("div");
-        div.classList.add("module"); /* Changed from matiere */
+        div.classList.add("module");
 
         const h3 = document.createElement("h3");
-        h3.textContent = mod.label; /* Changed from mat.label */
+        h3.textContent = mod.label;
         div.appendChild(h3);
 
         const contentWrap = document.createElement("div");
@@ -598,7 +596,7 @@
         inputGroup.classList.add("input-group");
 
         // Helper function to create an input field and attach event listeners
-        const createInputField = (id, labelText, moduleKey) => { /* Changed from subjectKey */
+        const createInputField = (id, labelText, moduleKey) => {
           const label = document.createElement('label');
           label.textContent = labelText + ': ';
           const input = document.createElement('input');
@@ -618,7 +616,7 @@
           // Save value to localStorage and update individual module note on input
           input.addEventListener('input', (event) => {
             localStorage.setItem(id, event.target.value);
-            updateModuleNote(moduleKey); /* Changed from updateMatiereNote(subjectKey) */
+            updateModuleNote(moduleKey);
             // Remove invalid class on input change
             event.target.classList.remove("invalid");
           });
@@ -628,7 +626,7 @@
         };
 
         // Build input fields based on module type
-        if (mod.type === "emd_ecos") { /* Changed from mat.type */
+        if (mod.type === "emd_ecos") {
           inputGroup.appendChild(createInputField(`${key}_emd`, 'EMD', key));
           inputGroup.appendChild(createInputField(`${key}_ecos`, 'Écos', key));
         }
@@ -646,23 +644,27 @@
       }
 
       // Initialize individual module notes on load
-      for (const key of Object.keys(modules)) { /* Changed from matieres */
-        updateModuleNote(key); /* Changed from updateMatiereNote */
+      for (const key of Object.keys(modules)) {
+        updateModuleNote(key);
       }
 
-      // After creating all inputs, add event listener to the last one
-      const inputElements = form.querySelectorAll('input:not([type="button"])');
-      if (inputElements.length > 0) {
-        const lastInput = inputElements.length > 0 ? inputElements.item(inputElements.length - 1) : null;
-        if (lastInput) {
-          lastInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault(); // Prevent default form submission (if any)
+      // NEW LOGIC FOR ENTER KEY NAVIGATION
+      const allInputElements = form.querySelectorAll('input[type="number"]'); // Select all number inputs
+      allInputElements.forEach((input, index) => {
+        input.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form submission
+
+            if (index < allInputElements.length - 1) {
+              // If not the last input, move focus to the next one
+              allInputElements[index + 1].focus();
+            } else {
+              // If it's the last input, trigger calculation
               calculerMoyenne();
             }
-          });
-        }
-      }
+          }
+        });
+      });
     };
 
     /**
@@ -690,11 +692,11 @@
      * @param {object} mod - The module object.
      * @returns {number|null} The module's note or null if fields are missing/are invalid.
      */
-    function calculateModuleNote(key, mod) { /* Changed from calculateMatiereNote */
+    function calculateModuleNote(key, mod) {
       let note = null;
       let champs = [];
 
-      if (mod.type === "emd_ecos") { /* Changed from mat.type */
+      if (mod.type === "emd_ecos") {
         champs = [val(key + "_emd"), val(key + "_ecos")];
         // Only calculate if both EMD and Écos are valid numbers
         if (champs[0] !== null && champs[1] !== null) {
@@ -723,33 +725,24 @@
 
       // First, check for errors and mark invalid fields
       let erreur = false;
-      for (const [key, mod] of Object.entries(modules)) { /* Changed from matieres */
-        const emdInput = document.getElementById(`${key}_emd`);
-        const ecosInput = document.getElementById(`${key}_ecos`);
-        
-        let emdVal = val(`${key}_emd`);
-        let ecosVal = val(`${key}_ecos`);
-
-        // Check if inputs are empty or invalid numbers
-        if (mod.type === "emd_ecos") { /* Changed from mat.type */
-          if (emdVal === null || ecosVal === null) {
-            erreur = true;
-            if (emdInput && (emdInput.value === "" || isNaN(parseFloat(emdInput.value)) || parseFloat(emdInput.value) < 0 || parseFloat(emdInput.value) > 20)) {
-              emdInput.classList.add("invalid");
-            }
-            if (ecosInput && (ecosInput.value === "" || isNaN(parseFloat(ecosInput.value)) || parseFloat(ecosInput.value) < 0 || parseFloat(ecosInput.value) > 20)) {
-              ecosInput.classList.add("invalid");
-            }
-          }
-        } else if (mod.type === "emd_only") { /* Changed from mat.type */
-          if (emdVal === null) {
-            erreur = true;
-            if (emdInput && (emdInput.value === "" || isNaN(parseFloat(emdInput.value)) || parseFloat(emdInput.value) < 0 || parseFloat(emdInput.value) > 20)) {
-              emdInput.classList.add("invalid");
-            }
-          }
+      for (const [key, mod] of Object.entries(modules)) {
+        // Collect all relevant input IDs for the current module based on its type
+        let inputIdsToValidate = [];
+        if (mod.type === "emd_ecos") {
+          inputIdsToValidate = [`${key}_emd`, `${key}_ecos`];
         }
         // Add similar checks for other types if they exist (e.g., tp, ssh etc.)
+
+        inputIdsToValidate.forEach(id => {
+          const inputElement = document.getElementById(id);
+          const parsedValue = parseFloat(inputElement.value);
+
+          // Mark as invalid if empty or outside 0-20 range
+          if (inputElement.value === "" || isNaN(parsedValue) || parsedValue < 0 || parsedValue > 20) {
+            inputElement.classList.add("invalid");
+            erreur = true;
+          }
+        });
       }
 
       if (erreur) {
@@ -775,21 +768,26 @@
       setTimeout(() => {
         let total = 0;
         let coeffTotal = 0;
-        let modulesRattrapageList_moins5 = []; // Changed from matiereRattrapageList_moins5
-        let modulesRattrapageList_entre5et10 = []; // Changed from matiereRattrapageList_entre5et10
+        let modulesRattrapageList_moins5 = [];
+        let modulesRattrapageList_entre5et10 = [];
 
         // Recalculate notes and populate rattrapage lists
-        for (const [key, mod] of Object.entries(modules)) { /* Changed from matieres, mat */
-          const note = calculateModuleNote(key, mod); /* Changed from calculateMatiereNote */
+        for (const [key, mod] of Object.entries(modules)) {
+          const note = calculateModuleNote(key, mod);
 
           if (note < 5) {
-              modulesRattrapageList_moins5.push(mod.label); /* Changed from matiereRattrapageList_moins5, mat.label */
+              modulesRattrapageList_moins5.push(mod.label);
           } else if (note < 10) { // Note is between 5 and 10
-              modulesRattrapageList_entre5et10.push(mod.label); /* Changed from matiereRattrapageList_entre5et10, mat.label */
+              modulesRattrapageList_entre5et10.push(mod.label);
           }
 
-          total += note * mod.coeff; /* Changed from mat.coeff */
-          coeffTotal += mod.coeff; /* Changed from mat.coeff */
+          total += note * mod.coeff;
+          coeffTotal += mod.coeff;
+
+          // Update individual module note display with final colors (from previous logic)
+          const noteDiv = document.getElementById("note_" + key);
+          noteDiv.textContent = `Note: ${note.toFixed(2)}`;
+          noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
         }
 
         hideMultiDotLoadingSpinnerInResults(); // Hide spinner after calculation is done
@@ -805,18 +803,18 @@
         } else { // Goes to rattrapage if average < 10 OR any module < 5
           // Specific message if average >= 10 but failed due to modules < 5
           if (moyenne >= 10 && modulesRattrapageList_moins5.length > 0) {
-              validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année à cause de module(s) avec une note inférieure à 5. Vous allez entrer en rattrapage.</p>`; /* Reverted text */
+              validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année à cause de module(s) avec une note inférieure à 5. Vous allez entrer en rattrapage.</p>`;
           } else { // Average < 10
               validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année. Vous allez entrer en rattrapage.</p>`;
           }
           
           // Determine rattrapage details based on conditions
           if (modulesRattrapageList_moins5.length > 0) {
-              rattrapageDetails += `<p style="color:red;">⚠️ Module(s) en rattrapage (note < 5): ${modulesRattrapageList_moins5.join(", ")}</p>`; /* Changed from Matière(s) */
+              rattrapageDetails += `<p style="color:red;">⚠️ Module(s) en rattrapage (note < 5): ${modulesRattrapageList_moins5.join(", ")}</p>`;
           }
           // This part only appears if overall average < 10 AND there are modules between 5 and 10
           if (moyenne < 10 && modulesRattrapageList_entre5et10.length > 0) {
-              rattrapageDetails += `<p class="rattrapage-orange">⚠️ Module(s) en rattrapage (note < 10): ${modulesRattrapageList_entre5et10.join(", ")}</p>`; /* Changed from Matière(s) */
+              rattrapageDetails += `<p class="rattrapage-orange">⚠️ Module(s) en rattrapage (note < 10): ${modulesRattrapageList_entre5et10.join(", ")}</p>`;
           }
         }
 
@@ -839,3 +837,4 @@
   </script>
 </body>
 </html>
+
