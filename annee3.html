@@ -58,7 +58,6 @@
       flex-grow: 1; /* Allow container to grow and fill remaining vertical space on mobile */
       display: flex; /* Make container a flex container */
       flex-direction: column; /* Stack content inside container vertically */
-      /* max-height and overflow-y removed from here, applied to .input-scroll-area instead */
     }
 
     /* This rule makes the area below the container white on mobile */
@@ -72,14 +71,6 @@
       @media (max-width: 767px) {
         margin-top: -1px; /* To ensure it connects seamlessly with the container */
       }
-    }
-
-    .input-scroll-area { /* NEW: Specific area for scrollable inputs */
-        flex-grow: 1; /* Allows it to take up available space */
-        overflow-y: auto; /* Enables vertical scrolling only for inputs */
-        padding-right: 15px; /* Add some padding for scrollbar if it appears */
-        margin-bottom: 20px; /* Space between inputs and button */
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     }
 
     .matiere {
@@ -152,14 +143,13 @@
       display: none; /* Initially hidden */
       min-height: 150px; /* Ensure space for results or spinner */
       position: relative; /* Crucial for positioning the spinner inside */
-      flex-shrink: 0; /* NEW: Prevent results area from shrinking */
     }
 
     #resultat p {
       margin-bottom: 8px;
     }
 
-    /* Multi-dot Loading Spinner within #resultat */
+    /* Multi-dot Loading Spinner within #resultat (from annee4 and annee1 design) */
     .dot-spinner-in-results {
       display: flex;
       justify-content: center;
@@ -241,7 +231,6 @@
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       transition: background-color 0.3s ease, transform 0.2s ease;
-      flex-shrink: 0; /* NEW: Prevent button from shrinking */
     }
 
     button:hover {
@@ -467,9 +456,7 @@
     <header>
       <h1>🩺 MedCalculator - 3ème Année Médecine</h1>
     </header>
-    <div class="input-scroll-area"> <form id="gpa-form"></form>
-    </div>
-    
+    <form id="gpa-form"></form>
     <button onclick="calculerMoyenne()">Calculer</button>
     <div id="resultat">
       <div id="dotSpinnerInResults" class="dot-spinner-in-results">
@@ -632,21 +619,6 @@
             event.target.classList.remove("invalid"); // Remove invalid class on input
           });
 
-          // Handle Enter key to move to the next input or trigger calculation
-          input.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault(); // Prevent default Enter behavior (e.g., form submission)
-              const formInputs = Array.from(document.querySelectorAll('#gpa-form input[type="number"]'));
-              const currentIndex = formInputs.indexOf(event.target);
-              if (currentIndex > -1 && currentIndex < formInputs.length - 1) {
-                formInputs[currentIndex + 1].focus(); // Move focus to the next input
-              } else {
-                // If it's the last input, trigger the calculation
-                calculerMoyenne();
-              }
-            }
-          });
-
           label.appendChild(input);
           return label;
         };
@@ -676,7 +648,23 @@
         updateMatiereNote(key);
       }
 
-      // No need for a separate last input listener if handled by createInputField's keydown
+      // NEW LOGIC FOR ENTER KEY NAVIGATION
+      const allInputElements = form.querySelectorAll('input[type="number"]'); // Select all number inputs
+      allInputElements.forEach((input, index) => {
+        input.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form submission
+
+            if (index < allInputElements.length - 1) {
+              // If not the last input, move focus to the next one
+              allInputElements[index + 1].focus();
+            } else {
+              // If it's the last input, trigger calculation
+              calculerMoyenne();
+            }
+          }
+        });
+      });
     };
 
     /**
@@ -716,6 +704,7 @@
         }
       } else if (mat.type === "emd_only") {
         note = val(key + "_emd");
+        // No need for 'if (note === null) return null;' here, as val() already returns null if invalid.
       }
       return note;
     }
