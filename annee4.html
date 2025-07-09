@@ -73,7 +73,7 @@
       }
     }
 
-    .matiere {
+    .module { /* Changed from .matiere */
       background-color: #FFF5F5; /* Even lighter red, almost white for subject containers */
       padding: 20px;
       border-radius: 15px;
@@ -83,7 +83,7 @@
       gap: 15px;
     }
 
-    .matiere h3 {
+    .module h3 { /* Changed from .matiere h3 */
       margin-top: 0;
       color: #CC3333; /* Strong, clear red for subject headings */
       margin-bottom: 0;
@@ -119,7 +119,7 @@
       width: 60px;
       padding: 8px 10px;
       border-radius: 12px;
-      border: 1px solid #ccc;
+      border: 1px solid #ccc; /* Default neutral border */
       font-size: 14px;
       text-align: center;
       transition: border-color 0.3s ease;
@@ -132,7 +132,7 @@
     }
 
     .input-group input.invalid {
-      border-color: red;
+      border-color: red; /* Red border for invalid state */
     }
 
     #resultat {
@@ -140,10 +140,83 @@
       text-align: center;
       font-size: 1.2em;
       line-height: 1.6;
+      display: none; /* Initially hidden */
+      min-height: 150px; /* Ensure space for results or spinner */
+      position: relative; /* Crucial for positioning the spinner inside */
     }
 
     #resultat p {
       margin-bottom: 8px;
+    }
+
+    /* Multi-dot Loading Spinner within #resultat */
+    .dot-spinner-in-results {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%; /* Take full height of #resultat */
+      width: 100%; /* Take full width of #resultat */
+      position: absolute; /* Position relative to #resultat */
+      top: 0;
+      left: 0;
+      background-color: rgba(255, 255, 255, 0.9); /* Opaque white background for spinner area */
+      z-index: 5; /* Above results content */
+      display: none; /* Hidden by default */
+      opacity: 0; /* For fade transition */
+      transition: opacity 0.3s ease;
+    }
+
+    .dot-spinner-in-results.visible {
+      opacity: 1;
+    }
+
+    .dot {
+      width: 20px; /* Size of each dot */
+      height: 20px; /* Size of each dot */
+      border-radius: 50%;
+      margin: 0 6px; /* Space between dots */
+      animation: bounce 0.8s infinite ease-in-out; /* Bounce animation */
+    }
+
+    /* Specific dot colors and animation delays (using heading colors from previous designs) */
+    .dot:nth-child(1) { background-color: #5C4B8C; /* Purple Heading from Anne 1 */ animation-delay: 0s; }
+    .dot:nth-child(2) { background-color: #2C7DA0; /* Blue-Greenish Heading from Anne 3 */ animation-delay: 0.1s; }
+    .dot:nth-child(3) { background-color: #CC3333; /* Red Heading from Anne 4 */ animation-delay: 0.2s; }
+    .dot:nth-child(4) { background-color: #3D8C40; /* Dark Green (new heading-like) */ animation-delay: 0.3s; }
+    .dot:nth-child(5) { background-color: #D4AC0D; /* Dark Gold (new heading-like) */ animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); } /* Updated: Bounce height to match new dot size */
+    }
+
+    /* Animation for success message */
+    @keyframes pulse-success {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-animation {
+      animation: pulse-success 0.8s ease-out;
+      color: #28A745 !important; /* Brighter green for success */
+    }
+
+    /* Animation for failure message */
+    @keyframes shake-failure {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    .failure-animation {
+      animation: shake-failure 0.5s ease-in-out;
+      color: #DC3545 !important; /* Brighter red for failure */
+    }
+
+    /* Style for rattrapage list with note < 10 */
+    .rattrapage-orange {
+        color: orange;
     }
 
     button {
@@ -328,13 +401,13 @@
         display: none;
       }
 
-      .matiere {
+      .module { /* Changed from .matiere */
         flex-direction: row;
         align-items: center; /* ALIGN VERTICALLY: This ensures all items are centered along the cross-axis (vertically in a row) */
         gap: 20px; /* Maintain consistent gap between elements */
       }
 
-      .matiere h3 {
+      .module h3 { /* Changed from .matiere h3 */
         min-width: 160px;
         text-align: left;
         flex-shrink: 0; /* Prevent h3 from shrinking too much */
@@ -385,7 +458,20 @@
     </header>
     <form id="gpa-form"></form>
     <button onclick="calculerMoyenne()">Calculer</button>
-    <div id="resultat"></div>
+    <div id="resultat">
+      <!-- Multi-dot Loading Spinner will appear here -->
+      <div id="dotSpinnerInResults" class="dot-spinner-in-results">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <!-- Results will be displayed here dynamically -->
+      <div id="actualResultsContent" style="display: none;">
+        <!-- This div will hold the actual results HTML -->
+      </div>
+    </div>
 
     <div class="app-links">
         <p>Connectez-vous et téléchargez notre application :</p>
@@ -411,14 +497,16 @@
 </script>
       </div>
   </div>
+
   <div id="customMessageBox" class="message-box">
     <p id="messageBoxText"></p>
     <button onclick="hideMessageBox()">OK</button>
   </div>
+
   <script>
-    // Definition of subjects, their coefficients, and types for the 4th year
-    // All subjects now have a coefficient of 1 as requested.
-    const matieres = {
+    // Definition of modules, their coefficients, and types for the 4th year
+    // All modules now have a coefficient of 1 as requested.
+    const modules = { /* Changed from matieres */
       cardio: { label: "Cardio", coeff: 1, type: "emd_ecos" },
       pneumo: { label: "Pneumo", coeff: 1, type: "emd_ecos" },
       neuro: { label: "Neuro", coeff: 1, type: "emd_ecos" },
@@ -446,16 +534,61 @@
     }
 
     /**
+     * Updates the individual module note display.
+     * This function is called when EMD or Écos inputs change.
+     * @param {string} key - The module key.
+     */
+    function updateModuleNote(key) { /* Changed from updateMatiereNote */
+      const mod = modules[key]; /* Changed from mat */
+      if (!mod) return;
+
+      const noteDiv = document.getElementById("note_" + key);
+      const note = calculateModuleNote(key, mod); /* Changed from calculateMatiereNote */
+
+      if (note !== null) {
+        noteDiv.textContent = `Note: ${note.toFixed(2)}`;
+        noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
+      } else {
+        noteDiv.textContent = ''; // Clear note if inputs are incomplete or invalid
+      }
+    }
+
+    /**
+     * Shows the multi-dot loading spinner within the results div.
+     */
+    function showMultiDotLoadingSpinnerInResults() {
+      const resultatDiv = document.getElementById("resultat");
+      const dotSpinner = document.getElementById("dotSpinnerInResults");
+      const actualResultsContent = document.getElementById("actualResultsContent");
+
+      actualResultsContent.style.display = "none"; // Hide actual results content
+      resultatDiv.style.display = "flex"; // Show #resultat as flex container to center spinner
+      dotSpinner.style.display = "flex"; // Show the spinner
+      dotSpinner.classList.add("visible"); // For fade transition
+    }
+
+    /**
+     * Hides the multi-dot loading spinner within the results div.
+     */
+    function hideMultiDotLoadingSpinnerInResults() {
+      const dotSpinner = document.getElementById("dotSpinnerInResults");
+      dotSpinner.classList.remove("visible");
+      setTimeout(() => {
+        dotSpinner.style.display = "none"; // Hide after transition
+      }, 300); // Match CSS transition duration
+    }
+
+    /**
      * This function is executed when the page loads to dynamically create the input fields.
      */
     window.onload = () => {
       const form = document.getElementById("gpa-form");
-      for (const [key, mat] of Object.entries(matieres)) {
+      for (const [key, mod] of Object.entries(modules)) { /* Changed from matieres */
         const div = document.createElement("div");
-        div.classList.add("matiere");
+        div.classList.add("module"); /* Changed from matiere */
 
         const h3 = document.createElement("h3");
-        h3.textContent = mat.label;
+        h3.textContent = mod.label; /* Changed from mat.label */
         div.appendChild(h3);
 
         const contentWrap = document.createElement("div");
@@ -465,7 +598,7 @@
         inputGroup.classList.add("input-group");
 
         // Helper function to create an input field and attach event listeners
-        const createInputField = (id, labelText) => {
+        const createInputField = (id, labelText, moduleKey) => { /* Changed from subjectKey */
           const label = document.createElement('label');
           label.textContent = labelText + ': ';
           const input = document.createElement('input');
@@ -482,19 +615,22 @@
             input.value = savedValue;
           }
 
-          // Save value to localStorage when input changes
+          // Save value to localStorage and update individual module note on input
           input.addEventListener('input', (event) => {
             localStorage.setItem(id, event.target.value);
+            updateModuleNote(moduleKey); /* Changed from updateMatiereNote(subjectKey) */
+            // Remove invalid class on input change
+            event.target.classList.remove("invalid");
           });
 
           label.appendChild(input);
           return label;
         };
 
-        // Build input fields based on subject type
-        if (mat.type === "emd_ecos") {
-          inputGroup.appendChild(createInputField(`${key}_emd`, 'EMD'));
-          inputGroup.appendChild(createInputField(`${key}_ecos`, 'Écos'));
+        // Build input fields based on module type
+        if (mod.type === "emd_ecos") { /* Changed from mat.type */
+          inputGroup.appendChild(createInputField(`${key}_emd`, 'EMD', key));
+          inputGroup.appendChild(createInputField(`${key}_ecos`, 'Écos', key));
         }
         
         contentWrap.appendChild(inputGroup); // Append inputGroup to contentWrap
@@ -504,9 +640,14 @@
         noteDiv.classList.add("note");
         contentWrap.appendChild(noteDiv); // Append noteDiv to contentWrap
 
-        div.appendChild(contentWrap); // Append contentWrap to the matiere div
+        div.appendChild(contentWrap); // Append contentWrap to the module div
 
         form.appendChild(div);
+      }
+
+      // Initialize individual module notes on load
+      for (const key of Object.keys(modules)) { /* Changed from matieres */
+        updateModuleNote(key); /* Changed from updateMatiereNote */
       }
 
       // After creating all inputs, add event listener to the last one
@@ -536,28 +677,31 @@
       const v = inputElement.value;
       const parsedValue = parseFloat(v);
 
+      // Check for invalidity
       if (v === "" || isNaN(parsedValue) || parsedValue < 0 || parsedValue > 20) {
-        inputElement.classList.add("invalid"); // Add a class to visually indicate the error
-        return null;
+        return null; // Return null for invalid values
       }
-      inputElement.classList.remove("invalid"); // Remove the error class if the value is valid
       return parsedValue;
     }
 
     /**
-     * Calculates the subject's grade based on its type and input fields.
-     * @param {string} key - The subject key.
-     * @param {object} mat - The subject object.
-     * @returns {number|null} The subject's grade or null if fields are missing/invalid.
+     * Calculates the module's note based on its type and input fields.
+     * @param {string} key - The module key.
+     * @param {object} mod - The module object.
+     * @returns {number|null} The module's note or null if fields are missing/are invalid.
      */
-    function calculateMatiereNote(key, mat) {
+    function calculateModuleNote(key, mod) { /* Changed from calculateMatiereNote */
       let note = null;
       let champs = [];
 
-      if (mat.type === "emd_ecos") {
+      if (mod.type === "emd_ecos") { /* Changed from mat.type */
         champs = [val(key + "_emd"), val(key + "_ecos")];
-        if (champs.includes(null)) return null;
-        note = (champs[0] * 0.7 + champs[1] * 0.3); // Calculation for EMD and Écos (70% EMD, 30% Écos)
+        // Only calculate if both EMD and Écos are valid numbers
+        if (champs[0] !== null && champs[1] !== null) {
+          note = (champs[0] * 0.7 + champs[1] * 0.3); // Calculation for EMD and Écos (70% EMD, 30% Écos)
+        } else {
+          return null; // Return null if any input is invalid or missing
+        }
       }
       return note;
     }
@@ -566,63 +710,131 @@
      * Calculates the general average and updates the results in the interface.
      */
     function calculerMoyenne() {
-      let total = 0;
-      let coeffTotal = 0;
-      let sous10 = 0;
-      let matiereSous5Count = 0; // Counts subjects with a grade less than 5
-      let matiereRattrapageList = []; // List of subjects requiring re-sit
+      const resultatDiv = document.getElementById("resultat");
+      const actualResultsContent = document.getElementById("actualResultsContent");
+      
+      actualResultsContent.style.display = "none"; // Ensure results content is hidden
+      resultatDiv.style.display = "none"; // Hide the entire resultat div initially
+      
+      // Clear all invalid classes before re-validation
+      document.querySelectorAll('.input-group input').forEach(input => {
+        input.classList.remove("invalid");
+      });
 
+      // First, check for errors and mark invalid fields
       let erreur = false;
+      for (const [key, mod] of Object.entries(modules)) { /* Changed from matieres */
+        const emdInput = document.getElementById(`${key}_emd`);
+        const ecosInput = document.getElementById(`${key}_ecos`);
+        
+        let emdVal = val(`${key}_emd`);
+        let ecosVal = val(`${key}_ecos`);
 
-      for (const [key, mat] of Object.entries(matieres)) {
-        const note = calculateMatiereNote(key, mat);
-
-        if (note === null) {
-          erreur = true;
-          // We don't break the loop here, we continue to identify all erroneous fields
-        } else {
-          if (note < 10) sous10++;
-          if (note < 5) {
-            matiereSous5Count++;
-            matiereRattrapageList.push(mat.label); // Add the subject to the re-sit list
+        // Check if inputs are empty or invalid numbers
+        if (mod.type === "emd_ecos") { /* Changed from mat.type */
+          if (emdVal === null || ecosVal === null) {
+            erreur = true;
+            if (emdInput && (emdInput.value === "" || isNaN(parseFloat(emdInput.value)) || parseFloat(emdInput.value) < 0 || parseFloat(emdInput.value) > 20)) {
+              emdInput.classList.add("invalid");
+            }
+            if (ecosInput && (ecosInput.value === "" || isNaN(parseFloat(ecosInput.value)) || parseFloat(ecosInput.value) < 0 || parseFloat(ecosInput.value) > 20)) {
+              ecosInput.classList.add("invalid");
+            }
           }
-
-          total += note * mat.coeff;
-          coeffTotal += mat.coeff;
-
-          const noteDiv = document.getElementById("note_" + key);
-          noteDiv.textContent = `Note: ${note.toFixed(2)}`;
-          noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
+        } else if (mod.type === "emd_only") { /* Changed from mat.type */
+          if (emdVal === null) {
+            erreur = true;
+            if (emdInput && (emdInput.value === "" || isNaN(parseFloat(emdInput.value)) || parseFloat(emdInput.value) < 0 || parseFloat(emdInput.value) > 20)) {
+              emdInput.classList.add("invalid");
+            }
+          }
         }
+        // Add similar checks for other types if they exist (e.g., tp, ssh etc.)
       }
 
       if (erreur) {
+        // If there's an error, just show the message box and return
         showMessageBox("Veuillez remplir tous les champs avec des valeurs valides (entre 0 et 20) avant de calculer.");
-        return;
+        return; 
       }
 
-      const moyenne = total / coeffTotal;
+      // If no errors, scroll to results div (only on small screens), show loading spinner, and proceed with calculation after delay
+      // Show resultatDiv as flex container first to ensure it takes space for scrolling and spinner
+      resultatDiv.style.display = "flex"; 
+      if (window.innerWidth <= 768) { // Apply scroll only for screens up to 768px wide (typical mobile/tablet)
+        resultatDiv.scrollIntoView({ behavior: 'smooth' }); // Scroll to results div
+      }
       
-      let validationMessage = '';
-      if (moyenne >= 10 && matiereSous5Count === 0) {
-        validationMessage = '<p style="color:green;">✅ Félicitations ! Vous avez validé cette année 🎉</p>';
-      } else if (moyenne < 10) {
-        validationMessage = `<p style="color:red;">⚠️ Vous n'avez pas validé cette année. Vous allez entrer en rattrapage.</p>`;
-      } else if (matiereSous5Count > 0) {
-        // If the average is >= 10 but there are subjects below 5, it's still a validation issue
-        validationMessage = `<p style="color:red;">⚠️ Vous n'avez pas validé à cause de matières avec une note inférieure à 5. Vous allez entrer en rattrapage.</p>`;
+      showMultiDotLoadingSpinnerInResults(); 
+
+      // Dismiss the keyboard
+      if (document.activeElement && document.activeElement.blur) {
+        document.activeElement.blur();
       }
 
-      const resultat = `
-        <p>Moyenne générale: <strong>${moyenne.toFixed(2)}</strong></p>
-        ${matiereRattrapageList.length > 0 ? `<p style="color:red;">⚠️ Matière(s) en rattrapage (note < 5): ${matiereRattrapageList.join(", ")}</p>` : ''}
-        ${sous10 > 0 && moyenne < 10 ? `<p>${sous10} matière(s) avec moins de 10.</p>` : ''}
-        ${validationMessage}
-      `;
-      document.getElementById("resultat").innerHTML = resultat;
+      setTimeout(() => {
+        let total = 0;
+        let coeffTotal = 0;
+        let modulesRattrapageList_moins5 = []; // Changed from matiereRattrapageList_moins5
+        let modulesRattrapageList_entre5et10 = []; // Changed from matiereRattrapageList_entre5et10
 
-      // Smooth scroll to the results section
-      document.getElementById("resultat").scrollIntoView({ behavior: 'smooth' });
+        // Recalculate notes and populate rattrapage lists
+        for (const [key, mod] of Object.entries(modules)) { /* Changed from matieres, mat */
+          const note = calculateModuleNote(key, mod); /* Changed from calculateMatiereNote */
+
+          if (note < 5) {
+              modulesRattrapageList_moins5.push(mod.label); /* Changed from matiereRattrapageList_moins5, mat.label */
+          } else if (note < 10) { // Note is between 5 and 10
+              modulesRattrapageList_entre5et10.push(mod.label); /* Changed from matiereRattrapageList_entre5et10, mat.label */
+          }
+
+          total += note * mod.coeff; /* Changed from mat.coeff */
+          coeffTotal += mod.coeff; /* Changed from mat.coeff */
+        }
+
+        hideMultiDotLoadingSpinnerInResults(); // Hide spinner after calculation is done
+
+        const moyenne = total / coeffTotal;
+        
+        let validationMessage = '';
+        let rattrapageDetails = '';
+
+        // Determine main validation message
+        if (moyenne >= 10 && modulesRattrapageList_moins5.length === 0) { // Validated if average >= 10 AND no modules below 5
+          validationMessage = '<p class="success-animation">✅ Félicitations ! Vous avez validé cette année 🎉</p>';
+        } else { // Goes to rattrapage if average < 10 OR any module < 5
+          // Specific message if average >= 10 but failed due to modules < 5
+          if (moyenne >= 10 && modulesRattrapageList_moins5.length > 0) {
+              validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année à cause de module(s) avec une note inférieure à 5. Vous allez entrer en rattrapage.</p>`; /* Reverted text */
+          } else { // Average < 10
+              validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année. Vous allez entrer en rattrapage.</p>`;
+          }
+          
+          // Determine rattrapage details based on conditions
+          if (modulesRattrapageList_moins5.length > 0) {
+              rattrapageDetails += `<p style="color:red;">⚠️ Module(s) en rattrapage (note < 5): ${modulesRattrapageList_moins5.join(", ")}</p>`; /* Changed from Matière(s) */
+          }
+          // This part only appears if overall average < 10 AND there are modules between 5 and 10
+          if (moyenne < 10 && modulesRattrapageList_entre5et10.length > 0) {
+              rattrapageDetails += `<p class="rattrapage-orange">⚠️ Module(s) en rattrapage (note < 10): ${modulesRattrapageList_entre5et10.join(", ")}</p>`; /* Changed from Matière(s) */
+          }
+        }
+
+        const resultatContent = `
+          <p>Moyenne générale: <strong>${moyenne.toFixed(2)}</strong></p>
+          ${rattrapageDetails}
+          ${validationMessage}
+        `;
+        
+        actualResultsContent.innerHTML = resultatContent; // Set results HTML
+        actualResultsContent.style.display = "block"; // Show actual results content
+        resultatDiv.style.display = "block"; // Show results div container (ensure it's block for content flow)
+
+        // Smooth scroll to the results section (again, to ensure it's visible after content change)
+        if (window.innerWidth <= 768) { 
+          resultatDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 1000); // 1 second delay
     }
   </script>
 </body>
