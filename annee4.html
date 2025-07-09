@@ -751,12 +751,11 @@
         return; 
       }
 
-      // If no errors, scroll to results div (only on small screens), show loading spinner, and proceed with calculation after delay
+      // If no errors, scroll to results div, show loading spinner, and proceed with calculation after delay
       // Show resultatDiv as flex container first to ensure it takes space for scrolling and spinner
       resultatDiv.style.display = "flex"; 
-      if (window.innerWidth <= 768) { // Apply scroll only for screens up to 768px wide (typical mobile/tablet)
-        resultatDiv.scrollIntoView({ behavior: 'smooth' }); // Scroll to results div
-      }
+      // Removed the window.innerWidth condition to ensure scrolling on all screen sizes
+      resultatDiv.scrollIntoView({ behavior: 'smooth' }); 
       
       showMultiDotLoadingSpinnerInResults(); 
 
@@ -829,12 +828,10 @@
         resultatDiv.style.display = "block"; // Show results div container (ensure it's block for content flow)
 
         // Smooth scroll to the results section (again, to ensure it's visible after content change)
-        if (window.innerWidth <= 768) { 
-          resultatDiv.scrollIntoView({ behavior: 'smooth' });
-        }
+        // Removed the window.innerWidth condition to ensure scrolling on all screen sizes
+        resultatDiv.scrollIntoView({ behavior: 'smooth' });
       }, 1000); // 1 second delay
     }
   </script>
 </body>
 </html>
-
