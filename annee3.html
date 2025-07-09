@@ -58,9 +58,7 @@
       flex-grow: 1; /* Allow container to grow and fill remaining vertical space on mobile */
       display: flex; /* Make container a flex container */
       flex-direction: column; /* Stack content inside container vertically */
-      /* Added for desktop screen fit */
-      max-height: calc(100vh - 60px); /* Adjust height to fit screen with top/bottom margin */
-      overflow-y: auto; /* Enable vertical scrolling if content overflows */
+      /* max-height and overflow-y removed from here, applied to .input-scroll-area instead */
     }
 
     /* This rule makes the area below the container white on mobile */
@@ -74,6 +72,14 @@
       @media (max-width: 767px) {
         margin-top: -1px; /* To ensure it connects seamlessly with the container */
       }
+    }
+
+    .input-scroll-area { /* NEW: Specific area for scrollable inputs */
+        flex-grow: 1; /* Allows it to take up available space */
+        overflow-y: auto; /* Enables vertical scrolling only for inputs */
+        padding-right: 15px; /* Add some padding for scrollbar if it appears */
+        margin-bottom: 20px; /* Space between inputs and button */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     }
 
     .matiere {
@@ -146,6 +152,7 @@
       display: none; /* Initially hidden */
       min-height: 150px; /* Ensure space for results or spinner */
       position: relative; /* Crucial for positioning the spinner inside */
+      flex-shrink: 0; /* NEW: Prevent results area from shrinking */
     }
 
     #resultat p {
@@ -234,6 +241,7 @@
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       transition: background-color 0.3s ease, transform 0.2s ease;
+      flex-shrink: 0; /* NEW: Prevent button from shrinking */
     }
 
     button:hover {
@@ -459,7 +467,9 @@
     <header>
       <h1>🩺 MedCalculator - 3ème Année Médecine</h1>
     </header>
-    <form id="gpa-form"></form>
+    <div class="input-scroll-area"> <form id="gpa-form"></form>
+    </div>
+    
     <button onclick="calculerMoyenne()">Calculer</button>
     <div id="resultat">
       <div id="dotSpinnerInResults" class="dot-spinner-in-results">
@@ -547,7 +557,6 @@
 
       if (note !== null) {
         noteDiv.textContent = `Note: ${note.toFixed(2)}`;
-        // Keeping colors consistent with validation messages (red for <5, orange for <10, green for >=10)
         noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
       } else {
         noteDiv.textContent = ''; // Clear note if inputs are incomplete or invalid
