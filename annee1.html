@@ -863,11 +863,11 @@
           
           // Determine rattrapage details based on conditions
           if (matieresRattrapageList_moins5.length > 0) {
-              rattrapageDetails += `<p style="color:red;">⚠️ Matière(s) en rattrapage (note < 5): ${matieresRattrapageList_moins5.join(", ")}</p>`;
+              rattrapageDetails += `<p style="color:red;">⚠️ Module(s) en rattrapage obligatoire pour valider l'année (note < 5): ${matieresRattrapageList_moins5.join(", ")}</p>`;
           }
           // This part only appears if overall average < 10 AND there are modules between 5 and 10
           if (moyenne < 10 && matieresRattrapageList_entre5et10.length > 0) {
-              rattrapageDetails += `<p class="rattrapage-orange">⚠️ Matière(s) en rattrapage (note < 10): ${matieresRattrapageList_entre5et10.join(", ")}</p>`;
+              rattrapageDetails += `<p class="rattrapage-orange">⚠️ Module(s) en rattrapage (note < 10): ${matieresRattrapageList_entre5et10.join(", ")}</p>`;
           }
 
           // Add points needed message if not validated (based on 160 threshold)
