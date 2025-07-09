@@ -15,7 +15,7 @@
     }
 
     body {
-      background-color: #E8EDF8; /* Light blue from the image */
+      background-color: #E8EDF8; /* Light blue-gray background */
       font-family: 'Inter', sans-serif;
       margin: 0;
       padding: 0;
@@ -751,11 +751,10 @@
         return;
       }
 
-      // If no errors, scroll to results div (only on small screens), show loading spinner, and proceed with calculation after delay
+      // If no errors, scroll to results div, show loading spinner, and proceed with calculation after delay
       resultatDiv.style.display = "flex"; 
-      if (window.innerWidth <= 768) { 
-        resultatDiv.scrollIntoView({ behavior: 'smooth' }); 
-      }
+      // Removed the window.innerWidth condition to ensure scrolling on all screen sizes
+      resultatDiv.scrollIntoView({ behavior: 'smooth' }); 
       
       showMultiDotLoadingSpinnerInResults(); 
 
@@ -828,11 +827,11 @@
         resultatDiv.style.display = "block"; // Show results div container (ensure it's block for content flow)
 
         // Smooth scroll to the results section (again, to ensure it's visible after content change)
-        if (window.innerWidth <= 768) { 
-          resultatDiv.scrollIntoView({ behavior: 'smooth' });
-        }
+        // Removed the window.innerWidth condition to ensure scrolling on all screen sizes
+        resultatDiv.scrollIntoView({ behavior: 'smooth' });
       }, 1000); // 1 second delay
     }
   </script>
 </body>
 </html>
+
