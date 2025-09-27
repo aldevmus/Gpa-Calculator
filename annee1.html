@@ -9,80 +9,229 @@
 
     /* Ensure HTML and Body take full height for background to extend */
     html, body {
-      height: 100%; /* Make html and body fill the entire viewport height */
+      height: 100%;
       margin: 0;
       padding: 0;
     }
 
     body {
-      background-color: #e3f6e5; /* Green background for the entire page */
+      background-color: #e3f6e5;
       font-family: 'Inter', sans-serif;
       margin: 0;
       padding: 0;
       direction: ltr;
       text-align: left;
-      display: flex; /* Use flexbox for overall page layout */
-      flex-direction: column; /* Stack children vertically */
-      min-height: 100vh; /* Ensure body is at least viewport height */
-      align-items: center; /* Center content horizontally */
-      padding-top: 30px; /* Space above the main title */
-      overflow-x: hidden; /* Prevent horizontal scrolling */
-      box-sizing: border-box; /* Include padding/border in element's total width/height */
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      padding-top: 20px;
+      overflow-x: hidden;
+      box-sizing: border-box;
     }
 
+    /* ===== Collapsible Notes Section Styles ===== */
+    .notes-section-modern {
+      background-color: rgba(209, 238, 216, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(34, 94, 59, 0.2);
+      border-radius: 15px;
+      padding: 15px 20px;
+      margin: 0 auto 20px auto;
+      max-width: 900px;
+      width: calc(100% - 40px);
+      box-sizing: border-box;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+    }
+    .notes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .notes-header h4 {
+      margin: 0;
+      color: #134c2e;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1em;
+      font-weight: 700;
+    }
+    .notes-header h4 svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+    .notes-toggle-arrow {
+        width: 16px;
+        height: 16px;
+        fill: #134c2e;
+        transition: transform 0.3s ease-in-out;
+    }
+    .notes-header.expanded .notes-toggle-arrow {
+        transform: rotate(180deg);
+    }
+    .notes-content {
+      overflow: hidden;
+      transition: all 0.4s ease-in-out;
+    }
+    .notes-content.collapsed {
+        max-height: 0;
+        padding-top: 0;
+        margin-top: 0;
+        opacity: 0;
+    }
+    .notes-content:not(.collapsed) {
+        max-height: 300px; /* Adjust as needed */
+        opacity: 1;
+        padding-top: 15px;
+        margin-top: 10px;
+        border-top: 1px solid rgba(34, 94, 59, 0.2);
+    }
+    .notes-content ul {
+      margin: 0;
+      padding-left: 5px;
+      list-style-type: none;
+      color: #225e3b;
+    }
+    .notes-content li {
+      padding-left: 25px;
+      margin-bottom: 8px;
+      font-size: 0.9em;
+      line-height: 1.5;
+      position: relative;
+      text-align: left;
+    }
+    .notes-content li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      top: 2px;
+      color: #1d7a3c;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    .notes-content li:last-child {
+      margin-bottom: 0;
+    }
+    
+    /* ===== Mode Switcher Styles (Updated) ===== */
+    .mode-switcher {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: none; /* Removed shadow */
+      border: 1px solid #dcdcdc; /* Added light border */
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .mode-switcher span {
+      font-weight: 600;
+      color: #333;
+      font-size: 1em;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    .switch input { 
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #225e3b;
+    }
+    input:focus + .slider {
+      box-shadow: 0 0 1px #225e3b;
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    /* Main Styles */
     h1 {
       text-align: center;
-      color: #225e3b; /* Dark green color */
-      margin: 0 20px 30px 20px; /* Adjust margin to separate from container */
-      font-size: 1.8em; /* Larger font size */
-      font-weight: 700; /* Bold font weight */
-      display: flex; /* Use flexbox for centering content within H1 (icon + text) */
-      justify-content: center; /* Center horizontally */
-      align-items: center; /* Center vertically */
-      gap: 10px; /* Space between icon and text */
-      width: calc(100% - 40px); /* Adjust width to account for side margins */
-      max-width: 900px; /* Limit max width */
+      color: #225e3b;
+      margin: 0 20px 20px 20px;
+      font-size: 1.8em;
+      font-weight: 700;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: calc(100% - 40px);
+      max-width: 900px;
     }
-
     .container {
-      background-color: white; /* White background for the card */
-      padding: 30px; /* Ample padding */
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Soft shadow for depth */
-      max-width: 900px; /* Max width for desktop */
-      width: 100%; /* Take full width of parent (body) on mobile */
-      margin: 30px auto 0 auto; /* Top margin, auto horizontal, ZERO bottom margin for mobile */
-      border-radius: 20px; /* Default rounded corners */
-      border-bottom-left-radius: 0; /* Remove bottom left radius for mobile */
-      border-bottom-right-radius: 0; /* Remove bottom right radius for mobile */
-      box-sizing: border-box; /* Ensure padding/border are included in element's total width/height */
-      flex-grow: 1; /* Allow container to grow and fill remaining vertical space on mobile */
-      display: flex; /* Make container a flex container */
-      flex-direction: column; /* Stack content inside container vertically */
+      background-color: white;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto 0 auto;
+      border-radius: 20px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      box-sizing: border-box;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
     }
-
-    /* This rule makes the area below the container white on mobile */
     body::after {
       content: '';
       display: block;
-      flex-grow: 1; /* Make it fill remaining vertical space */
-      background-color: white; /* White background for the bottom part */
-      width: 100%; /* Take full width */
-      /* Only apply on mobile */
-      @media (max-width: 767px) {
-        margin-top: -1px; /* To ensure it connects seamlessly with the container */
+      flex-grow: 1;
+      background-color: white;
+      width: 100%;
+    }
+    @media (max-width: 767px) {
+      body::after {
+        margin-top: -1px;
       }
     }
-
     .matiere {
       background-color: #d7f2dc;
       padding: 20px;
       border-radius: 15px;
       margin-bottom: 20px;
       display: flex;
-      flex-direction: column; /* Vertical by default for mobile */
+      flex-direction: column;
       gap: 15px;
     }
-
     .matiere h3 {
       margin-top: 0;
       color: #134c2e;
@@ -90,30 +239,34 @@
       font-weight: 600;
       flex-shrink: 0;
     }
-
-    /* New wrapper for inputs and note */
     .content-wrap {
       display: flex;
-      flex-direction: column; /* Stack inputs and note vertically by default (mobile) */
-      flex-grow: 1; /* Allow it to grow in column direction */
-      gap: 10px; /* Space between input-group and note */
+      flex-direction: column;
+      flex-grow: 1;
+      gap: 10px;
     }
-
     .input-group {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       justify-content: flex-start;
-      flex-grow: 1; /* Allow input-group to take horizontal space if needed within content-wrap */
+      flex-grow: 1;
       align-items: center;
     }
-
     .input-group label {
       display: flex;
       align-items: center;
       gap: 5px;
       font-size: 0.9em;
       color: #333;
+    }
+    
+    /* Logic to hide/show rattrapage field */
+    .ratt-field-wrapper {
+        display: none !important;
+    }
+    #gpa-form.rattrapage-mode .ratt-field-wrapper {
+        display: flex !important;
     }
 
     .input-group input {
@@ -125,101 +278,81 @@
       text-align: center;
       transition: border-color 0.3s ease;
     }
-
     .input-group input:focus {
       outline: none;
       border-color: #1d7a3c;
       box-shadow: 0 0 0 2px rgba(29, 122, 60, 0.2);
     }
-
     .input-group input.invalid {
       border-color: red;
     }
-
     #resultat {
       margin-top: 30px;
       text-align: center;
       font-size: 1.2em;
       line-height: 1.6;
-      display: none; /* Initially hidden */
-      min-height: 150px; /* Ensure space for results or spinner */
-      position: relative; /* Crucial for positioning the spinner inside */
+      display: none;
+      min-height: 150px;
+      position: relative;
     }
-
     #resultat p {
       margin-bottom: 8px;
     }
-
-    /* Multi-dot Loading Spinner within #resultat (from annee4) */
     .dot-spinner-in-results {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100%; /* Take full height of #resultat */
-      width: 100%; /* Take full width of #resultat */
-      position: absolute; /* Position relative to #resultat */
+      height: 100%;
+      width: 100%;
+      position: absolute;
       top: 0;
       left: 0;
-      background-color: rgba(255, 255, 255, 0.9); /* Opaque white background for spinner area */
-      z-index: 5; /* Above results content */
-      display: none; /* Hidden by default */
-      opacity: 0; /* For fade transition */
+      background-color: rgba(255, 255, 255, 0.9);
+      z-index: 5;
+      display: none;
+      opacity: 0;
       transition: opacity 0.3s ease;
     }
-
     .dot-spinner-in-results.visible {
       opacity: 1;
     }
-
     .dot {
-      width: 20px; /* Size of each dot */
-      height: 20px; /* Size of each dot */
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
-      margin: 0 6px; /* Space between dots */
-      animation: bounce 0.8s infinite ease-in-out; /* Bounce animation */
+      margin: 0 6px;
+      animation: bounce 0.8s infinite ease-in-out;
     }
-
-    /* Specific dot colors and animation delays (using heading colors from annee4 but adapting them) */
-    .dot:nth-child(1) { background-color: #225e3b; /* Dark Green from annee1 H1 */ animation-delay: 0s; }
-    .dot:nth-child(2) { background-color: #1d7a3c; /* Green from annee1 button */ animation-delay: 0.1s; }
-    .dot:nth-child(3) { background-color: #4CAF50; /* Google Play green from annee1 */ animation-delay: 0.2s; }
-    .dot:nth-child(4) { background-color: #66BB6A; /* Lighter Green (new heading-like) */ animation-delay: 0.3s; }
-    .dot:nth-child(5) { background-color: #81C784; /* Even lighter Green (new heading-like) */ animation-delay: 0.4s; }
+    .dot:nth-child(1) { background-color: #225e3b; animation-delay: 0s; }
+    .dot:nth-child(2) { background-color: #1d7a3c; animation-delay: 0.1s; }
+    .dot:nth-child(3) { background-color: #4CAF50; animation-delay: 0.2s; }
+    .dot:nth-child(4) { background-color: #66BB6A; animation-delay: 0.3s; }
+    .dot:nth-child(5) { background-color: #81C784; animation-delay: 0.4s; }
 
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); } /* Updated: Bounce height to match new dot size */
+      50% { transform: translateY(-20px); }
     }
-
-    /* Animation for success message (from annee4) */
     @keyframes pulse-success {
       0% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.05); opacity: 0.9; }
       100% { transform: scale(1); opacity: 1; }
     }
-
     .success-animation {
       animation: pulse-success 0.8s ease-out;
-      color: #28A745 !important; /* Brighter green for success (standard green) */
+      color: #28A745 !important;
     }
-
-    /* Animation for failure message (from annee4) */
     @keyframes shake-failure {
       0%, 100% { transform: translateX(0); }
       10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
       20%, 40%, 60%, 80% { transform: translateX(5px); }
     }
-
     .failure-animation {
       animation: shake-failure 0.5s ease-in-out;
-      color: #DC3545 !important; /* Brighter red for failure (standard red) */
+      color: #DC3545 !important;
     }
-
-    /* Style for rattrapage list with note < 10 (from annee4) */
-    .rattrapage-orange {
-        color: orange;
-    }
-
+    .rattrapage-orange { color: orange; }
+    .failing-modules-list { color: red; }
     button {
       display: block;
       margin: 30px auto;
@@ -233,20 +366,16 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       transition: background-color 0.3s ease, transform 0.2s ease;
     }
-
     button:hover {
       background-color: #166130;
       transform: translateY(-2px);
     }
-
     .note {
-      margin-top: 5px; /* Adjust or remove depending on gap from content-wrap */
+      margin-top: 5px;
       font-weight: bold;
       text-align: left;
       min-width: 100px;
     }
-
-    /* Custom error message box */
     .message-box {
       position: fixed;
       top: 50%;
@@ -262,36 +391,25 @@
       max-width: 300px;
       border: 1px solid #ddd;
     }
-
     .message-box p {
       margin-bottom: 20px;
       font-size: 1.1em;
       color: #333;
     }
-
     .message-box button {
       margin: 0 auto;
       padding: 8px 20px;
       font-size: 15px;
       background-color: #007bff;
       color: white;
-      border: none;
       border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
     }
-
-    .message-box button:hover {
-      background-color: #0056b3;
-    }
-
-    /* New styles for app links section */
     .app-links {
         margin-top: 30px;
         text-align: center;
         width: 100%;
         padding-top: 20px;
-        border-top: 1px solid #eee; /* A subtle separator */
+        border-top: 1px solid #eee;
     }
     .app-links p {
         color: #333;
@@ -317,191 +435,115 @@
         font-size: 1em;
         transition: background-color 0.3s ease, transform 0.2s ease;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        width: 100%; /* Full width on mobile */
-        max-width: 300px; /* Max width for consistency */
-        justify-content: center; /* Center content within the button */
-    }
-    /* SVG icon styling within links */
-    .social-link svg {
-        width: 1.3em; /* Match font-size of text */
-        height: 1.3em;
-        fill: currentColor; /* Inherit color from parent link */
-    }
-
-    .instagram {
-        background-color: #E1306C; /* Instagram brand color */
-        color: white;
-    }
-    .instagram:hover {
-        background-color: #C13584;
-        transform: translateY(-2px);
-    }
-    .google-play {
-        background-color: #4CAF50; /* Google Play green */
-        color: white;
-    }
-    .google-play:hover {
-        background-color: #449D48;
-        transform: translateY(-2px);
-    }
-    .container-footer-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-    }
-    .copyright-info {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    }
-
-    .copyright-info p {
-    margin: 0;
-    }
-
-    .footer-logo {
-    width: 30px;
-    height: 30px;
-    -webkit-user-drag: none;
-    user-drag: none;
-    -webkit-touch-callout: none;
-    user-select: none;
-    }
-
-    .container-footer-content p:nth-child(2) {
-    margin: 0;
-    text-align: center;
-    }
-   .container-footer-content a {
-  color: #1d7a3c;
-  text-decoration: none;
-  font-weight: bold;
-    }
-    /* Desktop layout adjustments (media queries) */
-    @media (min-width: 768px) {
-      body {
-        justify-content: flex-start;
-        padding-top: 30px;
-      }
-
-      .container {
-        margin: 30px auto 50px auto;
-        border-radius: 20px;
-        flex-grow: 0;
-        width: 90%;
-        max-width: 900px;
-      }
-
-      body::after {
-        display: none;
-      }
-
-      .matiere {
-        flex-direction: row;
-        align-items: center; /* ALIGN VERTICALLY: This ensures all items are centered along the cross-axis (vertically in a row) */
-        gap: 20px; /* Maintain consistent gap between elements */
-      }
-
-      .matiere h3 {
-        min-width: 160px;
-        text-align: left;
-        flex-shrink: 0; /* Prevent h3 from shrinking too much */
-      }
-
-      .input-group {
-        flex-wrap: nowrap;
-        justify-content: flex-start;
-        flex-grow: 1; /* Allow input-group to take available space */
-        min-width: 0; /* Allow it to shrink if needed */
-      }
-
-      .input-group label {
-        min-width: unset;
-      }
-
-      .input-group input {
-        width: 80px;
-      }
-
-      .note {
-        text-align: left;
-        flex-shrink: 0; /* Prevent the note from shrinking */
-        margin-top: 0; /* Reset margin from mobile default */
-      }
-
-      .links-group {
-          flex-direction: row; /* Display side-by-side on desktop */
-          gap: 20px;
-      }
-      .social-link {
-          width: auto; /* Let content determine width */
-          padding: 12px 25px; /* Adjust padding for desktop */
-      }
-      .container-footer-content {
-        flex-direction: column;
-      }
-
-      .copyright-info {
+        width: 100%;
+        max-width: 300px;
         justify-content: center;
-      }
+    }
+    .social-link svg {
+        width: 1.3em;
+        height: 1.3em;
+        fill: currentColor;
+    }
+    .instagram { background-color: #E1306C; color: white; }
+    .instagram:hover { background-color: #C13584; transform: translateY(-2px); }
+    .google-play { background-color: #4CAF50; color: white; }
+    .google-play:hover { background-color: #449D48; transform: translateY(-2px); }
+    .container-footer-content { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
+    .copyright-info { display: flex; flex-direction: row; align-items: center; gap: 10px; }
+    .copyright-info p { margin: 0; }
+    .footer-logo { width: 30px; height: 30px; -webkit-user-drag: none; user-drag: none; -webkit-touch-callout: none; user-select: none; }
+    .container-footer-content p:nth-child(2) { margin: 0; text-align: center; }
+    .container-footer-content a { color: #1d7a3c; text-decoration: none; font-weight: bold; }
+    
+    @media (min-width: 768px) {
+      body { justify-content: flex-start; padding-top: 30px; }
+      .container { margin: 0 auto 50px auto; border-radius: 20px; flex-grow: 0; width: 90%; max-width: 900px; }
+      body::after { display: none; }
+      .matiere { flex-direction: row; align-items: center; gap: 20px; }
+      .matiere h3 { min-width: 160px; text-align: left; flex-shrink: 0; }
+      .input-group { flex-wrap: nowrap; justify-content: flex-start; flex-grow: 1; min-width: 0; }
+      .input-group label { min-width: unset; }
+      .input-group input { width: 80px; }
+      .note { text-align: left; flex-shrink: 0; margin-top: 0; }
+      .links-group { flex-direction: row; gap: 20px; }
+      .social-link { width: auto; padding: 12px 25px; }
+      .container-footer-content { flex-direction: column; }
+      .copyright-info { justify-content: center; }
     }
   </style>
 </head>
 <body>
+  
+  <div class="notes-section-modern">
+    <div class="notes-header" id="notes-header">
+        <h4>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-144c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32z"/></svg>
+            Notes Importantes
+        </h4>
+        <svg class="notes-toggle-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+    </div>
+    <div class="notes-content collapsed" id="notes-content">
+        <ul>
+            <li>Le champ <strong>'Rattrapage'</strong> (en mode Rattrapage) est pris en compte seulement si la moyenne du module est <strong>inférieure à 10</strong>.</li>
+            <li>Appuyez sur <strong>'Entrée'</strong> pour naviguer rapidement entre les champs et pour calculer à la fin.</li>
+            <li>Tous les champs (sauf Rattrapage) doivent être remplis avec des notes valides (entre 0 et 20) pour le calcul.</li>
+        </ul>
+    </div>
+  </div>
+
   <div class="container">
     <header>
-      <h1>🩺 MedCalculator - 1ère Année Médecine</h1>
+      <h1>🩺 MedCalculator - 1ère Année</h1>
     </header>
+    
+    <div class="mode-switcher">
+        <span>Annuel</span>
+        <label class="switch">
+            <input type="checkbox" id="modeToggle">
+            <span class="slider round"></span>
+        </label>
+        <span>Rattrapage</span>
+    </div>
+
     <form id="gpa-form"></form>
     <button onclick="calculerMoyenne()">Calculer</button>
     <div id="resultat">
       <div id="dotSpinnerInResults" class="dot-spinner-in-results">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
       </div>
-      <div id="actualResultsContent" style="display: none;">
-        </div>
+      <div id="actualResultsContent" style="display: none;"></div>
     </div>
 
     <div class="app-links">
         <p>Connectez-vous et téléchargez notre application :</p>
         <div class="links-group">
             <a href="https://www.instagram.com/aldevmus/profilecard/?igsh=b2M5azVpb2d1b2Fn" target="_blank" class="social-link instagram">
-                <svg viewBox="0 0 448 512" fill="currentColor" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram"><path d="M224.1 12.6C100.9 12.6 0 113.5 0 236.8 0 358.1 98.9 457 220.2 457h.3c123.3 0 224.1-100.9 224.1-224.1 0-123.3-100.9-224.1-224.1-224.1zm127.3 359.3c-23.2 23.2-56.1 36-90.7 36s-67.5-12.8-90.7-36c-23.2-23.2-36-56.1-36-90.7s12.8-67.5 36-90.7c23.2-23.2 56.1-36 90.7-36s67.5 12.8 90.7 36c23.2 23.2 36 56.1 36 90.7s-12.8 67.5-36 90.7zM185 236.8c0-21.7 17.6-39.3 39.3-39.3s39.3 17.6 39.3 39.3c0 21.7-17.6 39.3-39.3 39.3s-39.3-17.6-39.3-39.3zM372.4 135.5c-15.6 0-28.3-12.7-28.3-28.3s12.7-28.3 28.3-28.3 28.3 12.7 28.3 28.3-12.7 28.3-28.3 28.3z"/></svg>
+                <svg viewBox="0 0 448 512"><path d="M224.1 12.6C100.9 12.6 0 113.5 0 236.8 0 358.1 98.9 457 220.2 457h.3c123.3 0 224.1-100.9 224.1-224.1 0-123.3-100.9-224.1-224.1-224.1zm127.3 359.3c-23.2 23.2-56.1 36-90.7 36s-67.5-12.8-90.7-36c-23.2-23.2-36-56.1-36-90.7s12.8-67.5 36-90.7c23.2-23.2 56.1-36 90.7-36s67.5 12.8 90.7 36c23.2 23.2 36 56.1 36 90.7s-12.8 67.5-36 90.7zM185 236.8c0-21.7 17.6-39.3 39.3-39.3s39.3 17.6 39.3 39.3c0 21.7-17.6 39.3-39.3 39.3s-39.3-17.6-39.3-39.3zM372.4 135.5c-15.6 0-28.3-12.7-28.3-28.3s12.7-28.3 28.3-28.3 28.3 12.7 28.3 28.3-12.7 28.3-28.3 28.3z"/></svg>
                 Instagram
             </a>
             <a href="https://play.google.com/store/apps/details?id=com.medcalculator.aldevmus" target="_blank" class="social-link google-play">
-                <svg viewBox="0 0 512 512" fill="currentColor" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google-play"><path d="M325.3 234.3l-105.4 61.2c-5.1 3-11.3-.2-11.3-6.1V169.8c0-5.9 6.2-9.1 11.3-6.1l105.4 61.2c5.1 3.1 5.1 9.2 0 12.3zM454.4 126.3l-34.4-19.9c-11-6.4-24.5-5.2-34.4 3.2L249.2 249.1l-105.7-61.4c-9.9-5.7-22.6-5.8-32.5-.1L8.6 206.5c-8.9 5.2-9.7 17.7-1.7 26l119.7 122.9c8 8.2 20.9 9.3 30.6 2.4l105.7-61.4 136.4 137.9c9.9 10 23.4 11.2 34.4 3.2l34.4-19.9c11-6.4 12.2-20 3.2-30l-136.4-137.9 136.4-137.9c8.9-10.1 7.7-23.7-3.2-30.1z"/></svg>
+                <svg viewBox="0 0 512 512"><path d="M325.3 234.3l-105.4 61.2c-5.1 3-11.3-.2-11.3-6.1V169.8c0-5.9 6.2-9.1 11.3-6.1l105.4 61.2c5.1 3.1 5.1 9.2 0 12.3zM454.4 126.3l-34.4-19.9c-11-6.4-24.5-5.2-34.4 3.2L249.2 249.1l-105.7-61.4c-9.9-5.7-22.6-5.8-32.5-.1L8.6 206.5c-8.9 5.2-9.7 17.7-1.7 26l119.7 122.9c8 8.2 20.9 9.3 30.6 2.4l105.7-61.4 136.4 137.9c9.9 10 23.4 11.2 34.4 3.2l34.4-19.9c11-6.4 12.2-20 3.2-30l-136.4-137.9 136.4-137.9c8.9-10.1 7.7-23.7-3.2-30.1z"/></svg>
                 Télécharger MedCalculator
             </a>
         </div>
     </div>
     <div class="container-footer-content">
-    <div class="copyright-info">
-        <img src="Images/logo.png" alt="Logo MedCalculator" class="footer-logo">
-        <p>© 2025 Tous droits réservés par MedCalculator.</p>
-    </div>
-    <p>Réalisé par <a href="https://www.instagram.com/aldevmus/profilecard/?igsh=b2M5azVpb2d1b2Fn" target="_blank">aldevmus</a></p>
-      <script>
-  document.addEventListener('contextmenu', event => event.preventDefault());
-</script>
+      <div class="copyright-info">
+          <img src="Images/logo.png" alt="Logo MedCalculator" class="footer-logo">
+          <p>© 2025 Tous droits réservés par MedCalculator.</p>
       </div>
+      <p>Réalisé par <a href="https://www.instagram.com/aldevmus/profilecard/?igsh=b2M5azVpb2d1b2Fn" target="_blank">aldevmus</a></p>
+      <script>document.addEventListener('contextmenu', e => e.preventDefault());</script>
+    </div>
   </div>
   <div id="customMessageBox" class="message-box">
     <p id="messageBoxText"></p>
     <button onclick="hideMessageBox()">OK</button>
   </div>
+
   <script>
-    // Définition des matières, de leurs coefficients et types
+    let currentMode = 'annuel'; // 'annuel' or 'rattrapage'
+
     const matieres = {
       anatomy: { label: "Anatomie", coeff: 2, type: "tp" },
       biophysique: { label: "Biophysique", coeff: 2, type: "tp" },
@@ -515,118 +557,72 @@
       ssh: { label: "SSH", coeff: 1, type: "ssh" },
     };
 
-    /**
-     * Affiche un message personnalisé au lieu d'une alerte().
-     * @param {string} message - Le message à afficher.
-     */
     function showMessageBox(message) {
-      const messageBox = document.getElementById("customMessageBox");
-      const messageBoxText = document.getElementById("messageBoxText");
-      messageBoxText.textContent = message;
-      messageBox.style.display = "block";
+      const mb = document.getElementById("customMessageBox");
+      document.getElementById("messageBoxText").textContent = message;
+      mb.style.display = "block";
     }
-
-    /**
-     * Masque la boîte de message d'erreur personnalisée.
-     */
     function hideMessageBox() {
       document.getElementById("customMessageBox").style.display = "none";
     }
-
-    /**
-     * Met à jour l'affichage de la note individuelle de la matière.
-     * Cette fonction est appelée lorsque les entrées EMD ou TP changent.
-     * @param {string} key - La clé de la matière.
-     */
     function updateMatiereNote(key) {
       const mat = matieres[key];
       if (!mat) return;
-
       const noteDiv = document.getElementById("note_" + key);
-      const note = calculateMatiereNote(key, mat);
-
+      const note = calculateMatiereNote(key, mat, currentMode);
       if (note !== null) {
         noteDiv.textContent = `Note: ${note.toFixed(2)}`;
         noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
       } else {
-        noteDiv.textContent = ''; // Effacer la note si les entrées sont incomplètes ou invalides
+        noteDiv.textContent = '';
       }
     }
-
-    /**
-     * Shows the multi-dot loading spinner within the results div.
-     */
     function showMultiDotLoadingSpinnerInResults() {
       const resultatDiv = document.getElementById("resultat");
       const dotSpinner = document.getElementById("dotSpinnerInResults");
-      const actualResultsContent = document.getElementById("actualResultsContent");
-
-      actualResultsContent.style.display = "none"; // Hide actual results content
-      resultatDiv.style.display = "flex"; // Show #resultat as flex container to center spinner
-      dotSpinner.style.display = "flex"; // Show the spinner
-      dotSpinner.classList.add("visible"); // For fade transition
+      document.getElementById("actualResultsContent").style.display = "none";
+      resultatDiv.style.display = "flex";
+      dotSpinner.style.display = "flex";
+      dotSpinner.classList.add("visible");
     }
-
-    /**
-     * Hides the multi-dot loading spinner within the results div.
-     */
     function hideMultiDotLoadingSpinnerInResults() {
       const dotSpinner = document.getElementById("dotSpinnerInResults");
       dotSpinner.classList.remove("visible");
-      setTimeout(() => {
-        dotSpinner.style.display = "none"; // Hide after transition
-      }, 300); // Match CSS transition duration
+      setTimeout(() => { dotSpinner.style.display = "none"; }, 300);
     }
 
-    /**
-     * Cette fonction est exécutée au chargement de la page pour créer dynamiquement les champs de saisie.
-     */
     window.onload = () => {
       const form = document.getElementById("gpa-form");
       for (const [key, mat] of Object.entries(matieres)) {
         const div = document.createElement("div");
         div.classList.add("matiere");
-
         const h3 = document.createElement("h3");
         h3.textContent = mat.label;
         div.appendChild(h3);
-
         const contentWrap = document.createElement("div");
         contentWrap.classList.add("content-wrap");
-
         const inputGroup = document.createElement("div");
         inputGroup.classList.add("input-group");
 
-        // Fonction d'aide pour créer un champ de saisie et attacher des écouteurs d'événements
-        const createInputField = (id, labelText, matiereKey) => { 
-          const label = document.createElement('label');
-          label.textContent = labelText + ': ';
-          const input = document.createElement('input');
-          input.type = "number";
-          input.id = id;
-          input.min = "0";
-          input.max = "20";
-          input.step = "0.01";
-          input.setAttribute('autocomplete', 'off'); // Désactiver l'autocomplétion pour le comportement du clavier
-
-          // Charger la valeur enregistrée depuis localStorage
-          const savedValue = localStorage.getItem(id);
-          if (savedValue !== null) {
-            input.value = savedValue;
+        const createInputField = (id, labelText, matiereKey, isRatt = false) => { 
+          const wrapper = document.createElement('label');
+          if (isRatt) {
+              wrapper.classList.add('ratt-field-wrapper');
           }
-
-          // Enregistrer la valeur dans localStorage lors du changement de l'input et mettre à jour la note
+          wrapper.textContent = labelText + ': ';
+          const input = document.createElement('input');
+          input.type = "number"; input.id = id; input.min = "0"; input.max = "20"; input.step = "0.01";
+          input.setAttribute('autocomplete', 'off');
+          const savedValue = localStorage.getItem(id);
+          if (savedValue !== null) input.value = savedValue;
           input.addEventListener('input', (event) => {
             localStorage.setItem(id, event.target.value);
             updateMatiereNote(matiereKey); 
-            event.target.classList.remove("invalid"); // Remove invalid class on input
+            event.target.classList.remove("invalid");
           });
-
-          label.appendChild(input);
-          return label;
+          wrapper.appendChild(input);
+          return wrapper;
         };
-
-        // Construction des champs de saisie en fonction du type de matière
         if (mat.type === "tp") {
           inputGroup.appendChild(createInputField(`${key}_emd1`, 'EMD1', key));
           inputGroup.appendChild(createInputField(`${key}_tp1`, 'TP1', key));
@@ -647,321 +643,211 @@
           inputGroup.appendChild(createInputField(`${key}_emd2`, 'EMD2', key));
           inputGroup.appendChild(createInputField(`${key}_td`, 'TD', key));
         }
+        inputGroup.appendChild(createInputField(`${key}_ratt`, 'Rattrapage', key, true));
 
-        // <<< MODIFICATION START: Add Rattrapage field >>>
-        inputGroup.appendChild(createInputField(`${key}_ratt`, 'Rattrapage', key));
-        // <<< MODIFICATION END >>>
-
-        contentWrap.appendChild(inputGroup); // Append inputGroup to contentWrap
-
+        contentWrap.appendChild(inputGroup);
         const noteDiv = document.createElement("div");
         noteDiv.id = `note_${key}`;
         noteDiv.classList.add("note");
-        contentWrap.appendChild(noteDiv); // Append noteDiv to contentWrap
-
-        div.appendChild(contentWrap); // Append contentWrap to the matiere div
-
+        contentWrap.appendChild(noteDiv);
+        div.appendChild(contentWrap);
         form.appendChild(div);
       }
-
-      // Initialize individual matiere notes on load
       for (const key of Object.keys(matieres)) {
         updateMatiereNote(key);
       }
 
-      // NEW LOGIC FOR ENTER KEY NAVIGATION
-      const allInputElements = form.querySelectorAll('input[type="number"]'); // Select all number inputs
-      allInputElements.forEach((input, index) => {
+      // Event Listeners Setup
+      const allInputs = form.querySelectorAll('input[type="number"]');
+      allInputs.forEach((input, index) => {
         input.addEventListener('keydown', (event) => {
           if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent default form submission
-
-            if (index < allInputElements.length - 1) {
-              // If not the last input, move focus to the next one
-              allInputElements[index + 1].focus();
+            event.preventDefault();
+            const visibleInputs = [...allInputs].filter(i => {
+                const wrapper = i.closest('label');
+                return window.getComputedStyle(wrapper).display !== 'none';
+            });
+            const currentVisibleIndex = visibleInputs.indexOf(input);
+            if (currentVisibleIndex > -1 && currentVisibleIndex < visibleInputs.length - 1) {
+              visibleInputs[currentVisibleIndex + 1].focus();
             } else {
-              // If it's the last input, trigger calculation
               calculerMoyenne();
             }
           }
         });
       });
+
+      const modeToggle = document.getElementById('modeToggle');
+      modeToggle.addEventListener('change', () => {
+          currentMode = modeToggle.checked ? 'rattrapage' : 'annuel';
+          form.classList.toggle('rattrapage-mode', modeToggle.checked);
+          document.getElementById('resultat').style.display = 'none';
+          Object.keys(matieres).forEach(updateMatiereNote);
+      });
+
+      const notesHeader = document.getElementById('notes-header');
+      const notesContent = document.getElementById('notes-content');
+      notesHeader.addEventListener('click', () => {
+          notesContent.classList.toggle('collapsed');
+          notesHeader.classList.toggle('expanded');
+      });
     };
 
-    /**
-     * Récupère la valeur d'un champ de saisie et vérifie sa validité.
-     * @param {string} id - L'ID du champ de saisie.
-     * @returns {number|null} La valeur numérique ou null si invalide.
-     */
     function val(id) {
-      const inputElement = document.getElementById(id);
-      if (!inputElement) return null; // Pour s'assurer que l'élément existe
-
-      const v = inputElement.value;
-      if (v === "") return null; // Rattrapage can be empty, so treat it as null
-
-      const parsedValue = parseFloat(v);
-
-      // Check for invalidity
-      if (isNaN(parsedValue) || parsedValue < 0 || parsedValue > 20) {
-        return null; // Return null for invalid values
-      }
-      return parsedValue;
+      const input = document.getElementById(id);
+      if (!input || input.value === "") return null;
+      const parsed = parseFloat(input.value);
+      return (isNaN(parsed) || parsed < 0 || parsed > 20) ? null : parsed;
     }
 
-    /**
-     * Calcule la note de la matière en fonction de son type et des champs de saisie.
-     * @param {string} key - La clé de la matière.
-     * @param {object} mat - L'objet matière.
-     * @returns {number|null} La note de la matière ou null s'il manque des champs/sont invalides.
-     */
-    function calculateMatiereNote(key, mat) {
+    function calculateMatiereNote(key, mat, mode) {
         let note = null;
         const ratt = val(key + "_ratt");
 
+        // Calculate base note without rattrapage first
         if (mat.type === "tp") {
-            const emd1 = val(key + "_emd1");
-            const tp1 = val(key + "_tp1");
-            const emd2 = val(key + "_emd2");
-            const tp2 = val(key + "_tp2");
-
+            const [emd1, tp1, emd2, tp2] = [val(key+"_emd1"), val(key+"_tp1"), val(key+"_emd2"), val(key+"_tp2")];
             if ([emd1, tp1, emd2, tp2].includes(null)) return null;
-
             let avgEmd = (emd1 + emd2) / 2;
             const avgTp = (tp1 + tp2) / 2;
-            
             note = (avgEmd * 0.8) + (avgTp * 0.2);
-
-            // <<< MODIFICATION START: Apply rattrapage only if note < 10 >>>
-            if (note < 10 && ratt !== null && ratt > avgEmd) {
-                avgEmd = ratt;
-                note = (avgEmd * 0.8) + (avgTp * 0.2);
+            if (mode === 'rattrapage' && note < 10 && ratt !== null && ratt > avgEmd) {
+                note = (ratt * 0.8) + (avgTp * 0.2);
             }
-            // <<< MODIFICATION END >>>
-
         } else if (mat.type === "emd") {
-            const emd1 = val(key + "_emd1");
-            const emd2 = val(key + "_emd2");
-            
+            const [emd1, emd2] = [val(key+"_emd1"), val(key+"_emd2")];
             if ([emd1, emd2].includes(null)) return null;
-            
             let avgEmd = (emd1 + emd2) / 2;
             note = avgEmd;
-            
-            // <<< MODIFICATION START: Apply rattrapage only if note < 10 >>>
-            if (note < 10 && ratt !== null && ratt > avgEmd) {
+            if (mode === 'rattrapage' && note < 10 && ratt !== null && ratt > avgEmd) {
                 note = ratt;
             }
-            // <<< MODIFICATION END >>>
-
         } else if (mat.type === "emd_tp2") {
-            const emd1 = val(key + "_emd1");
-            const emd2 = val(key + "_emd2");
-            const tp2 = val(key + "_tp2");
-            
+            const [emd1, emd2, tp2] = [val(key+"_emd1"), val(key+"_emd2"), val(key+"_tp2")];
             if ([emd1, emd2, tp2].includes(null)) return null;
-            
             let avgEmd = (emd1 + emd2) / 2;
             note = avgEmd * 0.8 + tp2 * 0.2;
-
-            // <<< MODIFICATION START: Apply rattrapage only if note < 10 >>>
-            if (note < 10 && ratt !== null && ratt > avgEmd) {
-                avgEmd = ratt;
-                note = avgEmd * 0.8 + tp2 * 0.2;
+            if (mode === 'rattrapage' && note < 10 && ratt !== null && ratt > avgEmd) {
+                note = ratt * 0.8 + tp2 * 0.2;
             }
-            // <<< MODIFICATION END >>>
-
         } else if (mat.type === "emd1") {
             let emd1 = val(key + "_emd1");
             if (emd1 === null) return null;
             note = emd1;
-
-            // <<< MODIFICATION START: Apply rattrapage only if note < 10 >>>
-            if (note < 10 && ratt !== null && ratt > emd1) {
+            if (mode === 'rattrapage' && note < 10 && ratt !== null && ratt > emd1) {
                 note = ratt;
             }
-            // <<< MODIFICATION END >>>
-
         } else if (mat.type === "emd2") {
             let emd2 = val(key + "_emd2");
             if (emd2 === null) return null;
             note = emd2;
-
-            // <<< MODIFICATION START: Apply rattrapage only if note < 10 >>>
-            if (note < 10 && ratt !== null && ratt > emd2) {
+            if (mode === 'rattrapage' && note < 10 && ratt !== null && ratt > emd2) {
                 note = ratt;
             }
-            // <<< MODIFICATION END >>>
-
         } else if (mat.type === "ssh") {
             let emd2 = val(key + "_emd2");
             const td = val(key + "_td");
-
             if ([emd2, td].includes(null)) return null;
-            
             note = emd2 * 0.6 + td * 0.4;
-
-            // <<< MODIFICATION START: Apply rattrapage only if note < 10 >>>
-            if (note < 10 && ratt !== null && ratt > emd2) {
-                emd2 = ratt;
-                note = emd2 * 0.6 + td * 0.4;
+            if (mode === 'rattrapage' && note < 10 && ratt !== null && ratt > emd2) {
+                note = ratt * 0.6 + td * 0.4;
             }
-            // <<< MODIFICATION END >>>
         }
         return note;
     }
 
-
-    /**
-     * Calcule la moyenne générale et met à jour les résultats dans l'interface.
-     */
     function calculerMoyenne() {
-      const resultatDiv = document.getElementById("resultat");
-      const actualResultsContent = document.getElementById("actualResultsContent");
-      
-      actualResultsContent.style.display = "none"; // Ensure results content is hidden
-      resultatDiv.style.display = "none"; // Hide the entire resultat div initially
-      
-      // Clear all invalid classes before re-validation
-      document.querySelectorAll('.input-group input').forEach(input => {
-        input.classList.remove("invalid");
-      });
-
-      // First, check for errors and mark invalid fields
+      document.querySelectorAll('.input-group input').forEach(i => i.classList.remove("invalid"));
       let erreur = false;
       for (const [key, mat] of Object.entries(matieres)) {
-        // Collect all relevant input IDs for the current matière based on its type
-        let inputIdsToValidate = [];
-        if (mat.type === "tp") {
-          inputIdsToValidate = [`${key}_emd1`, `${key}_tp1`, `${key}_emd2`, `${key}_tp2`];
-        } else if (mat.type === "emd") {
-          inputIdsToValidate = [`${key}_emd1`, `${key}_emd2`];
-        } else if (mat.type === "emd_tp2") {
-          inputIdsToValidate = [`${key}_emd1`, `${key}_emd2`, `${key}_tp2`];
-        } else if (mat.type === "emd1") {
-          inputIdsToValidate = [`${key}_emd1`];
-        } else if (mat.type === "emd2") {
-          inputIdsToValidate = [`${key}_emd2`];
-        } else if (mat.type === "ssh") {
-          inputIdsToValidate = [`${key}_emd2`, `${key}_td`];
-        }
-
-        inputIdsToValidate.forEach(id => {
-          const inputElement = document.getElementById(id);
-          const parsedValue = parseFloat(inputElement.value);
-
-          // Mark as invalid if empty or outside 0-20 range
-          if (inputElement.value === "" || isNaN(parsedValue) || parsedValue < 0 || parsedValue > 20) {
-            inputElement.classList.add("invalid");
+        let idsToValidate = [];
+        if (mat.type === "tp") idsToValidate = [`${key}_emd1`,`${key}_tp1`,`${key}_emd2`,`${key}_tp2`];
+        else if (mat.type === "emd") idsToValidate = [`${key}_emd1`,`${key}_emd2`];
+        else if (mat.type === "emd_tp2") idsToValidate = [`${key}_emd1`,`${key}_emd2`,`${key}_tp2`];
+        else if (mat.type === "emd1") idsToValidate = [`${key}_emd1`];
+        else if (mat.type === "emd2") idsToValidate = [`${key}_emd2`];
+        else if (mat.type === "ssh") idsToValidate = [`${key}_emd2`,`${key}_td`];
+        
+        idsToValidate.forEach(id => {
+          if (val(id) === null) {
+            document.getElementById(id).classList.add("invalid");
             erreur = true;
           }
         });
-
-        // <<< MODIFICATION START: Validate Rattrapage field only if it's not empty >>>
-        const rattInput = document.getElementById(`${key}_ratt`);
-        if (rattInput && rattInput.value !== "") {
-            const rattValue = parseFloat(rattInput.value);
-            if (isNaN(rattValue) || rattValue < 0 || rattValue > 20) {
+        if (currentMode === 'rattrapage') {
+            const rattInput = document.getElementById(`${key}_ratt`);
+            if (rattInput.value !== "" && val(`${key}_ratt`) === null) {
                 rattInput.classList.add("invalid");
                 erreur = true;
             }
         }
-        // <<< MODIFICATION END >>>
       }
 
       if (erreur) {
-        showMessageBox("Veuillez remplir tous les champs obligatoires avec des valeurs valides (entre 0 et 20) avant de calculer. Le champ Rattrapage est optionnel.");
+        showMessageBox("Veuillez remplir tous les champs obligatoires avec des valeurs valides (entre 0 et 20).");
         return;
       }
 
-      // If no errors, scroll to results div, show loading spinner, and proceed with calculation after delay
+      const resultatDiv = document.getElementById("resultat");
       resultatDiv.style.display = "flex"; 
       resultatDiv.scrollIntoView({ behavior: 'smooth' }); 
-      
       showMultiDotLoadingSpinnerInResults();
-
-      // Dismiss the keyboard
-      if (document.activeElement && document.activeElement.blur) {
-        document.activeElement.blur();
-      }
+      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
 
       setTimeout(() => {
-        let total = 0;
-        let coeffTotal = 0;
-        let matieresRattrapageList_moins5 = [];
-        let matieresRattrapageList_entre5et10 = [];
-
-        // Recalculate notes and populate rattrapage lists
+        let total = 0, coeffTotal = 0;
+        let listMoins5 = [], listEntre5et10 = [];
         for (const [key, mat] of Object.entries(matieres)) {
-          const note = calculateMatiereNote(key, mat);
-
-          if (note < 5) {
-              matieresRattrapageList_moins5.push(mat.label);
-          } else if (note < 10) { // Note is between 5 and 10
-              matieresRattrapageList_entre5et10.push(mat.label);
-          }
-
+          const note = calculateMatiereNote(key, mat, currentMode);
+          if (note < 5) listMoins5.push(mat.label);
+          else if (note < 10) listEntre5et10.push(mat.label);
           total += note * mat.coeff;
           coeffTotal += mat.coeff;
-
-          // Update individual matiere note display with final colors (from previous logic)
           const noteDiv = document.getElementById("note_" + key);
           noteDiv.textContent = `Note: ${note.toFixed(2)}`;
           noteDiv.style.color = note < 5 ? "red" : note < 10 ? "orange" : "green";
         }
 
-        hideMultiDotLoadingSpinnerInResults(); // Hide spinner after calculation is done
-
+        hideMultiDotLoadingSpinnerInResults();
         const moyenne = total / coeffTotal;
-        // CORRECTED LINE: Calculate total points based on average * total coefficients (which is 16)
-        const totalPoints = moyenne * coeffTotal; 
-        const pointsToValidate = 160; // Validation threshold remains 160
-        const maxPossiblePoints = 320; // Maximum possible points (20 * 16 coefficients)
+        const totalPoints = moyenne * coeffTotal;
         
-        let validationMessage = '';
-        let rattrapageDetails = '';
-        let pointsMessage = `<p>Points totaux: <strong>${totalPoints.toFixed(2)} / ${maxPossiblePoints}</strong></p>`; // Display total points out of 320
+        let validationMsg = '', detailsMsg = '';
+        let pointsMsg = `<p>Moyenne générale: <strong>${moyenne.toFixed(2)}</strong></p><p>Points totaux: <strong>${totalPoints.toFixed(2)} / ${coeffTotal * 20}</strong></p>`;
 
-        // Determine main validation message
-        if (moyenne >= 10 && matieresRattrapageList_moins5.length === 0) { // Validated if average >= 10 AND no modules below 5
-          validationMessage = '<p class="success-animation">✅ Félicitations ! Vous avez validé cette année 🎉</p>';
-        } else { // Goes to rattrapage if average < 10 OR any module < 5
-          // Specific message if average >= 10 but failed due to modules < 5
-          if (moyenne >= 10 && matieresRattrapageList_moins5.length > 0) {
-              validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année à cause de matière(s) avec une note inférieure à 5. Vous allez entrer en rattrapage.</p>`;
-          } else { // Average < 10
-              validationMessage = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année. Vous allez entrer en rattrapage.</p>`;
-          }
-          
-          // Determine rattrapage details based on conditions
-          if (matieresRattrapageList_moins5.length > 0) {
-              rattrapageDetails += `<p style="color:red;">⚠️ Module(s) en rattrapage obligatoire pour valider l'année (note < 5): ${matieresRattrapageList_moins5.join(", ")}</p>`;
-          }
-          // This part only appears if overall average < 10 AND there are modules between 5 and 10
-          if (moyenne < 10 && matieresRattrapageList_entre5et10.length > 0) {
-              rattrapageDetails += `<p class="rattrapage-orange">⚠️ Module(s) en rattrapage (note < 10): ${matieresRattrapageList_entre5et10.join(", ")}</p>`;
-          }
+        const isSuccess = moyenne >= 10 && listMoins5.length === 0;
 
-          // Add points needed message if not validated (based on 160 threshold)
-          if (totalPoints < pointsToValidate) {
-              const pointsNeeded = pointsToValidate - totalPoints;
-              pointsMessage += `<p style="color:red;">Il vous manque <strong>${pointsNeeded.toFixed(2)}</strong> points pour valider l'année.</p>`;
-          }
+        if (currentMode === 'annuel') {
+            if (isSuccess) {
+                validationMsg = '<p class="success-animation">✅ Félicitations ! Vous avez validé cette année 🎉</p>';
+            } else {
+                validationMsg = `<p class="failure-animation">⚠️ Vous n'avez pas validé cette année. Vous allez entrer en rattrapage.</p>`;
+                if (moyenne >= 10 && listMoins5.length > 0) {
+                   validationMsg = `<p class="failure-animation">⚠️ Vous n'avez pas validé à cause de module(s) avec une note inférieure à 5. Vous allez entrer en rattrapage.</p>`;
+                }
+                if (listMoins5.length > 0) {
+                    detailsMsg += `<p class="failing-modules-list">Module(s) en rattrapage obligatoire (note < 5): ${listMoins5.join(", ")}</p>`;
+                }
+                if (moyenne < 10 && listEntre5et10.length > 0) {
+                    detailsMsg += `<p class="rattrapage-orange">Module(s) en rattrapage (note < 10): ${listEntre5et10.join(", ")}</p>`;
+                }
+            }
+        } else { // rattrapage mode
+            if (isSuccess) {
+                validationMsg = '<p class="success-animation">✅ Félicitations ! Vous avez validé votre année après rattrapage 🎉</p>';
+            } else {
+                validationMsg = `<p class="failure-animation">❌ Malheureusement, vous n'avez pas validé l'année. Vous devez redoubler.</p>`;
+                const failingModules = [...new Set([...listMoins5, ...listEntre5et10])];
+                if (failingModules.length > 0) {
+                   detailsMsg = `<p class="failing-modules-list">Les modules non validés qui ont causé l'échec sont : ${failingModules.join(", ")}</p>`;
+                }
+            }
         }
-
-        const resultatContent = `
-          <p>Moyenne générale: <strong>${moyenne.toFixed(2)}</strong></p>
-          ${pointsMessage}
-          ${rattrapageDetails}
-          ${validationMessage}
-        `;
         
-        actualResultsContent.innerHTML = resultatContent; // Set results HTML
-        actualResultsContent.style.display = "block"; // Show actual results content
-        resultatDiv.style.display = "block"; // Show results div container (ensure it's block for content flow)
-
-        resultatDiv.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll to the results section (always scroll)
-      }, 1000); // 1 second delay
+        document.getElementById("actualResultsContent").innerHTML = `${pointsMsg}${detailsMsg}${validationMsg}`;
+        document.getElementById("actualResultsContent").style.display = "block";
+        resultatDiv.style.display = "block";
+      }, 1000);
     }
   </script>
 </body>
