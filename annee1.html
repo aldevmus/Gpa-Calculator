@@ -716,87 +716,99 @@
      * @returns {number|null} La note de la matière ou null s'il manque des champs/sont invalides.
      */
     function calculateMatiereNote(key, mat) {
-      let note = null;
-      let champs = [];
-      const ratt = val(key + "_ratt");
+        let note = null;
+        const ratt = val(key + "_ratt");
 
-      if (mat.type === "tp") {
-        const emd1 = val(key + "_emd1");
-        const tp1 = val(key + "_tp1");
-        const emd2 = val(key + "_emd2");
-        const tp2 = val(key + "_tp2");
+        if (mat.type === "tp") {
+            const emd1 = val(key + "_emd1");
+            const tp1 = val(key + "_tp1");
+            const emd2 = val(key + "_emd2");
+            const tp2 = val(key + "_tp2");
 
-        if ([emd1, tp1, emd2, tp2].includes(null)) return null;
+            if ([emd1, tp1, emd2, tp2].includes(null)) return null;
 
-        let avgEmd = (emd1 + emd2) / 2;
-        const avgTp = (tp1 + tp2) / 2;
-        
-        if (ratt !== null && ratt > avgEmd) {
-          avgEmd = ratt;
+            let avgEmd = (emd1 + emd2) / 2;
+            const avgTp = (tp1 + tp2) / 2;
+            
+            note = (avgEmd * 0.8) + (avgTp * 0.2);
+
+            // <<< MODIFICATION START: Apply rattrapage only if note < 10 >>>
+            if (note < 10 && ratt !== null && ratt > avgEmd) {
+                avgEmd = ratt;
+                note = (avgEmd * 0.8) + (avgTp * 0.2);
+            }
+            // <<< MODIFICATION END >>>
+
+        } else if (mat.type === "emd") {
+            const emd1 = val(key + "_emd1");
+            const emd2 = val(key + "_emd2");
+            
+            if ([emd1, emd2].includes(null)) return null;
+            
+            let avgEmd = (emd1 + emd2) / 2;
+            note = avgEmd;
+            
+            // <<< MODIFICATION START: Apply rattrapage only if note < 10 >>>
+            if (note < 10 && ratt !== null && ratt > avgEmd) {
+                note = ratt;
+            }
+            // <<< MODIFICATION END >>>
+
+        } else if (mat.type === "emd_tp2") {
+            const emd1 = val(key + "_emd1");
+            const emd2 = val(key + "_emd2");
+            const tp2 = val(key + "_tp2");
+            
+            if ([emd1, emd2, tp2].includes(null)) return null;
+            
+            let avgEmd = (emd1 + emd2) / 2;
+            note = avgEmd * 0.8 + tp2 * 0.2;
+
+            // <<< MODIFICATION START: Apply rattrapage only if note < 10 >>>
+            if (note < 10 && ratt !== null && ratt > avgEmd) {
+                avgEmd = ratt;
+                note = avgEmd * 0.8 + tp2 * 0.2;
+            }
+            // <<< MODIFICATION END >>>
+
+        } else if (mat.type === "emd1") {
+            let emd1 = val(key + "_emd1");
+            if (emd1 === null) return null;
+            note = emd1;
+
+            // <<< MODIFICATION START: Apply rattrapage only if note < 10 >>>
+            if (note < 10 && ratt !== null && ratt > emd1) {
+                note = ratt;
+            }
+            // <<< MODIFICATION END >>>
+
+        } else if (mat.type === "emd2") {
+            let emd2 = val(key + "_emd2");
+            if (emd2 === null) return null;
+            note = emd2;
+
+            // <<< MODIFICATION START: Apply rattrapage only if note < 10 >>>
+            if (note < 10 && ratt !== null && ratt > emd2) {
+                note = ratt;
+            }
+            // <<< MODIFICATION END >>>
+
+        } else if (mat.type === "ssh") {
+            let emd2 = val(key + "_emd2");
+            const td = val(key + "_td");
+
+            if ([emd2, td].includes(null)) return null;
+            
+            note = emd2 * 0.6 + td * 0.4;
+
+            // <<< MODIFICATION START: Apply rattrapage only if note < 10 >>>
+            if (note < 10 && ratt !== null && ratt > emd2) {
+                emd2 = ratt;
+                note = emd2 * 0.6 + td * 0.4;
+            }
+            // <<< MODIFICATION END >>>
         }
-        
-        note = (avgEmd * 0.8) + (avgTp * 0.2);
-
-      } else if (mat.type === "emd") {
-        const emd1 = val(key + "_emd1");
-        const emd2 = val(key + "_emd2");
-        
-        if ([emd1, emd2].includes(null)) return null;
-        
-        let avgEmd = (emd1 + emd2) / 2;
-        
-        if (ratt !== null && ratt > avgEmd) {
-          note = ratt;
-        } else {
-          note = avgEmd;
-        }
-
-      } else if (mat.type === "emd_tp2") {
-        const emd1 = val(key + "_emd1");
-        const emd2 = val(key + "_emd2");
-        const tp2 = val(key + "_tp2");
-        
-        if ([emd1, emd2, tp2].includes(null)) return null;
-        
-        let avgEmd = (emd1 + emd2) / 2;
-
-        if (ratt !== null && ratt > avgEmd) {
-          avgEmd = ratt;
-        }
-        note = avgEmd * 0.8 + tp2 * 0.2;
-
-      } else if (mat.type === "emd1") {
-        let emd1 = val(key + "_emd1");
-        if (emd1 === null) return null;
-
-        if (ratt !== null && ratt > emd1) {
-          note = ratt;
-        } else {
-          note = emd1;
-        }
-
-      } else if (mat.type === "emd2") {
-        let emd2 = val(key + "_emd2");
-        if (emd2 === null) return null;
-        
-        if (ratt !== null && ratt > emd2) {
-          note = ratt;
-        } else {
-          note = emd2;
-        }
-
-      } else if (mat.type === "ssh") {
-        let emd2 = val(key + "_emd2");
-        const td = val(key + "_td");
-
-        if ([emd2, td].includes(null)) return null;
-
-        if (ratt !== null && ratt > emd2) {
-          emd2 = ratt;
-        }
-        note = emd2 * 0.6 + td * 0.4;
-      }
-      return note;
+        return note;
     }
 
 
@@ -954,4 +966,5 @@
   </script>
 </body>
 </html>
+
 
