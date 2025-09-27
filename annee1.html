@@ -648,6 +648,10 @@
           inputGroup.appendChild(createInputField(`${key}_td`, 'TD', key));
         }
 
+        // <<< MODIFICATION START: Add Rattrapage field >>>
+        inputGroup.appendChild(createInputField(`${key}_ratt`, 'Rattrapage', key));
+        // <<< MODIFICATION END >>>
+
         contentWrap.appendChild(inputGroup); // Append inputGroup to contentWrap
 
         const noteDiv = document.createElement("div");
@@ -694,10 +698,12 @@
       if (!inputElement) return null; // Pour s'assurer que l'élément existe
 
       const v = inputElement.value;
+      if (v === "") return null; // Rattrapage can be empty, so treat it as null
+
       const parsedValue = parseFloat(v);
 
       // Check for invalidity
-      if (v === "" || isNaN(parsedValue) || parsedValue < 0 || parsedValue > 20) {
+      if (isNaN(parsedValue) || parsedValue < 0 || parsedValue > 20) {
         return null; // Return null for invalid values
       }
       return parsedValue;
@@ -712,53 +718,87 @@
     function calculateMatiereNote(key, mat) {
       let note = null;
       let champs = [];
+      const ratt = val(key + "_ratt");
 
       if (mat.type === "tp") {
-        champs = [val(key + "_emd1"), val(key + "_tp1"), val(key + "_emd2"), val(key + "_tp2")];
-        // Only calculate if all TP fields are valid numbers
-        if (!champs.includes(null)) {
-          // Nouvelle logique de calcul pour les matières de type "tp"
-          const emd1 = champs[0];
-          const tp1 = champs[1];
-          const emd2 = champs[2];
-          const tp2 = champs[3];
+        const emd1 = val(key + "_emd1");
+        const tp1 = val(key + "_tp1");
+        const emd2 = val(key + "_emd2");
+        const tp2 = val(key + "_tp2");
 
-          const avgEmd = (emd1 + emd2) / 2;
-          const avgTp = (tp1 + tp2) / 2;
-          
-          note = (avgEmd * 0.8) + (avgTp * 0.2);
-        } else {
-          return null;
+        if ([emd1, tp1, emd2, tp2].includes(null)) return null;
+
+        let avgEmd = (emd1 + emd2) / 2;
+        const avgTp = (tp1 + tp2) / 2;
+        
+        if (ratt !== null && ratt > avgEmd) {
+          avgEmd = ratt;
         }
+        
+        note = (avgEmd * 0.8) + (avgTp * 0.2);
+
       } else if (mat.type === "emd") {
-        champs = [val(key + "_emd1"), val(key + "_emd2")];
-        if (!champs.includes(null)) {
-          note = (champs[0] + champs[1]) / 2;
+        const emd1 = val(key + "_emd1");
+        const emd2 = val(key + "_emd2");
+        
+        if ([emd1, emd2].includes(null)) return null;
+        
+        let avgEmd = (emd1 + emd2) / 2;
+        
+        if (ratt !== null && ratt > avgEmd) {
+          note = ratt;
         } else {
-          return null;
+          note = avgEmd;
         }
+
       } else if (mat.type === "emd_tp2") {
-        champs = [val(key + "_emd1"), val(key + "_emd2"), val(key + "_tp2")];
-        if (!champs.includes(null)) {
-          const moyenne = (champs[0] + champs[1]) / 2;
-          note = moyenne * 0.8 + champs[2] * 0.2;
-        } else {
-          return null;
+        const emd1 = val(key + "_emd1");
+        const emd2 = val(key + "_emd2");
+        const tp2 = val(key + "_tp2");
+        
+        if ([emd1, emd2, tp2].includes(null)) return null;
+        
+        let avgEmd = (emd1 + emd2) / 2;
+
+        if (ratt !== null && ratt > avgEmd) {
+          avgEmd = ratt;
         }
+        note = avgEmd * 0.8 + tp2 * 0.2;
+
       } else if (mat.type === "emd1") {
-        note = val(key + "_emd1");
-      } else if (mat.type === "emd2") {
-        note = val(key + "_emd2");
-      } else if (mat.type === "ssh") {
-        champs = [val(key + "_emd2"), val(key + "_td")];
-        if (!champs.includes(null)) {
-          note = champs[0] * 0.6 + champs[1] * 0.4;
+        let emd1 = val(key + "_emd1");
+        if (emd1 === null) return null;
+
+        if (ratt !== null && ratt > emd1) {
+          note = ratt;
         } else {
-          return null;
+          note = emd1;
         }
+
+      } else if (mat.type === "emd2") {
+        let emd2 = val(key + "_emd2");
+        if (emd2 === null) return null;
+        
+        if (ratt !== null && ratt > emd2) {
+          note = ratt;
+        } else {
+          note = emd2;
+        }
+
+      } else if (mat.type === "ssh") {
+        let emd2 = val(key + "_emd2");
+        const td = val(key + "_td");
+
+        if ([emd2, td].includes(null)) return null;
+
+        if (ratt !== null && ratt > emd2) {
+          emd2 = ratt;
+        }
+        note = emd2 * 0.6 + td * 0.4;
       }
       return note;
     }
+
 
     /**
      * Calcule la moyenne générale et met à jour les résultats dans l'interface.
@@ -804,10 +844,21 @@
             erreur = true;
           }
         });
+
+        // <<< MODIFICATION START: Validate Rattrapage field only if it's not empty >>>
+        const rattInput = document.getElementById(`${key}_ratt`);
+        if (rattInput && rattInput.value !== "") {
+            const rattValue = parseFloat(rattInput.value);
+            if (isNaN(rattValue) || rattValue < 0 || rattValue > 20) {
+                rattInput.classList.add("invalid");
+                erreur = true;
+            }
+        }
+        // <<< MODIFICATION END >>>
       }
 
       if (erreur) {
-        showMessageBox("Veuillez remplir tous les champs avec des valeurs valides (entre 0 et 20) avant de calculer.");
+        showMessageBox("Veuillez remplir tous les champs obligatoires avec des valeurs valides (entre 0 et 20) avant de calculer. Le champ Rattrapage est optionnel.");
         return;
       }
 
@@ -903,3 +954,4 @@
   </script>
 </body>
 </html>
+
