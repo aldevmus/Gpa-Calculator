@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Redirecting...</title>
+  <body>
+  <p style="text-align:center; margin-top: 50px; font-family: Arial, sans-serif; color: #555;">
+    Redirecting...
+  </p>
+</body>
+  <script>
+    window.onload = function () {
+      const lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+
+      if (lang.startsWith('ar')) {
+        window.location.href = "privacy-policy-ar.html";
+      } else if (lang.startsWith('fr')) {
+        window.location.href = "privacy-policy-fr.html";
+      } else {
+        // أي لغة أخرى يتم توجيهها إلى الإنجليزية
+        window.location.href = "privacy-policy-en.html";
+      }
+    }
+  </script>
+</head>
+<body>
+</body>
+</html>
