@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meding App - Legal & Privacy</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom Styles - The Design You Liked */
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        body.ltr {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+        }
+        .tab-active {
+            border-bottom: 2px solid #2563eb;
+            color: #2563eb;
+            font-weight: 700;
+        }
+        .section-title {
+            @apply text-xl font-bold text-gray-800 mb-4 mt-8 pb-2 border-b border-gray-200;
+        }
+        .content-text {
+            @apply text-gray-600 leading-relaxed mb-4;
+        }
+        ul {
+            @apply list-disc list-inside mb-4 text-gray-600 space-y-2;
+        }
+        li {
+            @apply mb-1;
+        }
+        strong {
+            @apply text-gray-800;
+        }
+        .alert-box {
+            @apply bg-blue-50 border-r-4 border-blue-500 p-4 my-6 rounded-md text-gray-700;
+        }
+        /* LTR adjustments for alert box */
+        body.ltr .alert-box {
+            @apply border-r-0 border-l-4;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col transition-all duration-300">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-blue-600 tracking-tight">Meding<span class="text-gray-400 text-sm font-normal mx-2">App</span></span>
+                </div>
+
+                <!-- Language Switcher -->
+                <div class="flex space-x-2 space-x-reverse bg-gray-100 rounded-lg p-1">
+                    <button onclick="setLang('ar')" id="btn-ar" class="px-3 py-1 text-sm rounded-md transition-all font-bold">عربي</button>
+                    <button onclick="setLang('en')" id="btn-en" class="px-3 py-1 text-sm rounded-md transition-all">EN</button>
+                    <button onclick="setLang('fr')" id="btn-fr" class="px-3 py-1 text-sm rounded-md transition-all">FR</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="gradient-bg text-white py-12">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 id="header-title" class="text-3xl md:text-4xl font-bold mb-4">مركز الخصوصية والدعم القانوني</h1>
+            <p id="header-subtitle" class="text-blue-100 text-lg">كل ما تحتاج معرفته عن سياساتنا وشروط استخدام تطبيق Meding</p>
+            <div class="mt-4 text-sm opacity-75" id="last-updated">تاريخ آخر تحديث: 1 ديسمبر 2025</div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="bg-white border-b border-gray-200">
+        <div class="max-w-4xl mx-auto flex">
+            <button onclick="showSection('about')" id="tab-about" class="flex-1 py-4 text-center text-gray-500 hover:text-blue-600 transition-colors">من نحن</button>
+            <button onclick="showSection('privacy')" id="tab-privacy" class="flex-1 py-4 text-center text-gray-500 hover:text-blue-600 transition-colors border-b-2 border-transparent">سياسة الخصوصية</button>
+            <button onclick="showSection('terms')" id="tab-terms" class="flex-1 py-4 text-center text-gray-500 hover:text-blue-600 transition-colors border-b-2 border-transparent">شروط الاستخدام</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-4xl mx-auto px-4 py-8 w-full bg-white shadow-sm my-4 rounded-b-lg">
+        
+        <!-- About Section -->
+        <div id="content-about" class="hidden animate-fade-in"></div>
+
+        <!-- Privacy Section -->
+        <div id="content-privacy" class="hidden animate-fade-in"></div>
+
+        <!-- Terms Section -->
+        <div id="content-terms" class="hidden animate-fade-in"></div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-400 py-8 mt-auto">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <p id="footer-contact" class="mb-4">للتواصل والدعم: <a href="mailto:support@meding.app" class="text-blue-400 hover:underline">support@meding.app</a></p>
+            <p id="footer-copy">&copy; 2025 Meding App. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Content Data (Full Version) ---
+        const contentData = {
+            ar: {
+                headerTitle: "مركز الخصوصية والدعم القانوني",
+                headerSubtitle: "الشفافية والثقة هما أساس تجربتك التعليمية معنا",
+                lastUpdated: "تاريخ آخر تحديث: 1 ديسمبر 2025",
+                tabs: { about: "من نحن", privacy: "سياسة الخصوصية", terms: "شروط الاستخدام" },
+                footerContact: "للتواصل والدعم:",
+                footerCopy: "جميع الحقوق محفوظة لتطبيق Meding © 2025",
+                
+                aboutHTML: `
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">من نحن</h2>
+                    <p class="content-text">
+                        تطبيق <strong>Meding</strong> هو منصة تعليمية مبتكرة مصممة خصيصاً لطلاب المجال الطبي. نهدف إلى تبسيط العملية التعليمية من خلال توفير أدوات ذكية، اختبارات تفاعلية (QCM)، ومتابعة دقيقة للتقدم الدراسي.
+                    </p>
+                    <p class="content-text">
+                        نحن نؤمن بأن التكنولوجيا يجب أن تكون داعماً أساسياً للطالب، لذا نحرص على تقديم تجربة مستخدم سلسة، آمنة، ومحفزة للتعلم الذاتي والمنافسة الإيجابية.
+                    </p>
+                `,
+
+                privacyHTML: `
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">سياسة الخصوصية</h2>
+                    <p class="content-text">نشكركم لثقتكم في تطبيق <strong>Meding</strong>. نحن نلتزم بحماية خصوصيتكم وضمان أمان بياناتكم. توضح هذه الوثيقة بشفافية كيفية تعاملنا مع المعلومات، وفقاً لأفضل الممارسات وقوانين حماية البيانات.</p>
+                    
+                    <h3 class="section-title">1. المعلومات التي نجمعها</h3>
+                    <p class="content-text">نحن نجمع فقط المعلومات الضرورية لعمل التطبيق بكفاءة:</p>
+                    <ul>
+                        <li><strong>1.1 بيانات الحساب (التي تقدمها طواعية):</strong> البريد الإلكتروني (لتسجيل الدخول واستعادة الحساب)، الاسم، والبيانات الديموغرافية الاختيارية (مثل الجنس وتاريخ الميلاد) لتحسين تخصيص المحتوى.</li>
+                        <li><strong>1.2 بيانات الاستخدام (تُجمع تلقائياً):</strong> التقدم الدراسي، نتائج الاختبارات، والأوسمة. كما نجمع بيانات تقنية غير شخصية (ملفات السجل Log Files) مثل نوع الجهاز ونظام التشغيل، لضمان توافق التطبيق واكتشاف الأعطال.</li>
+                        <li><strong>1.3 بيانات تفعيل الترخيص:</strong> عند استخدام "كود تفعيل" للحصول على ميزات إضافية، قد نسجل معرّفاً فريداً للجهاز (Device ID) لضمان استخدام الكود وفق شروط الاستخدام ومنع المشاركة غير المصرح بها.</li>
+                    </ul>
+
+                    <h3 class="section-title">2. عمليات الشراء والدفع</h3>
+                    <div class="alert-box">
+                        <strong>تنويه هام:</strong> تطبيق Meding <u>لا يقدم أي اشتراكات رقمية أو عمليات شراء داخل التطبيق</u> (In-App Purchases)، ولا يخضع لأي آلية دفع خاصة بمتجر التطبيقات (Google Play أو App Store).
+                    </div>
+                    <ul>
+                        <li>جميع "أكواد التفعيل" يتم الحصول عليها وتداولها خارج التطبيق تماماً للأغراض التعليمية.</li>
+                        <li>نحن لا نطلب ولا نخزن أي بيانات بنكية أو تفاصيل بطاقات ائتمان.</li>
+                    </ul>
+
+                    <h3 class="section-title">3. مشاركة البيانات ومزودو الخدمات</h3>
+                    <p class="content-text">نحن نلتزم بسياسة صارمة لعدم بيع بياناتك الشخصية. ومع ذلك، نعتمد على شركاء تقنيين موثوقين لتشغيل التطبيق:</p>
+                    <ul>
+                        <li><strong>مزودو البنية التحتية والتحليلات:</strong> نستخدم خدمات سحابية عالمية آمنة (مثل منصة <strong>Google Firebase</strong>) لمعالجة البيانات، توثيق الدخول، وتحليل أداء التطبيق (Crashlytics) لتحسين الجودة.</li>
+                        <li><strong>الشبكات الإعلانية:</strong> قد يستخدم التطبيق خدمات إعلانية (مثل <strong>Google AdMob</strong>) التي قد تجمع بيانات غير شخصية لتقديم إعلانات ملائمة وآمنة.</li>
+                    </ul>
+                    <p class="content-text"><strong>ملاحظة:</strong> جميع الأطراف الثالثة ملزمة بمعايير أمان عالية ولا تملك حق استخدام بياناتك لأغراضها الخاصة خارج نطاق تشغيل التطبيق.</p>
+
+                    <h3 class="section-title">4. حماية البيانات</h3>
+                    <p class="content-text">نطبق تدابير أمان متقدمة لحماية معلوماتك من الوصول غير المصرح به، بما في ذلك تشفير البيانات أثناء النقل والتخزين. رغم ذلك، لا يمكن ضمان الأمان المطلق عبر الإنترنت، لذا ننصح المستخدمين بالحفاظ على سرية بيانات دخولهم.</p>
+
+                    <h3 class="section-title">5. حقوق المستخدم والتحكم في البيانات</h3>
+                    <p class="content-text">لك الحق الكامل في التحكم ببياناتك:</p>
+                    <ul>
+                        <li><strong>تعديل البيانات:</strong> يمكنك تحديث ملفك الشخصي من إعدادات التطبيق.</li>
+                        <li><strong>حذف الحساب:</strong> يمكنك طلب حذف حسابك وبياناتك نهائياً من خلال خيار "حذف الحساب" الموجود داخل إعدادات التطبيق، أو بمراسلتنا عبر البريد الإلكتروني. عند الحذف، يتم محو بياناتك الشخصية وسجلك الدراسي بشكل دائم.</li>
+                    </ul>
+
+                    <h3 class="section-title">6. خصوصية الأطفال والقاصرين</h3>
+                    <p class="content-text">تم تصميم خدماتنا للطلاب. نحن نحترم خصوصية القاصرين ولا نجمع عمداً معلومات شخصية ممن هم دون السن القانوني للموافقة الرقمية وفقاً لقوانين بلد المستخدم، دون موافقة ولي الأمر. إذا اكتشفنا وجود بيانات غير مصرح بها لقاصر، سنقوم بحذفها فوراً.</p>
+
+                    <h3 class="section-title">7. التغييرات على هذه السياسة</h3>
+                    <p class="content-text">قد نقوم بتحديث هذه السياسة لتعكس التحسينات في التطبيق أو التغييرات القانونية. سيتم إشعار المستخدمين بأي تحديثات جوهرية داخل التطبيق.</p>
+
+                    <h3 class="section-title">8. اتصل بنا</h3>
+                    <p class="content-text">لأي استفسارات حول الخصوصية أو لطلب المساعدة، يرجى التواصل معنا: 📧 support@meding.app</p>
+                `,
+
+                termsHTML: `
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">شروط الاستخدام</h2>
+                    <p class="content-text">أهلاً بك في تطبيق <strong>Meding</strong>. يرجى قراءة شروط الاستخدام هذه ("الشروط") بعناية قبل البدء في استخدام التطبيق. بتحميلك للتطبيق أو تسجيل حساب، فإنك توافق على الالتزام بهذه الشروط.</p>
+
+                    <h3 class="section-title">1. طبيعة التطبيق (إخلاء مسؤولية)</h3>
+                    <p class="content-text">تطبيق Meding هو أداة تعليمية مساعدة لطلاب المجال الطبي.</p>
+                    <ul>
+                        <li><strong>المحتوى تعليمي فقط:</strong> جميع المعلومات والاختبارات هي لأغراض الدراسة والمراجعة الأكاديمية.</li>
+                        <li><strong>ليس مرجعاً سريرياً:</strong> لا يجب الاعتماد على التطبيق كبديل للمراجع الطبية الرسمية أو لاتخاذ قرارات علاجية.</li>
+                        <li><strong>دقة المعلومات:</strong> لا نضمن خلو المحتوى تماماً من الأخطاء، ولا نتحمل مسؤولية أي استخدام خاطئ للمعلومات.</li>
+                    </ul>
+
+                    <h3 class="section-title">2. الحسابات، الأمان، وإنهاء الخدمة</h3>
+                    <ul>
+                        <li><strong>أمن الحساب:</strong> أنت المسؤول الوحيد عن الحفاظ على سرية بيانات دخولك.</li>
+                        <li><strong>مراقبة النشاط:</strong> يحتفظ النظام بحق مراقبة الأنشطة (تلقائياً) لاكتشاف حالات الاحتيال، مثل: محاولات التلاعب بالنتائج، أو استخدام نفس الحساب/الكود على أجهزة متعددة بشكل متزامن أو مشبوه.</li>
+                        <li><strong>إنهاء الخدمة:</strong> يحق لإدارة التطبيق تعليق أو حظر حسابك نهائياً <strong>ودون سابق إنذار</strong> إذا ثبت انتهاكك للشروط (مثل الغش في الاختبارات أو توزيع أكواد التفعيل).</li>
+                    </ul>
+                    <div class="alert-box border-red-500 bg-red-50">
+                        <strong>سقوط الحقوق:</strong> في حال تم حظر الحساب بسبب مخالفة، يسقط حق المستخدم في استرجاع قيمة كود التفعيل أو المطالبة بأي تعويض، ولن يتمكن من استخدام الكود مرة أخرى.
+                    </div>
+
+                    <h3 class="section-title">3. سياسة أكواد التفعيل (Activation Codes)</h3>
+                    <p class="content-text">يقدم التطبيق ميزات إضافية يتم تفعيلها عبر أكواد خارجية.</p>
+                    <ul>
+                        <li><strong>التراخيص:</strong> الكود هو ترخيص استخدام شخصي وغير قابل للنقل.</li>
+                        <li><strong>سياسة الجهاز الواحد:</strong> يتم ربط كود التفعيل بجهاز واحد فقط لضمان الحقوق.</li>
+                    </ul>
+
+                    <p class="content-text"><strong>3.1 استثناءات تغيير الجهاز ونقل الترخيص:</strong></p>
+                    <p class="content-text">في حالات الضرورة (مثل تلف الجهاز، ضياعه، أو شراء هاتف جديد)، يمكن للمستخدم التواصل مع الدعم الفني لطلب نقل تفعيل الكود إلى الجهاز الجديد.</p>
+                    <ul>
+                        <li>يتم التعامل مع هذه الطلبات بشكل فردي.</li>
+                        <li>نحتفظ بحق رفض النقل في حال الاشتباه في مشاركة الحساب أو تكرار الطلب بشكل غير طبيعي.</li>
+                    </ul>
+
+                    <h3 class="section-title">4. حقوق الملكية الفكرية</h3>
+                    <p class="content-text">جميع الحقوق (المحتوى، التصميم، البرمجة) محفوظة لتطبيق Meding. يُمنع نسخ أو توزيع المحتوى أو استخدام الهندسة العكسية للتطبيق.</p>
+
+                    <h3 class="section-title">5. الاستخدام المقبول</h3>
+                    <p class="content-text">تتعهد بعدم:</p>
+                    <ul>
+                        <li>استخدام التطبيق في أي نشاط غير قانوني.</li>
+                        <li>التلاعب بنتائج الاختبارات أو الترتيب (Leaderboard).</li>
+                        <li>مشاركة حسابك أو كود التفعيل مع الآخرين.</li>
+                    </ul>
+
+                    <h3 class="section-title">6. انقطاع الخدمة</h3>
+                    <p class="content-text">نحن نسعى لضمان عمل التطبيق دائماً، لكننا لا نضمن عدم حدوث انقطاعات للصيانة أو لأسباب تقنية.</p>
+
+                    <h3 class="section-title">7. التعديلات على الشروط</h3>
+                    <p class="content-text">قد نقوم بتحديث الشروط من وقت لآخر. استمرارك في استخدام التطبيق يعني موافقتك على التعديلات.</p>
+
+                    <h3 class="section-title">8. القانون الواجب التطبيق</h3>
+                    <p class="content-text">تخضع هذه الشروط لقوانين <strong>الجمهورية الجزائرية الديمقراطية الشعبية</strong>، وتختص محاكمها بالفصل في أي نزاع.</p>
+
+                    <h3 class="section-title">9. الاتصال والدعم الفني</h3>
+                    <p class="content-text">للاستفسارات، أو لحل مشاكل التفعيل وتغيير الجهاز، يرجى التواصل معنا: 📧 support@meding.app</p>
+                `
+            },
+            en: {
+                headerTitle: "Legal Center & Support",
+                headerSubtitle: "Transparency and trust are the foundation of your learning experience",
+                lastUpdated: "Last Updated: December 1, 2025",
+                tabs: { about: "About Us", privacy: "Privacy Policy", terms: "Terms of Use" },
+                footerContact: "Contact & Support:",
+                footerCopy: "All rights reserved Meding App © 2025",
+
+                aboutHTML: `
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">About Us</h2>
+                    <p class="content-text">
+                        <strong>Meding</strong> is an innovative educational platform designed specifically for medical students. We aim to simplify the learning process by providing smart tools, interactive quizzes (QCM), and precise progress tracking.
+                    </p>
+                    <p class="content-text">
+                        We believe technology should be a core supporter for students, so we strive to provide a seamless, secure user experience that stimulates self-learning and positive competition.
+                    </p>
+                `,
+
+                privacyHTML: `
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Privacy Policy</h2>
+                    <p class="content-text">Thank you for trusting <strong>Meding</strong>. We are committed to protecting your privacy and ensuring your data security. This document transparently explains how we handle information, in accordance with best practices and data protection laws.</p>
+                    
+                    <h3 class="section-title">1. Information We Collect</h3>
+                    <p class="content-text">We only collect information necessary for the app to function efficiently:</p>
+                    <ul>
+                        <li><strong>1.1 Account Data (Voluntarily provided):</strong> Email (for login and recovery), Name, and optional demographic data (such as Gender and Date of Birth) to improve content personalization.</li>
+                        <li><strong>1.2 Usage Data (Collected automatically):</strong> Academic progress, test results, and badges. We also collect non-personal technical data (Log Files) such as device type and OS, to ensure app compatibility and detect crashes.</li>
+                        <li><strong>1.3 License Activation Data:</strong> When using an "Activation Code" to unlock features, we may record a unique Device ID to ensure the code is used according to terms and prevent unauthorized sharing.</li>
+                    </ul>
+
+                    <h3 class="section-title">2. Payments and Purchases</h3>
+                    <div class="alert-box">
+                        <strong>Important Notice:</strong> Meding <u>does NOT offer any digital subscriptions or In-App Purchases</u>, and is not subject to any App Store (Google Play or Apple) payment mechanisms.
+                    </div>
+                    <ul>
+                        <li>All "Activation Codes" are obtained and traded entirely outside the app for educational purposes.</li>
+                        <li>We do not request nor store any banking data or credit card details.</li>
+                    </ul>
+
+                    <h3 class="section-title">3. Data Sharing and Service Providers</h3>
+                    <p class="content-text">We adhere to a strict policy of not selling your personal data. However, we rely on trusted technical partners to operate the app:</p>
+                    <ul>
+                        <li><strong>Infrastructure & Analytics Providers:</strong> We use secure global cloud services (such as <strong>Google Firebase</strong>) to process data, authenticate logins, and analyze app performance (Crashlytics) to improve quality.</li>
+                        <li><strong>Ad Networks:</strong> The app may use advertising services (such as <strong>Google AdMob</strong>) which may collect non-personal data to serve safe and relevant ads.</li>
+                    </ul>
+                    <p class="content-text"><strong>Note:</strong> All third parties are bound by high security standards and do not have the right to use your data for their own purposes outside the scope of operating the app.</p>
+
+                    <h3 class="section-title">4. Data Protection</h3>
+                    <p class="content-text">We implement advanced security measures to protect your information from unauthorized access, including data encryption during transmission and storage. However, absolute security cannot be guaranteed online, so we advise users to keep their login credentials confidential.</p>
+
+                    <h3 class="section-title">5. User Rights and Data Control</h3>
+                    <p class="content-text">You have full rights to control your data:</p>
+                    <ul>
+                        <li><strong>Edit Data:</strong> You can update your profile from the app settings.</li>
+                        <li><strong>Delete Account:</strong> You can request to permanently delete your account and data via the "Delete Account" option in settings, or by emailing us. Upon deletion, your personal data and academic record will be permanently erased.</li>
+                    </ul>
+
+                    <h3 class="section-title">6. Children's Privacy</h3>
+                    <p class="content-text">Our services are designed for students. We respect the privacy of minors and do not knowingly collect personal information from those under the digital age of consent according to the user's country laws, without parental consent. If we discover unauthorized data of a minor, we will delete it immediately.</p>
+
+                    <h3 class="section-title">7. Changes to this Policy</h3>
+                    <p class="content-text">We may update this policy to reflect app improvements or legal changes. Users will be notified of any material updates within the app.</p>
+
+                    <h3 class="section-title">8. Contact Us</h3>
+                    <p class="content-text">For any privacy inquiries or assistance, please contact us at: 📧 support@meding.app</p>
+                `,
+
+                termsHTML: `
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Terms of Use</h2>
+                    <p class="content-text">Welcome to <strong>Meding</strong>. Please read these Terms of Use ("Terms") carefully before using the app. By downloading the app or registering an account, you agree to be bound by these Terms.</p>
+
+                    <h3 class="section-title">1. Nature of the App (Disclaimer)</h3>
+                    <p class="content-text">Meding is an educational tool for medical students.</p>
+                    <ul>
+                        <li><strong>Educational Content Only:</strong> All information and quizzes are for academic study and revision purposes.</li>
+                        <li><strong>Not a Clinical Reference:</strong> The app should not be relied upon as a substitute for official medical references or for making treatment decisions.</li>
+                        <li><strong>Accuracy:</strong> We do not guarantee the content is completely error-free, and we assume no liability for misuse of the information.</li>
+                    </ul>
+
+                    <h3 class="section-title">2. Accounts, Security, and Termination</h3>
+                    <ul>
+                        <li><strong>Account Security:</strong> You are solely responsible for maintaining the confidentiality of your login credentials.</li>
+                        <li><strong>Activity Monitoring:</strong> The system reserves the right to monitor activities (automatically) to detect fraud, such as: attempts to manipulate results, or concurrent/suspicious use of the same account/code on multiple devices.</li>
+                        <li><strong>Termination:</strong> App administration has the right to suspend or permanently ban your account <strong>without prior notice</strong> if you are found violating the terms (e.g., cheating on tests or distributing activation codes).</li>
+                    </ul>
+                    <div class="alert-box border-red-500 bg-red-50">
+                        <strong>Forfeiture of Rights:</strong> If an account is banned due to a violation, the user forfeits the right to a refund for the activation code or any compensation, and will not be able to use the code again.
+                    </div>
+
+                    <h3 class="section-title">3. Activation Codes Policy</h3>
+                    <p class="content-text">The app offers additional features activated via external codes.</p>
+                    <ul>
+                        <li><strong>Licenses:</strong> The code is a personal, non-transferable usage license.</li>
+                        <li><strong>Single Device Policy:</strong> The activation code is linked to one device only to ensure rights.</li>
+                    </ul>
+
+                    <p class="content-text"><strong>3.1 Device Change and License Transfer Exceptions:</strong></p>
+                    <p class="content-text">In cases of necessity (e.g., device damage, loss, or purchasing a new phone), the user may contact Support to request transferring the code activation to the new device.</p>
+                    <ul>
+                        <li>These requests are handled on a case-by-case basis.</li>
+                        <li>We reserve the right to refuse the transfer if account sharing or abnormal repetition of requests is suspected.</li>
+                    </ul>
+
+                    <h3 class="section-title">4. Intellectual Property Rights</h3>
+                    <p class="content-text">All rights (Content, Design, Code) are reserved to Meding. Copying, distributing content, or reverse engineering the app is prohibited.</p>
+
+                    <h3 class="section-title">5. Acceptable Use</h3>
+                    <p class="content-text">You undertake not to:</p>
+                    <ul>
+                        <li>Use the app for any illegal activity.</li>
+                        <li>Manipulate quiz results or the Leaderboard.</li>
+                        <li>Share your account or activation code with others.</li>
+                    </ul>
+
+                    <h3 class="section-title">6. Service Interruption</h3>
+                    <p class="content-text">We strive to ensure the app works at all times, but we do not guarantee no interruptions for maintenance or technical reasons.</p>
+
+                    <h3 class="section-title">7. Amendments to Terms</h3>
+                    <p class="content-text">We may update the Terms from time to time. Your continued use of the app constitutes your agreement to the amendments.</p>
+
+                    <h3 class="section-title">8. Governing Law</h3>
+                    <p class="content-text">These terms are governed by the laws of the <strong>People's Democratic Republic of Algeria</strong>, and its courts shall have exclusive jurisdiction over any dispute.</p>
+
+                    <h3 class="section-title">9. Contact and Support</h3>
+                    <p class="content-text">For inquiries, or to resolve activation and device change issues, please contact us: 📧 support@meding.app</p>
+                `
+            },
+            fr: {
+                headerTitle: "Centre Juridique & Support",
+                headerSubtitle: "La transparence et la confiance sont la base de votre apprentissage",
+                lastUpdated: "Dernière mise à jour: 1 Décembre 2025",
+                tabs: { about: "À Propos", privacy: "Confidentialité", terms: "Conditions" },
+                footerContact: "Contact & Support:",
+                footerCopy: "Tous droits réservés Meding App © 2025",
+
+                aboutHTML: `
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">À Propos</h2>
+                    <p class="content-text">
+                        <strong>Meding</strong> est une plateforme éducative innovante conçue spécifiquement pour les étudiants en médecine. Nous visons à simplifier le processus d'apprentissage en fournissant des outils intelligents, des QCM interactifs et un suivi précis des progrès.
+                    </p>
+                    <p class="content-text">
+                        Nous croyons que la technologie doit être un soutien essentiel pour l'étudiant, c'est pourquoi nous nous efforçons de fournir une expérience utilisateur fluide, sécurisée et stimulante.
+                    </p>
+                `,
+
+                privacyHTML: `
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Politique de Confidentialité</h2>
+                    <p class="content-text">Merci de votre confiance en <strong>Meding</strong>. Nous nous engageons à protéger votre vie privée et à garantir la sécurité de vos données. Ce document explique de manière transparente comment nous traitons les informations, conformément aux meilleures pratiques et aux lois sur la protection des données.</p>
+                    
+                    <h3 class="section-title">1. Informations collectées</h3>
+                    <p class="content-text">Nous ne collectons que les informations nécessaires au bon fonctionnement de l'application :</p>
+                    <ul>
+                        <li><strong>1.1 Données du compte (fournies volontairement) :</strong> Email (pour la connexion et la récupération), Nom, et données démographiques optionnelles (comme le Sexe et la Date de naissance) pour améliorer la personnalisation du contenu.</li>
+                        <li><strong>1.2 Données d'utilisation (collectées automatiquement) :</strong> Progrès académiques, résultats des tests et badges. Nous collectons également des données techniques non personnelles (Fichiers journaux / Logs) comme le type d'appareil et l'OS, pour assurer la compatibilité de l'application et détecter les plantages.</li>
+                        <li><strong>1.3 Données d'activation de licence :</strong> Lors de l'utilisation d'un "Code d'activation" pour débloquer des fonctionnalités, nous pouvons enregistrer un ID d'appareil unique pour garantir que le code est utilisé conformément aux conditions et empêcher le partage non autorisé.</li>
+                    </ul>
+
+                    <h3 class="section-title">2. Paiements et Achats</h3>
+                    <div class="alert-box">
+                        <strong>Avis Important :</strong> Meding <u>ne propose AUCUN abonnement numérique ni achat intégré</u> (In-App Purchases), et n'est soumis à aucun mécanisme de paiement des stores (Google Play ou Apple).
+                    </div>
+                    <ul>
+                        <li>Tous les "Codes d'activation" sont obtenus et échangés entièrement en dehors de l'application à des fins éducatives.</li>
+                        <li>Nous ne demandons ni ne stockons aucune donnée bancaire ou détail de carte de crédit.</li>
+                    </ul>
+
+                    <h3 class="section-title">3. Partage des données et Fournisseurs de services</h3>
+                    <p class="content-text">Nous adhérons à une politique stricte de non-vente de vos données personnelles. Cependant, nous comptons sur des partenaires techniques de confiance pour faire fonctionner l'application :</p>
+                    <ul>
+                        <li><strong>Fournisseurs d'infrastructure et d'analyse :</strong> Nous utilisons des services cloud mondiaux sécurisés (tels que <strong>Google Firebase</strong>) pour traiter les données, authentifier les connexions et analyser les performances de l'application (Crashlytics) pour améliorer la qualité.</li>
+                        <li><strong>Réseaux publicitaires :</strong> L'application peut utiliser des services publicitaires (tels que <strong>Google AdMob</strong>) qui peuvent collecter des données non personnelles pour diffuser des publicités sûres et pertinentes.</li>
+                    </ul>
+                    <p class="content-text"><strong>Note :</strong> Tous les tiers sont tenus par des normes de sécurité élevées et n'ont pas le droit d'utiliser vos données à leurs propres fins en dehors du cadre du fonctionnement de l'application.</p>
+
+                    <h3 class="section-title">4. Protection des données</h3>
+                    <p class="content-text">Nous mettons en œuvre des mesures de sécurité avancées pour protéger vos informations contre tout accès non autorisé, y compris le cryptage des données lors de la transmission et du stockage. Cependant, la sécurité absolue ne peut être garantie en ligne, nous conseillons donc aux utilisateurs de garder leurs identifiants de connexion confidentiels.</p>
+
+                    <h3 class="section-title">5. Droits de l'utilisateur et Contrôle des données</h3>
+                    <p class="content-text">Vous avez tous les droits de contrôler vos données :</p>
+                    <ul>
+                        <li><strong>Modifier les données :</strong> Vous pouvez mettre à jour votre profil depuis les paramètres de l'application.</li>
+                        <li><strong>Supprimer le compte :</strong> Vous pouvez demander la suppression définitive de votre compte et de vos données via l'option "Supprimer le compte" dans les paramètres, ou en nous contactant par email. Lors de la suppression, vos données personnelles et votre dossier académique seront définitivement effacés.</li>
+                    </ul>
+
+                    <h3 class="section-title">6. Confidentialité des enfants</h3>
+                    <p class="content-text">Nos services sont conçus pour les étudiants. Nous respectons la vie privée des mineurs et ne collectons pas sciemment d'informations personnelles auprès de ceux qui n'ont pas l'âge légal numérique selon les lois du pays de l'utilisateur, sans consentement parental. Si nous découvrons des données non autorisées d'un mineur, nous les supprimerons immédiatement.</p>
+
+                    <h3 class="section-title">7. Modifications de cette politique</h3>
+                    <p class="content-text">Nous pouvons mettre à jour cette politique pour refléter les améliorations de l'application ou les changements juridiques. Les utilisateurs seront informés de toute mise à jour importante dans l'application.</p>
+
+                    <h3 class="section-title">8. Contactez-nous</h3>
+                    <p class="content-text">Pour toute question sur la confidentialité ou pour obtenir de l'aide, veuillez nous contacter à : 📧 support@meding.app</p>
+                `,
+
+                termsHTML: `
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Conditions d'Utilisation</h2>
+                    <p class="content-text">Bienvenue sur <strong>Meding</strong>. Veuillez lire attentivement ces Conditions d'utilisation ("Conditions") avant d'utiliser l'application. En téléchargeant l'application ou en créant un compte, vous acceptez d'être lié par ces Conditions.</p>
+
+                    <h3 class="section-title">1. Nature de l'application (Avis de non-responsabilité)</h3>
+                    <p class="content-text">Meding est un outil éducatif pour les étudiants en médecine.</p>
+                    <ul>
+                        <li><strong>Contenu éducatif uniquement :</strong> Toutes les informations et les quiz sont destinés à l'étude académique et à la révision.</li>
+                        <li><strong>Pas de référence clinique :</strong> L'application ne doit pas être utilisée comme substitut aux références médicales officielles ou pour prendre des décisions thérapeutiques.</li>
+                        <li><strong>Exactitude :</strong> Nous ne garantissons pas que le contenu est totalement exempt d'erreurs, et nous n'assumons aucune responsabilité en cas de mauvaise utilisation des informations.</li>
+                    </ul>
+
+                    <h3 class="section-title">2. Comptes, Sécurité et Résiliation</h3>
+                    <ul>
+                        <li><strong>Sécurité du compte :</strong> Vous êtes seul responsable de la confidentialité de vos identifiants de connexion.</li>
+                        <li><strong>Surveillance de l'activité :</strong> Le système se réserve le droit de surveiller les activités (automatiquement) pour détecter la fraude, telle que : tentatives de manipulation des résultats, ou utilisation simultanée/suspecte du même compte/code sur plusieurs appareils.</li>
+                        <li><strong>Résiliation :</strong> L'administration de l'application a le droit de suspendre ou de bannir définitivement votre compte <strong>sans préavis</strong> en cas de tricherie, manipulation de résultats ou partage de codes.</li>
+                    </ul>
+                    <div class="alert-box border-red-500 bg-red-50">
+                        <strong>Déchéance des droits :</strong> Si un compte est banni en raison d'une violation, l'utilisateur perd le droit au remboursement du code d'activation ou à toute indemnisation, et ne pourra plus utiliser le code.
+                    </div>
+
+                    <h3 class="section-title">3. Politique des codes d'activation</h3>
+                    <p class="content-text">L'application offre des fonctionnalités supplémentaires activées via des codes externes.</p>
+                    <ul>
+                        <li><strong>Licences :</strong> Le code est une licence d'utilisation personnelle et non transférable.</li>
+                        <li><strong>Politique de l'appareil unique :</strong> Le code d'activation est lié à un seul appareil pour garantir les droits.</li>
+                    </ul>
+
+                    <p class="content-text"><strong>3.1 Exceptions de changement d'appareil et transfert de licence :</strong></p>
+                    <p class="content-text">En cas de nécessité (ex: dommage de l'appareil, perte ou achat d'un nouveau téléphone), l'utilisateur peut contacter le Support pour demander le transfert de l'activation du code vers le nouvel appareil.</p>
+                    <ul>
+                        <li>Ces demandes sont traitées au cas par cas.</li>
+                        <li>Nous nous réservons le droit de refuser le transfert en cas de suspicion de partage de compte ou de répétition anormale des demandes.</li>
+                    </ul>
+
+                    <h3 class="section-title">4. Droits de propriété intellectuelle</h3>
+                    <p class="content-text">Tous les droits (Contenu, Design, Code) sont réservés à Meding. Copier, distribuer du contenu ou faire de l'ingénierie inverse de l'application est interdit.</p>
+
+                    <h3 class="section-title">5. Utilisation acceptable</h3>
+                    <p class="content-text">Vous vous engagez à ne pas :</p>
+                    <ul>
+                        <li>Utiliser l'application pour toute activité illégale.</li>
+                        <li>Manipuler les résultats des quiz ou le classement (Leaderboard).</li>
+                        <li>Partager votre compte ou votre code d'activation avec d'autres.</li>
+                    </ul>
+
+                    <h3 class="section-title">6. Interruption de service</h3>
+                    <p class="content-text">Nous nous efforçons d'assurer le fonctionnement de l'application à tout moment, mais nous ne garantissons pas l'absence d'interruptions pour maintenance ou raisons techniques.</p>
+
+                    <h3 class="section-title">7. Modifications des conditions</h3>
+                    <p class="content-text">Nous pouvons mettre à jour les Conditions de temps à autre. Votre utilisation continue de l'application constitue votre acceptation des modifications.</p>
+
+                    <h3 class="section-title">8. Loi applicable</h3>
+                    <p class="content-text">Ces conditions sont régies par les lois de la <strong>République Algérienne Démocratique et Populaire</strong>, et ses tribunaux auront compétence exclusive pour tout litige.</p>
+
+                    <h3 class="section-title">9. Contact et Support</h3>
+                    <p class="content-text">Pour toute demande, ou pour résoudre des problèmes d'activation et de changement d'appareil, veuillez nous contacter : 📧 support@meding.app</p>
+                `
+            }
+        };
+
+        // --- Logic ---
+        let currentLang = 'ar';
+        let currentSection = 'privacy'; // Default open tab
+
+        function setLang(lang) {
+            currentLang = lang;
+            
+            // Update Body Direction & Font
+            const body = document.body;
+            const html = document.documentElement;
+            
+            if (lang === 'ar') {
+                html.dir = 'rtl';
+                body.classList.remove('ltr');
+                document.getElementById('header-title').style.fontFamily = "'Cairo', sans-serif";
+            } else {
+                html.dir = 'ltr';
+                body.classList.add('ltr');
+                document.getElementById('header-title').style.fontFamily = "'Inter', sans-serif";
+            }
+
+            // Update Buttons Styling
+            ['ar', 'en', 'fr'].forEach(l => {
+                const btn = document.getElementById(`btn-${l}`);
+                if (l === lang) {
+                    btn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+                    btn.classList.remove('text-gray-600');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+                    btn.classList.add('text-gray-600');
+                }
+            });
+
+            renderContent();
+        }
+
+        function showSection(section) {
+            currentSection = section;
+            
+            // Hide all
+            ['about', 'privacy', 'terms'].forEach(s => {
+                document.getElementById(`content-${s}`).classList.add('hidden');
+                document.getElementById(`tab-${s}`).classList.remove('tab-active', 'border-blue-600');
+                document.getElementById(`tab-${s}`).classList.add('border-transparent');
+            });
+
+            // Show active
+            document.getElementById(`content-${section}`).classList.remove('hidden');
+            document.getElementById(`tab-${section}`).classList.add('tab-active', 'border-blue-600');
+            document.getElementById(`tab-${section}`).classList.remove('border-transparent');
+        }
+
+        function renderContent() {
+            const data = contentData[currentLang];
+
+            // Static elements
+            document.getElementById('header-title').textContent = data.headerTitle;
+            document.getElementById('header-subtitle').textContent = data.headerSubtitle;
+            document.getElementById('last-updated').textContent = data.lastUpdated;
+            document.getElementById('footer-contact').innerHTML = `${data.footerContact} <a href="mailto:support@meding.app" class="text-blue-400 hover:underline">support@meding.app</a>`;
+            document.getElementById('footer-copy').textContent = data.footerCopy;
+
+            // Tabs Text
+            document.getElementById('tab-about').textContent = data.tabs.about;
+            document.getElementById('tab-privacy').textContent = data.tabs.privacy;
+            document.getElementById('tab-terms').textContent = data.tabs.terms;
+
+            // HTML Content Injection
+            document.getElementById('content-about').innerHTML = data.aboutHTML;
+            document.getElementById('content-privacy').innerHTML = data.privacyHTML;
+            document.getElementById('content-terms').innerHTML = data.termsHTML;
+        }
+
+        // Initialize
+        setLang('ar');
+        showSection('privacy');
+
+    </script>
+</body>
+</html>
