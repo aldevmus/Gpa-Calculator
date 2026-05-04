@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <title>160 QCS Appareil Urinaire</title>
+    <meta property="og:title" content="160 QCS Appareil Urinaire">
+    <meta property="og:description" content="Application de préparation complète contenant 160 questions couvrant toutes les spécialités de l'appareil urinaire.">
+    <meta property="og:image" content="https://gpa.aldevmus.online/medconnect/logo.jpg">
+    <meta property="og:url" content="https://gpa.aldevmus.online/medconnect/">
+    <meta property="og:type" content="website">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedConnect - Appareil Urinaire QCS</title>
+    
+    <!-- Favicon (Utilise logo.jpg, avec fallback géré par le navigateur) -->
+    <link rel="icon" href="logo.jpg" type="image/jpeg">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { primary: '#0ea5e9', secondary: '#14b8a6', dark: '#0f172a' }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(at 40% 20%, hsla(199,100%,74%,0.15) 0px, transparent 50%), radial-gradient(at 80% 0%, hsla(189,100%,56%,0.15) 0px, transparent 50%), radial-gradient(at 0% 50%, hsla(199,100%,74%,0.15) 0px, transparent 50%);
+            background-attachment: fixed; min-height: 100vh;
+        }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .glass-header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.5); }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .option-btn { transition: all 0.2s ease; }
+        .option-btn:hover:not(:disabled) { border-color: #0ea5e9; background-color: #f0f9ff; }
+        .option-correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .option-wrong { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .hidden-section { display: none !important; }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col min-h-screen font-sans">
+
+    <!-- App Bar -->
+    <header class="glass-header sticky top-0 z-50 shadow-sm w-full">
+        <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer transition-transform hover:scale-105" onclick="returnToHome()">
+                <!-- Logo Image (avec Fallback si logo.jpg n'est pas trouvé) -->
+                <img src="logo.jpg" alt="MedConnect Logo" class="w-10 h-10 rounded-xl object-cover shadow-sm border border-slate-200 bg-white" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=MC&background=0ea5e9&color=fff&rounded=xl&bold=true';">
+                <div>
+                    <h1 class="font-bold text-xl text-dark leading-tight tracking-tight">MedConnect</h1>
+                    <p class="text-xs text-slate-500 font-semibold">Appareil Urinaire</p>
+                </div>
+            </div>
+            
+            <div id="header-timer" class="hidden items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200 shadow-inner">
+                <i data-lucide="timer" class="w-4 h-4 text-primary"></i>
+                <span id="timer-display" class="font-bold text-sm">20:00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-5xl mx-auto w-full px-4 py-8 relative">
+        
+        <!-- 1. Home View -->
+        <div id="home-view" class="fade-in">
+            
+            <!-- Pulsing Badge -->
+            <div class="flex justify-center mb-6">
+                <div class="bg-blue-50 border border-blue-200 text-blue-700 px-5 py-2 rounded-full flex items-center gap-3 shadow-sm font-bold text-sm">
+                    <span class="relative flex h-3 w-3">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                    </span>
+                    160 QCS Appareil Urinaire
+                </div>
+            </div>
+
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-extrabold text-dark mb-3">Choisissez un Module</h2>
+                <p class="text-slate-600 max-w-lg mx-auto">Application de préparation complète contenant 160 questions couvrant toutes les spécialités de l'appareil urinaire.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Anatomie -->
+                <button onclick="startQuiz('anatomy')" class="glass rounded-2xl p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group border-t-4 border-t-blue-500 relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-blue-100 rounded-xl text-blue-600 group-hover:scale-110 transition-transform"><i data-lucide="bone" class="w-8 h-8"></i></div>
+                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm">20 QCS</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-dark mb-2">Anatomie</h3>
+                    <p class="text-slate-500 text-sm">Anatomie de l'appareil urinaire, reins, uretères et vessie. (Temps recommandé : 20 min)</p>
+                </button>
+                
+                <!-- Histologie -->
+                <button onclick="startQuiz('histology')" class="glass rounded-2xl p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group border-t-4 border-t-purple-500 relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-purple-100 rounded-xl text-purple-600 group-hover:scale-110 transition-transform"><i data-lucide="microscope" class="w-8 h-8"></i></div>
+                        <span class="bg-purple-50 text-purple-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm">30 QCS</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-dark mb-2">Histologie</h3>
+                    <p class="text-slate-500 text-sm">Histologie et embryologie des reins et des voies urinaires. (30 min)</p>
+                </button>
+                
+                <!-- Physiologie -->
+                <button onclick="startQuiz('physiology')" class="glass rounded-2xl p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group border-t-4 border-t-green-500 relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-green-100 rounded-xl text-green-600 group-hover:scale-110 transition-transform"><i data-lucide="activity-square" class="w-8 h-8"></i></div>
+                        <span class="bg-green-50 text-green-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm">60 QCS</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-dark mb-2">Physiologie</h3>
+                    <p class="text-slate-500 text-sm">Physiologie rénale, filtration, réabsorption et miction. (60 min)</p>
+                </button>
+                
+                <!-- Biochimie -->
+                <button onclick="startQuiz('biochemistry')" class="glass rounded-2xl p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group border-t-4 border-t-yellow-500 relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-yellow-100 rounded-xl text-yellow-600 group-hover:scale-110 transition-transform"><i data-lucide="flask-conical" class="w-8 h-8"></i></div>
+                        <span class="bg-yellow-50 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm">50 QCS</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-dark mb-2">Biochimie</h3>
+                    <p class="text-slate-500 text-sm">Équilibre acido-basique, systèmes tampons et anomalies métaboliques. (50 min)</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. Quiz View -->
+        <div id="quiz-view" class="hidden-section max-w-3xl mx-auto fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <button onclick="returnToHome()" class="text-slate-500 hover:text-slate-800 flex items-center gap-1 text-sm font-semibold transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Retour
+                </button>
+                <div class="text-center">
+                    <h2 id="quiz-title" class="text-xl font-bold text-primary">Anatomie</h2>
+                    <span id="question-counter" class="text-sm text-slate-500">Question 1 / 20</span>
+                </div>
+                <div class="w-20"></div>
+            </div>
+            
+            <div class="w-full bg-slate-200 rounded-full h-2.5 mb-8 overflow-hidden shadow-inner">
+                <div id="progress-bar" class="bg-gradient-to-r from-primary to-secondary h-2.5 rounded-full transition-all duration-500" style="width: 5%"></div>
+            </div>
+            
+            <div class="glass rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 mb-6">
+                <h3 id="question-text" class="text-lg md:text-xl font-bold text-dark mb-6 leading-relaxed"></h3>
+                <div id="options-container" class="space-y-3 text-sm md:text-base"></div>
+            </div>
+            
+            <div id="explanation-box" class="hidden-section glass bg-blue-50/80 border-blue-200 rounded-2xl p-6 mb-6">
+                <div class="flex items-center gap-2 mb-3 text-blue-700">
+                    <i data-lucide="info" class="w-5 h-5"></i>
+                    <h4 class="font-bold text-lg">Explication scientifique</h4>
+                </div>
+                <p id="explanation-text" class="text-slate-700 leading-relaxed text-sm md:text-base"></p>
+            </div>
+            
+            <div class="flex justify-between items-center mt-8">
+                <button id="prev-btn" onclick="prevQuestion()" class="px-4 md:px-5 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-semibold shadow-sm transition-colors">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i> Précédent
+                </button>
+                
+                <button id="show-explanation-btn" onclick="toggleExplanation()" class="hidden-section px-4 md:px-5 py-2.5 rounded-xl text-primary bg-blue-50 hover:bg-blue-100 font-semibold transition-colors">
+                    Voir l'explication
+                </button>
+
+                <button id="next-btn" onclick="nextQuestion()" class="px-5 md:px-6 py-2.5 rounded-xl text-white bg-primary hover:bg-sky-600 shadow-md shadow-sky-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-semibold transition-all">
+                    Suivant <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+
+                <button id="finish-btn" onclick="finishQuiz()" class="hidden-section px-5 md:px-6 py-2.5 rounded-xl text-white bg-gradient-to-r from-teal-500 to-secondary hover:from-teal-600 hover:to-teal-500 shadow-md shadow-teal-200 flex items-center gap-2 font-semibold transition-all">
+                    Terminer <i data-lucide="check-circle" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. Results View -->
+        <div id="results-view" class="hidden-section max-w-2xl mx-auto text-center fade-in py-10">
+            <div class="glass rounded-3xl p-10 shadow-xl border-t-8 border-t-primary relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500 opacity-5 rounded-bl-full"></div>
+                <div class="absolute bottom-0 left-0 w-24 h-24 bg-teal-500 opacity-5 rounded-tr-full"></div>
+                
+                <div class="w-20 h-20 mx-auto bg-green-100 text-green-500 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                    <i data-lucide="award" class="w-10 h-10"></i>
+                </div>
+                <h2 class="text-3xl font-extrabold text-dark mb-2">Quiz Terminé !</h2>
+                <p id="result-category" class="text-lg text-slate-500 mb-8 font-medium">Anatomie</p>
+                
+                <div class="bg-white rounded-2xl p-6 border border-slate-100 mb-8 inline-block min-w-[250px] shadow-sm">
+                    <p class="text-sm text-slate-500 font-bold mb-1 uppercase tracking-wider">VOTRE SCORE</p>
+                    <div class="text-6xl font-black text-dark flex items-baseline justify-center gap-1">
+                        <span id="score-display" class="text-primary">15</span>
+                        <span class="text-3xl text-slate-300">/</span>
+                        <span id="total-display" class="text-3xl text-slate-400">20</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="retryQuiz()" class="px-6 py-3 rounded-xl font-bold text-slate-700 bg-slate-50 border-2 border-slate-200 hover:bg-slate-100 transition-colors flex items-center justify-center gap-2">
+                        <i data-lucide="refresh-cw" class="w-5 h-5"></i> Réessayer
+                    </button>
+                    <button onclick="returnToHome()" class="px-6 py-3 rounded-xl font-bold text-white bg-primary hover:bg-sky-600 shadow-lg shadow-sky-200 transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="home" class="w-5 h-5"></i> Accueil
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-header mt-auto border-t border-slate-200 py-8">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <p class="text-slate-500 text-sm font-medium mb-2">
+                Préparation QCS Appareil Urinaire © 2026
+            </p>
+            <p class="text-slate-600 text-sm font-bold flex items-center justify-center gap-1">
+                Propulsé par 
+                <a href="https://t.me/medconnectdz" target="_blank" class="text-primary hover:text-sky-600 hover:underline flex items-center gap-1 transition-colors">
+                    MedConnect Aldevmus <i data-lucide="external-link" class="w-3 h-3"></i>
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Application Logic & Data -->
+    <script>
+        lucide.createIcons();
+
+        // Base de données compressée pour 160 QCS (Intacte, sans aucune modification)
+        const quizData = {
+            anatomy: [
+                {q:"Q1. Concernant les généralités des reins, laquelle est exacte ?",o:["A) Dans la cavité péritonéale.","B) 140g femme, 120g homme.","C) D11 à L3.","D) Rouge vif.","E) Toutes justes."],a:2,e:"Les reins s'étendent de D11 à L3. Rétropéritonéaux, 140g homme/120g femme, rouge brun."},
+                {q:"Q2. Face antérieure du rein droit, il répond à tous SAUF UN :",o:["A) Le foie","B) Racine du mésocôlon transverse","C) La rate","D) Duodénum (D2)","E) Angle colique droit"],a:2,e:"La rate est en rapport avec la face antérieure du rein gauche, et non du rein droit."},
+                {q:"Q3. Proposition correcte concernant la face antérieure du rein gauche :",o:["A) Angle colique droit.","B) Duodénum D2.","C) Veine cave inférieure.","D) Queue du pancréas.","E) Aucune."],a:3,e:"La face antérieure du rein gauche répond à la rate, l'estomac et la queue du pancréas."},
+                {q:"Q4. Le bord médial des reins répond à de gros vaisseaux abdominaux :",o:["A) Droit = aorte.","B) Gauche = VCI.","C) Droit = VCI.","D) Les deux = aorte.","E) Gauche = iliaque."],a:2,e:"Le bord médial droit répond à la VCI, le gauche à l'aorte."},
+                {q:"Q5. Rapports postérieurs des reins (étage lombaire) par la loge rénale avec :",o:["A) Cul-de-sac costodiaphragmatique","B) Psoas-iliaque et carré des lombes","C) Diaphragme uniquement","D) 11e et 12e côtes","E) Toutes fausses"],a:1,e:"Étage lombaire: psoas-iliaque, carré des lombes et graisse pararénale. Côtes = étage thoracique."},
+                {q:"Q6. Vascularisation artérielle du rein. Proposition FAUSSE ?",o:["A) Naît en L1.","B) Artère droite ~7 cm.","C) Artère gauche en arrière de la veine gauche.","D) Artère droite en avant de la VCI.","E) Diamètre ~7 mm."],a:3,e:"L'artère rénale droite chemine en arrière de la VCI, et non en avant."},
+                {q:"Q7. Vascularisation intra-rénale (terminale). Proposition VRAIE ?",o:["A) Rétro-pyélique plus volumineuse.","B) Pré-pyélique donne l'artère polaire inférieure.","C) Rétro-pyélique donne 6-8 branches.","D) Nombreuses anastomoses.","E) Toutes justes."],a:1,e:"L'artère pré-pyélique est plus volumineuse et donne l'artère polaire inférieure. Réseau terminal sans anastomoses."},
+                {q:"Q8. Zone avasculaire séparant pré-pyélique et rétro-pyélique :",o:["A) Fascia de Gerota","B) Trigone de Lieutaud","C) Ligne de Brodel","D) Aire criblée","E) Feuillet inter-surréno-rénal"],a:2,e:"Les territoires sont séparés par un plan avasculaire: la ligne de Brodel."},
+                {q:"Q9. Concernant les voies excrétrices supérieures intrarénales :",o:["A) Calices mineurs 1-2 cm.","B) 3 calices majeurs dans 2/3 des cas.","C) Pelvis s'enfonce en l'absence de calices mineurs.","D) A et B.","E) Toutes fausses."],a:0,e:"Calices mineurs = 1-2 cm. 3 calices majeurs dans 1/3 cas. Pelvis globuleux si absence de calices majeurs."},
+                {q:"Q10. Les uretères. Affirmation correcte ?",o:["A) ~15 cm long.","B) 2 rétrécissements.","C) Diamètre ~1,5 cm.","D) Rétrécissement moyen au détroit supérieur.","E) Intrapéritonéaux totalement."],a:3,e:"Rétrécissement au détroit supérieur. 25 cm long, 0.5 cm diamètre, rétro/sous-péritonéaux."},
+                {q:"Q11. Rapports portion lombaire uretère DROIT en avant avec :",o:["A) D2, D3 et racine mésentère","B) Rein gauche et aorte","C) Fascia Toldt gauche","D) Côlon descendant","E) Aucune"],a:0,e:"En avant, uretère droit = D2, D3, vaisseaux génitaux, racine du mésentère."},
+                {q:"Q12. Croisement des uretères avec vaisseaux iliaques :",o:["A) Droite = iliaque commune.","B) Gauche = iliaque externe.","C) Gauche = iliaque commune à 1,5 cm de la bifurcation.","D) Droite = iliaque interne.","E) A et B."],a:2,e:"À gauche: croise l'iliaque commune. À droite: croise l'iliaque externe."},
+                {q:"Q13. Capacité physiologique de la vessie :",o:["A) Premier besoin vers 50 mL.","B) Besoin normal vers 300 mL.","C) Capacité max 1 L.","D) Identique H/F.","E) Toutes justes."],a:1,e:"Besoin normal vers 300 mL. Premier besoin 150 mL. Max 2-3 Litres."},
+                {q:"Q14. Rapports de la vessie chez l'homme :",o:["A) En arrière symphyse pubienne.","B) Au-dessus prostate.","C) En avant rectum/vésicules séminales.","D) A, B et C.","E) A et B seulement."],a:3,e:"Arrière symphyse, dessus prostate, avant rectum et vésicules séminales."},
+                {q:"Q15. Urètre. Proposition FAUSSE ?",o:["A) Femme = 3 cm.","B) Homme = urinaire/génitale.","C) Homme = 16 cm (flaccidité).","D) Homme = 3 portions (prostatique, membraneuse, spongieuse).","E) Femme = méat vulvaire."],a:3,e:"Chez l'homme, on distingue quatre portions : prostatique, membraneuse, spongieuse, et pénienne."},
+                {q:"Q16. Structure formant le trigone de Lieutaud avec les uretères :",o:["A) L'ouraque","B) Ostium de l'urètre","C) Veru montanum","D) Sphincter lisse","E) Apex vessie"],a:1,e:"Le trigone est délimité par les deux ostiums urétéraux et l'ostium de l'urètre."},
+                {q:"Q17. Structure s'enfonçant dans le sinus rénal en absence de calices majeurs :",o:["A) Bassinet bifide","B) Ligne de Brodel","C) Pelvis globuleux","D) Calice mineur","E) Aucune"],a:2,e:"C'est la définition du pelvis globuleux."},
+                {q:"Q18. Rapports du pôle supérieur des reins :",o:["A) L'uretère","B) Vaisseaux génitaux","C) Cul-de-sac costo-diaphragmatique","D) Glande surrénale (feuillet inter-surréno-rénal)","E) Diaphragme pelvien"],a:3,e:"En haut, glande surrénale, séparée par le feuillet inter-surréno-rénal."},
+                {q:"Q19. Drainage veineux du rein :",o:["A) Trajet indépendant des artères.","B) Veines satellites des artères.","C) Vers le système porte.","D) Veine gauche plus courte que droite.","E) Toutes fausses."],a:1,e:"Le drainage veineux est assuré par des veines satellites de la vascularisation artérielle. V.R. gauche est plus longue."},
+                {q:"Q20. Situation de la vessie :",o:["A) Vide fait saillie dans l'abdomen.","B) Pleine aplatie dans le pelvis.","C) Femme: arrière du vagin.","D) Femme: au-dessus du diaphragme pelvien.","E) Dimensions 15x12 cm."],a:3,e:"Chez la femme: au-dessus du diaphragme pelvien, en avant du vagin. Vessie vide est aplatie."}
+            ],
+            histology: [
+                {q:"Q1. L'organisation générale du rein permet de distinguer :",o:["A) Cortex corticis dans la médullaire.","B) Pyramides de Ferrein (base vers corticale).","C) Lobe = pyramide de Malpighi + parenchyme.","D) Colonnes Bertin séparent Ferrein.","E) Labyrinthe dans médullaire."],a:2,e:"Lobe = Pyramide de Malpighi + parenchyme. Labyrinthe/cortex corticis = corticale. Bertin séparent Malpighi."},
+                {q:"Q2. Pyramides de Ferrein :",o:["A) Situées dans la médullaire.","B) Sommet vers la capsule conjonctive.","C) Séparées par colonnes de Bertin.","D) Forment le lobe rénal.","E) Toutes justes."],a:1,e:"Le sommet des pyramides de Ferrein regarde la capsule. Elles sont dans la corticale et forment le lobule (non lobe)."},
+                {q:"Q3. Vascularisation rénale :",o:["A) 1200 ml sang/seconde.","B) Interlobaires donnent branches ant/post.","C) Capillaires glomérulaires continus.","D) Réseau péritubulaire naît de l'artère afférente.","E) Toutes fausses."],a:4,e:"1200 ml/min. Branches ant/post donnent interlobaires. Capillaires fenêtrés. Péritubulaire = artère efférente."},
+                {q:"Q4. Capsule de Bowman :",o:["A) Pariétal = podocytes.","B) Viscéral = endothéliformes.","C) Fentes filtration 60 nm.","D) Pariétal en continuité avec épithélium TCP.","E) Contact direct avec TCD."],a:3,e:"Pariétal = endothéliforme en continuité avec TCP. Viscéral = podocytes. Fentes = 6nm."},
+                {q:"Q5. Tube contourné proximal (TCP) :",o:["A) Bordure striée basale.","B) Cellules = podocytes.","C) Bâtonnets au pôle apical.","D) Diamètre 100-200 µm.","E) Aucune juste."],a:4,e:"TCP = bordure striée apicale, bâtonnets basaux, cellules néphrocytes, diamètre 50-60 µm."},
+                {q:"Q6. Branche grêle de l'anse de Henlé :",o:["A) Épithélium cubique simple.","B) Bordure striée très développée.","C) Diamètre 12-15 µm.","D) Longueur constante 40 µm.","E) Structure semblable au TCD."],a:2,e:"Diamètre 12-15 µm, endothéliforme. Branche épaisse ressemble au TCD."},
+                {q:"Q7. Tube contourné distal (TCD) :",o:["A) Épithélium endothéliforme.","B) Bâtonnets basaux, sans bordure striée.","C) Bordure striée apicale.","D) Diamètre 100 µm.","E) Aucune mitochondrie."],a:1,e:"Le TCD a des bâtonnets (mitochondries basales) mais pas de bordure striée."},
+                {q:"Q8. Cellules granuleuses (Ruyters) de l'appareil juxta-glomérulaire :",o:["A) Paroi du TCD.","B) Forment mésangium extra-glomérulaire.","C) Élaborent la rénine.","D) Sensibles au sodium.","E) Dérivent des capillaires."],a:2,e:"Cellules musculaires lisses de l'artériole afférente, sécrètent la rénine."},
+                {q:"Q9. Macula densa :",o:["A) Cellules prismatiques hautes, espaces fins.","B) Bâtonnets au pôle basal.","C) Paroi artériole efférente.","D) Contrôle érythropoïétine.","E) Toutes justes."],a:0,e:"Cellules hautes du TCD. Pas de bâtonnets basaux. Contrôle la rénine."},
+                {q:"Q10. Histophysiologie de l'excrétion :",o:["A) Filtration = 43 L/24h.","B) Urine primitive fortement hypertonique.","C) Fin TCP = urine hypo-osmotique.","D) Urine primitive = 1-2g Na+.","E) Fin TCP = volume d'urine est de 43 L/24h."],a:4,e:"Filtration = 180L. Fin TCP = 1/4 reste (~43L) iso-osmotique. Primitive contient ~600g Na."},
+                {q:"Q11. Fonctions endocrines du rein :",o:["A) Érythropoïétine.","B) Rénine.","C) Kallikréine.","D) Prostaglandines/IGF.","E) Toutes justes."],a:4,e:"Le rein sécrète EPO, Rénine, Kallikréine, Prostaglandines, Vit D."},
+                {q:"Q12. Musculeuse bassinet et 2/3 supérieurs uretère :",o:["A) Longitudinale int/ext, circulaire moy.","B) Longitudinale int, circulaire ext.","C) Circulaire int, longitudinale ext.","D) Plexiforme unique.","E) Striée."],a:1,e:"Longitudinale interne et circulaire externe (inverse de l'intestin)."},
+                {q:"Q13. Épithélium voies urinaires sus-vésicales (urothélium) :",o:["A) Cylindrique simple.","B) Pavimenteux stratifié non kératinisé.","C) Pseudostratifié polymorphe (toutes cellules sur basale).","D) Cubique stratifié.","E) Endothéliforme."],a:2,e:"Urothélium = pseudostratifié polymorphe, toutes les cellules touchent la lame basale."},
+                {q:"Q14. La vessie :",o:["A) Muqueuse trigone toujours plissée.","B) Détrusor = 2 couches.","C) Circulaire moyenne très développée.","D) Adventice ant. fusionne avec péritoine.","E) Pavimenteux stratifié."],a:2,e:"Détrusor = 3 couches, circulaire moyenne très développée. Trigone lisse."},
+                {q:"Q15. Urètre masculin/féminin :",o:["A) Féminin = double fonction.","B) Masculin = 4 cm.","C) Glandes Skene = masculin.","D) Près du méat = pavimenteux stratifié non kératinisé.","E) Masculin = 2 portions."],a:3,e:"Femme = 4cm (urinaire), Homme = 16cm (double fct, 3/4 portions). Près du méat = pavimenteux."},
+                {q:"Q16. [Embryologie] Origine appareil urinaire :",o:["A) Mésoblaste para-axial.","B) Ectoblaste.","C) Mésoblaste intermédiaire.","D) Entoblaste.","E) Lame latérale."],a:2,e:"L'appareil urinaire dérive du mésoblaste intermédiaire (gonéphrotome)."},
+                {q:"Q17. [Embryologie] Mésonéphros (corps Wolff) :",o:["A) Cervical 3ème semaine.","B) Rein définitif homme.","C) Canal Wolff forme vagin.","D) Homme: Wolff donne déférent et vésicules séminales.","E) Ne donne pas bourgeon urétéral."],a:3,e:"Chez l'homme: Wolff = épididyme, déférent, vésicules. Chez la femme: régresse."},
+                {q:"Q18. [Embryologie] Bourgeon urétéral donne :",o:["A) Capsule Bowman.","B) Anse Henlé.","C) TCD.","D) TCP.","E) Calices, bassinet, uretère."],a:4,e:"Bourgeon urétéral = voies excrétrices. Le blastème métanéphrogène donne le néphron (TCP, Henlé, TCD)."},
+                {q:"Q19. [Embryologie] Blastème métanéphrogène donne :",o:["A) Collecteur Bellini.","B) Uretères.","C) Néphron (TCP, Henlé, TCD).","D) Ouraque.","E) Urètre."],a:2,e:"Blastème métanéphrogène = unité de filtration (le néphron)."},
+                {q:"Q20. [Embryologie] Fonction rénale fœtale :",o:["A) Débute 4ème semaine.","B) Urines vers sang maternel.","C) Indispensable épuration fœtale.","D) Renouvelle liquide amniotique dès 10e sem.","E) Débute après naissance."],a:3,e:"Débute S8, urine vers S10, primordiale pour le volume amniotique. Placenta gère l'épuration."},
+                {q:"Q21. [Embryologie] Zone urinaire sinus urogénital donne :",o:["A) Canal anorectal.","B) Rectum.","C) Vestibule/vagin.","D) Vessie + urètre femme / début urètre homme.","E) Ligament ombilico-vésical."],a:3,e:"Sinus urogénital (partie urinaire) = vessie et urètre."},
+                {q:"Q22. [Embryologie] Rein en fer à cheval :",o:["A) Agénésie.","B) 20% naissances.","C) Ascension bloquée par artère mésentérique inférieure.","D) Ascension bloquée par aorte dorsale.","E) Oligo-amnios sévère."],a:2,e:"Les pôles inférieurs fusionnent, l'ascension bute sous l'artère mésentérique inférieure."},
+                {q:"Q23. Calibre tubes de Bellini (papille) :",o:["A) 10-20 µm.","B) 40-50 µm.","C) 100-200 µm.","D) 1-2 mm.","E) 175-200 µm."],a:2,e:"Le calibre s'élargit pour atteindre 100 à 200 µm à la papille."},
+                {q:"Q24. Lame basale capillaires glomérulaires :",o:["A) Lamina lucida centrale.","B) Contact exclusif mésangium.","C) Lamina densa centrale + 2 lamina rara.","D) Sur épithélium prismatique.","E) Inexistante."],a:2,e:"Structure trilaminaire: Lamina rara interne, densa (centrale), rara externe."},
+                {q:"Q25. Cellules du lacis :",o:["A) Ruyters.","B) Macula densa.","C) Myoépithélioïdes.","D) Néphrocytes.","E) Goormaghtigh."],a:4,e:"Cellules du lacis = cellules mésangiales extra-glomérulaires (Goormaghtigh)."},
+                {q:"Q26. Osmolarité (Histophysio) :",o:["A) Hypertonique entrée TCD.","B) Hypertonique dans branche grêle Henlé.","C) Primitive hypo-osmolaire.","D) Segment distal sans contrôle.","E) Hypertonique fin TCP."],a:1,e:"Concentration d'urine (hypertonique) dans la branche grêle par sortie d'eau."},
+                {q:"Q27. Urètre féminin :",o:["A) 12-13 cm.","B) Glandes Littré.","C) 3 portions distinctes.","D) Rôle urinaire, 4 cm.","E) Urothélium jusqu'au méat."],a:3,e:"4 cm de long, urinaire pur. Glandes de Skene. Fin = pavimenteux stratifié."},
+                {q:"Q28. [Embryologie] Agénésie rénale bilatérale :",o:["A) Compatible vie post-natale.","B) Poly-amnios.","C) Oligo-amnios.","D) Persistance pronéphros.","E) Rein fer à cheval."],a:2,e:"Absence d'urine fœtale = anamnios/oligoamnios sévère (Syndrome de Potter). Mortel."},
+                {q:"Q29. Mésangium glomérulaire :",o:["A) Axe de support des capillaires.","B) Matrice acellulaire.","C) Tapisse paroi Bowman.","D) Vasoconstricteur via Angio I.","E) Remplace lame basale."],a:0,e:"Tissu de soutien intra-glomérulaire avec cellules contractiles/phagocytaires."},
+                {q:"Q30. Lobule rénal (Histologie) :",o:["A) Malpighi + parenchyme.","B) Macula densa + glomérule.","C) Colonnes Bertin.","D) Labyrinthe cortical.","E) Aucune exacte."],a:4,e:"Aucune n'est exacte. Le lobule rénal correspond à une pyramide de Ferrein et le parenchyme autour."}
+            ],
+            physiology: [
+                {q:"Q1. Sélectivité barrière filtration glomérulaire :",o:["A) Maximale si >70 KDa.","B) Imperméable inuline/urée.","C) Dépend taille ET charge électrique.","D) Endothélium continu.","E) Passe protéines anioniques."],a:2,e:"La membrane basale repousse les protéines anioniques (charge négative) comme l'albumine. Dépend du PM et de la charge."},
+                {q:"Q2. Débit de filtration glomérulaire (DFG) adulte :",o:["A) 180 L/jour (~120 ml/min).","B) 120 L/jour.","C) 1.5 L/jour.","D) 120 ml/jour.","E) 600 ml/min."],a:0,e:"DFG normal = 120 ml/min. 120 * 60 * 24 = 180 L/jour d'urine primitive."},
+                {q:"Q3. [Calcul] P.Hydro=60, P.Capsulaire=15, P.Oncotique=28. Pression Nette de Filtration (PNF) ?",o:["A) 47 mmHg","B) 17 mmHg","C) 103 mmHg","D) 75 mmHg","E) 45 mmHg"],a:1,e:"PNF = 60 - (15 + 28) = 17 mmHg."},
+                {q:"Q4. Vasoconstriction sévère artériole AFFÉRENTE seule entraîne :",o:["A) Augmentation P.Hydro glomérulaire.","B) Augmentation fraction filtration.","C) Baisse flux rénal, DFG constant.","D) Diminution P.Hydro glomérulaire -> Baisse DFG.","E) Hausse P.Oncotique."],a:3,e:"L'artériole afférente amène le sang. La resserrer diminue la pression interne, donc le DFG chute."},
+                {q:"Q5. Rétro-contrôle : Macula densa détecte BAISSE Na+ tubulaire. Réaction ?",o:["A) Sécrétion rénine -> Angio II -> Vasoconstriction EFFÉRENTE.","B) Inhibition rénine.","C) Vasodilatation efférente.","D) Augmentation pathologique.","E) Libération FAN."],a:0,e:"Baisse Na+ = DFG trop bas. Rénine augmente Angio II qui serre la sortie (efférente) pour remonter la pression et le DFG."},
+                {q:"Q6. Régulation extrinsèque DFG :",o:["A) Rétro-contrôle exclusivement.","B) Myogénique.","C) SN Sympathique + Hormones (ADH, FAN).","D) Parasympathique.","E) Prostaglandines intra-rénales."],a:2,e:"Extrinsèque gère la pression corporelle globale (Sympathique, FAN, ADH)."},
+                {q:"Q7. Effet de l'Angiotensine II :",o:["A) Vasodilatation afférente.","B) Vasoconstriction systémique et efférente rénale.","C) Inhibition aldostérone.","D) Baisse réabsorption Na+.","E) Baisse tension."],a:1,e:"Puissant vasoconstricteur. Serre l'artériole efférente pour maintenir le DFG et systémique pour la tension."},
+                {q:"Q8. Charge filtrée Na+ (DFG 180 L/j, [Na] 140 mOsm/L) ?",o:["A) 140 mOsm/j","B) 180 mOsm/j","C) 1250 mOsm/j","D) 25 200 mOsmoles/jour","E) 25 000 mOsm/min"],a:3,e:"180 L/jour * 140 = 25 200 mOsmoles/jour."},
+                {q:"Q9. Tube contourné proximal (TCP) :",o:["A) Réabsorption ~65% eau/Na+ (iso-osmotique).","B) Eau indépendante Na+.","C) Fluide très hypertonique.","D) Imperméable acide urique.","E) Sécrétion 100% glucose."],a:0,e:"Réabsorption massive, obligatoire (65%). Eau suit le Na+, donc reste iso-osmotique."},
+                {q:"Q10. Moteur principal réabsorption active dans TCP :",o:["A) Gradient oncotique.","B) Na+/K+ ATPase pôle luminal.","C) Pompe Na+/K+ ATPase pôle basolatéral.","D) ADH.","E) Na-K-2Cl."],a:2,e:"Pompe basolatérale expulse Na+ vers le sang, créant le gradient pour l'entrée apicale des co-transporteurs."},
+                {q:"Q11. Réabsorption glucose rénal :",o:["A) TCD.","B) Active/Totale TCP, saturation vers 10 mmol/L.","C) Passive para-cellulaire.","D) Urine = 50% glucose.","E) Sans saturation."],a:1,e:"100% réabsorbé au TCP. Saturation (Tm) atteinte vers 10 mmol/L (glycosurie)."},
+                {q:"Q12. Branche large ascendante Henlé (BLA) :",o:["A) Eau réabsorbée massivement.","B) Fluide isotonique.","C) Co-transport NCCT.","D) Co-transport Na-K-2Cl luminal (NKCC2).","E) Cations divalents excrétés."],a:3,e:"NKCC2 = réabsorption active d'ions sans eau. Le fluide devient hypotonique."},
+                {q:"Q13. Action d'un diurétique de l'anse (Furosémide) :",o:["A) Inhibe NKCC2 dans branche large ascendante.","B) Inhibe aldostérone.","C) Inhibe eau branche descendante.","D) Bloque NCCT TCD.","E) Stimule ADH."],a:0,e:"Bloque NKCC2: les ions restent dans la lumière, l'eau suit, forte diurèse."},
+                {q:"Q14. Tube contourné distal (TCD) :",o:["A) Perméable eau sans ADH.","B) 65% Na+.","C) Imperméable à l'eau, segment dilution (~60 mOsm/L).","D) Calcium passif.","E) Fluide hypertonique."],a:2,e:"TCD ne laisse pas passer l'eau mais pompe du sel. L'urine se dilue énormément."},
+                {q:"Q15. Contre-courant (Henlé) :",o:["A) Fluide bas au sommet.","B) Osmolarité cortico-papillaire grimpe jusqu'à ~1200 mOsm/L.","C) Descendante réabsorbe Na+ sans eau.","D) Osmolarité diminue vers médullaire.","E) Urée inutile."],a:1,e:"Gradient osmotique majeur: cortex 300 -> médullaire interne 1200 mOsm/L."},
+                {q:"Q16. Action aldostérone dans canal collecteur :",o:["A) Inhibe eau.","B) Baisse sécrétion K+.","C) Inhibe H+.","D) Réabsorption Na+ / Sécrétion K+ et H+.","E) Bloque canaux sodiques."],a:3,e:"Hormone de survie: garde le sodium au prix d'une perte de potassium et d'acidité."},
+                {q:"Q17. Fonctions endocrines rein :",o:["A) EPO et calcitriol (Vit D active).","B) Angiotensinogène.","C) ADH.","D) Aldostérone.","E) ECA."],a:0,e:"Sécrète EPO et possède 1-alpha-hydroxylase pour activer la vitamine D."},
+                {q:"Q18. Kinines et Prostaglandines rénales :",o:["A) Thromboxane vasodilatateur.","B) Kinines vasoconstrictent.","C) PGI2 et Kinines = vasodilatatrices, protègent flux rénal.","D) PGs diminuent flux.","E) Aucun effet."],a:2,e:"Rôle protecteur: PGI2, PGE2 et kinines dilatent pour maintenir l'irrigation."},
+                {q:"Q19. Capacité physio vessie avant besoin impérieux :",o:["A) 50-100 ml","B) 300-500 ml","C) 1000-1500 ml","D) 100-150 ml","E) 2-3 L"],a:1,e:"Besoin normal vers 300ml. Compliance jusqu'à 500ml avant urgence."},
+                {q:"Q20. SNA pendant remplissage (continence) :",o:["A) Parasympathique contracte strié.","B) Ortho contracte détrusor.","C) Para relâche col.","D) Ortho relâche détrusor (bêta) et ferme col (alpha).","E) Somatique relâche strié."],a:3,e:"Sympathique = stockage. Relâche muscle (bêta) et serre sphincter (alpha)."},
+                {q:"Q21. Centre neurologique intégration/décision miction :",o:["A) Cortex cérébral.","B) S2-S4.","C) Protubérance.","D) Ganglion mésentérique.","E) Cervelet."],a:0,e:"Cortex permet le contrôle volontaire (choix du moment/lieu). Tronc = On/Off."},
+                {q:"Q22. Incontinence effort :",o:["A) Contractions désinhibées.","B) Besoin urgent.","C) Fuite brusque sans besoin, P.Abdominale > P.Clôture.","D) Obstruction.","E) Hyperréflexie."],a:2,e:"La pression de la toux écrase la vessie, le sphincter cède sans besoin préalable."},
+                {q:"Q23. Angle urétro-vésical postérieur femme (physio) :",o:["A) 10-30°","B) 90-100°","C) 180°","D) 150-160°","E) 45-60°"],a:1,e:"Normalement 90-100°. La perte de l'angle cause des fuites."},
+                {q:"Q24. Théorie Delancey (continence effort) :",o:["A) Enceinte abdominale.","B) Contraction détrusor.","C) Fermeture para.","D) Écrasement urètre contre hamac sous-vésical.","E) Paralysie releveurs."],a:3,e:"Hamac sous-vésical = mur rigide contre lequel l'urètre s'écrase à la toux."},
+                {q:"Q25. Récepteurs Muscariniques (Parasympathique) :",o:["A) Contraction en masse détrusor (miction).","B) Relaxation détrusor.","C) Contraction strié.","D) Fermeture col.","E) Relaxation urètre."],a:0,e:"Parasympathique (Ach) -> Récepteurs M3 -> Contraction puissante pour vider."},
+                {q:"Q26. Continence au repos dépend de :",o:["A) Contraction abdo.","B) Contraction diaphragme.","C) Compliance détrusor + tonus adrénergique urètre.","D) Fermeture mécanique lèvres.","E) Pompe NaK."],a:2,e:"Vessie se laisse distendre, col maintenu fermé par tonus orthosympathique."},
+                {q:"Q27. Théorie Petros et Ulmsten :",o:["A) Paralysie transitoire.","B) Contraction réflexe pubo-coccygien tirant hamac.","C) Ouverture réflexe.","D) Inhibition pubo-coccygien.","E) Volume passif."],a:1,e:"Ajoute rôle actif: plancher pelvien se contracte à l'effort pour tirer/plier l'urètre."},
+                {q:"Q28. Multipare, fuites toux, sans besoin. Mécanisme :",o:["A) Instabilité vésicale.","B) Hyperactivité para.","C) Obstruction.","D) Hypermobilité col / Insuffisance sphinctérienne (altération support).","E) Fistule."],a:3,e:"Incontinence d'effort typique post-partum (déchirure fascias/hamac)."},
+                {q:"Q29. Tonus muscle lisse urétral dépend de :",o:["A) Adrénergique (orthosympathique).","B) Parasympathique.","C) Somatique.","D) Extrapyramidal.","E) Kininique."],a:0,e:"Les récepteurs Alpha-1 (ortho) maintiennent la fermeture lisse."},
+                {q:"Q30. Instabilité vésicale (cystomanométrie) :",o:["A) Strié béant.","B) Absence contraction.","C) Contractions désinhibées/involontaires pdt remplissage.","D) Pression plate 0.","E) Hypertonie isolée."],a:2,e:"Vessie se contracte seule sans ordre = impériosité/urgence."},
+                {q:"Q31. Valeur DFG et DPR adulte :",o:["A) DFG 600, DPR 120.","B) DFG 120 ml/min, DPR 600 ml/min.","C) DFG 180 L/j, DPR 1 L/min.","D) DFG 120, DPR 1200.","E) DFG 60, DPR 600."],a:1,e:"Normales: 120 ml/min filtration, 600 ml/min plasma rénal."},
+                {q:"Q32. P.Hydro=60, Bowman=15, Onco=28. PNF ?",o:["A) 103","B) 75","C) 47","D) 17","E) 45"],a:3,e:"60 - (15 + 28) = 17 mmHg."},
+                {q:"Q33. Macula densa détecte BAISSE NaCl TCD :",o:["A) Rénine -> Angio II -> Vasoconstriction efférente -> Hausse DFG.","B) Inhibition rénine.","C) Vasodilatation efférente.","D) Baisse TA.","E) FAN."],a:0,e:"Baisse NaCl = DFG lent. Relance via Rénine."},
+                {q:"Q34. TCP, pourcentage eau/Na réabsorbé :",o:["A) 10 %","B) 25 %","C) ~65 % (2/3 charge filtrée).","D) 50 %","E) 90 %"],a:2,e:"2/3 obligatoires dans le TCP."},
+                {q:"Q35. 'Moteur' réabsorption active TCP :",o:["A) Pression oncotique.","B) Pompe NaK ATPase pôle basolatéral.","C) Gradient urée.","D) Protons apicaux.","E) NaK ATPase pôle luminal."],a:1,e:"Basolatérale = expulse Na+ au sang, créant le vide intracellulaire."},
+                {q:"Q36. Réabsorption glucose :",o:["A) TCD.","B) Passive.","C) Aldostérone.","D) Active totale TCP, max ~10 mmol/L.","E) Urine sans glucose."],a:3,e:"100% au TCP, Tm vers 1.8g/L (10 mmol/L)."},
+                {q:"Q37. 'Segment de dilution' imperméable eau :",o:["A) TCD.","B) TCP.","C) Descendante Henlé.","D) Collecteur ADH.","E) Large Ascendante."],a:0,e:"TCD ne laisse pas passer l'eau, mais pompe activement les ions, ce qui dilue l'urine."},
+                {q:"Q38. Transport NaCl BLA Henlé :",o:["A) NCCT.","B) ROM-K.","C) NKCC2 (Na-K-2Cl).","D) Paracelline.","E) Simple."],a:2,e:"NKCC2 est bloqué par les diurétiques de l'anse."},
+                {q:"Q39. Vitamine D active (calcitriol) par 1-alpha-hydroxylase :",o:["A) Foie.","B) Cellules tubulaires proximales.","C) Juxta-glomérule.","D) Collecteur.","E) Macula."],a:1,e:"L'activation rénale finale de la vitamine D se déroule dans les mitochondries des cellules du TCP."},
+                {q:"Q40. Angio II, effet FAUX :",o:["A) Vasoconstricteur systémique.","B) Aldostérone.","C) Rétention Na.","D) Baisse réabsorption Na TCD.","E) Vasoconstriction efférente."],a:3,e:"Faux car l'Angiotensine II AUGMENTE la réabsorption du sodium, elle ne la diminue pas."},
+                {q:"Q41. EPO produite par :",o:["A) Interstitielles péritubulaires fibroblastiques.","B) Macula densa.","C) TCD.","D) Foie seul.","E) Endothéliales glomérule."],a:0,e:"L'EPO est sécrétée par l'interstitium rénal lorsque l'oxygénation tissulaire baisse."},
+                {q:"Q42. Volume 'besoin normal' adulte :",o:["A) 50 mL","B) 150 mL","C) 300 mL","D) 500 mL","E) 1000 mL"],a:2,e:"B2=150ml, B3 (Besoin normal)=300ml."},
+                {q:"Q43. Remplissage (SNA) :",o:["A) Para stimule.","B) Ortho ferme col (alpha) et relâche détrusor (bêta).","C) Somatique relâche.","D) Ortho inhibe sphincter.","E) Ortho contracte détrusor."],a:1,e:"L'orthosympathique favorise le stockage: relâchement du muscle et serrage du col."},
+                {q:"Q44. Longueur urètre féminin :",o:["A) 12 cm","B) 16 cm","C) 7 mm","D) 40 mm (4 cm)","E) 10 cm"],a:3,e:"L'urètre de la femme est court, ce qui explique la prédisposition aux cystites."},
+                {q:"Q45. Théorie Enhorning :",o:["A) Transmission P.abdominale sur urètre proximal.","B) Hamac.","C) Muscle pubo.","D) Sphincter surpuissant.","E) Inhibition réflexe."],a:0,e:"Si la pression de la toux (abdomen) se transmet à la vessie ET à l'urètre, la différence de pression reste en faveur de la fermeture."},
+                {q:"Q46. Théorie 'hamac sous-vésical' :",o:["A) Enhorning.","B) Petros.","C) Delancey.","D) Bradley.","E) Myogénique."],a:2,e:"Le fameux hamac de soutien appartient à la théorie de Delancey."},
+                {q:"Q47. Charge filtrée (DFG 120 ml/min, X=2 mmol/L) :",o:["A) 60","B) 0.24 mmol/min","C) 120","D) 2400","E) 122"],a:1,e:"0.12 L/min x 2 mmol/L = 0.24 mmol/min."},
+                {q:"Q48. Perméabilité glomérule nulle si PM > :",o:["A) 10 KDa","B) 30 KDa","C) 50 KDa","D) 70 KDa (ex: albumine)","E) 100 KDa"],a:3,e:"Seuil de coupure absolu vers 70 KDa. L'albumine (68KDa) ne passe pas aussi à cause de sa charge."},
+                {q:"Q49. Réabsorption eau :",o:["A) Obligatoire TCP (65%), facultative/régulée (ADH) Collecteur.","B) ADH partout.","C) Active anse ascendante.","D) Indép Na TCP.","E) Nulle collecteur."],a:0,e:"Obligatoire au début (TCP) / Régulée et facultative à la fin (Canal collecteur)."},
+                {q:"Q50. Angle postérieur urétro-vésical femme :",o:["A) 30°","B) 45-60°","C) 90-100°","D) 180°","E) 120-130°"],a:2,e:"Mémorisation anatomique: Angle normal d'environ 90-100°."},
+                {q:"Q51. Incontinence impériosité (urgence) :",o:["A) Hypermobilité col.","B) Instabilité vésicale (désinhibée).","C) Insuffisance strié.","D) Béance repos.","E) Défaut transmission."],a:1,e:"Le besoin fulgurant vient d'une contraction inopinée du muscle de la vessie."},
+                {q:"Q52. Thromboxane (rein) :",o:["A) Vasodilatateur.","B) Diurétique.","C) Inhibe rénine.","D) Vasoconstricteur.","E) EPO."],a:3,e:"A l'inverse des PGI2 vasodilatatrices, le Thromboxane A2 est vasoconstricteur."},
+                {q:"Q53. Osmolarité MAX papille (médullaire interne) :",o:["A) 1200 mOsm/L","B) 60","C) 300","D) 600","E) 900"],a:0,e:"Le gradient osmotique grimpe à l'extrême à la pointe de la papille pour permettre de fortement concentrer les urines quand nécessaire."},
+                {q:"Q54. Aldostérone canal collecteur :",o:["A) Eau sans Na.","B) Inhibe H+.","C) Réabsorbe Na+, Sécrète K+ et H+.","D) Bloque canaux Na.","E) Excrète Na."],a:2,e:"Hormone de la survie en cas de perte de sel: elle récupère le sodium au prix d'une fuite de potassium et d'acidité."},
+                {q:"Q55. Récepteurs contraction miction :",o:["A) Alpha.","B) Muscariniques (M).","C) Bêta.","D) Nicotiniques.","E) Dopamine."],a:1,e:"Le parasympathique = Ach -> Muscarinique (M3) -> Contraction."},
+                {q:"Q56. Filtration unidirectionnelle car :",o:["A) Aspiration Bowman.","B) Oncotique nulle.","C) Afférente fermée.","D) P.Hydro capillaire (60) toujours > P.Onco (28).","E) Protéines attirent."],a:3,e:"Contrairement aux capillaires classiques, ici la pression hydrostatique ne chute jamais en dessous de la pression oncotique."},
+                {q:"Q57. Rénine sécrétée par :",o:["A) Cellules granuleuses artériole afférente.","B) Macula densa.","C) Lacis.","D) Podocytes.","E) Endothélium."],a:0,e:"Ce sont les cellules musculaires modifiées de l'artériole afférente qui stockent et relâchent la rénine."},
+                {q:"Q58. Diurétique anse (Furosémide) bloque :",o:["A) Aquaporines.","B) Anhydrase.","C) NKCC2 BLA.","D) NCCT TCD.","E) Aldostérone."],a:2,e:"Leur nom vient de leur cible: l'anse ascendante de Henlé (via le NKCC2)."},
+                {q:"Q59. Intégration/décision miction :",o:["A) S2-S4.","B) Cortex cérébral.","C) D10-L2.","D) Protubérance.","E) Cervelet."],a:1,e:"Cortex = Intégration consciente et volontaire (permet de se retenir jusqu'aux toilettes)."},
+                {q:"Q60. Multipare, fuites toux, sans besoin :",o:["A) Contractions non inhibées.","B) Sténose.","C) Hypertonie lisse.","D) Hypermobilité col / altération support.","E) Para paralysé."],a:3,e:"Le relâchement post-partum des fascias (Théorie de Delancey) entraine une instabilité anatomique de l'urètre."}
+            ],
+            biochemistry: [
+                {q:"Q1. Plage physiologique normale du pH artériel ?",o:["A) 7,00 - 7,10","B) 7,35 - 7,45","C) 7,25 - 7,35","D) 7,45 - 7,55","E) 7,40 - 7,50"],a:1,e:"Norme stricte = 7,35 à 7,45."},
+                {q:"Q2. Principal système tampon extracellulaire :",o:["A) Bicarbonate / Acide carbonique","B) Hémoglobine","C) Protéines","D) Phosphate","E) Ammoniac"],a:0,e:"Bicarbonate, très abondant et système 'ouvert'."},
+                {q:"Q3. Régulation acido-basique respiratoire :",o:["A) Agit en jours.","B) Élimine acides fixes.","C) Agit en minutes (élimine CO2).","D) Régénère HCO3-.","E) Plus lent mais puissant."],a:2,e:"Les poumons agissent vite (minutes) en ventilant le CO2 (acide volatil)."},
+                {q:"Q4. Rôle du rein dans l'homéostasie :",o:["A) Élimine CO2.","B) Réabsorbe H+.","C) Action instantanée.","D) Hyperventile.","E) Élimine acides fixes et régénère HCO3-."],a:4,e:"Le rein expulse les acides fixes (sulfates/phosphates) et fabrique du bicarbonate."},
+                {q:"Q5. Acidémie définie par :",o:["A) HCO3- < 22.","B) PaCO2 > 45.","C) pH > 7,45.","D) pH < 7,35.","E) TA > 16."],a:3,e:"Définition purement liée au pH."},
+                {q:"Q6. Acidose métabolique caractérisée par :",o:["A) Baisse primitive HCO3-.","B) Hausse primitive PaCO2.","C) Baisse primitive PaCO2.","D) Hausse primitive HCO3-.","E) Hausse chlore isolé."],a:0,e:"Métabolique = problème de bicarbonate (qui baisse)."},
+                {q:"Q7. Réponse à alcalose métabolique :",o:["A) Hyperventilation.","B) Hypoventilation alvéolaire.","C) Excrétion H+.","D) Réabsorption HCO3-.","E) Sécrétion aldostérone."],a:1,e:"Le poumon hypoventile pour retenir du CO2 (acide) et compenser l'alcalose."},
+                {q:"Q8. Trou Anionique (TA) :",o:["A) Na+ + (Cl- - HCO3-)","B) (Na+ + K+) - HCO3-","C) (Cl- + HCO3-) - Na+","D) Na+ + Cl- + HCO3-","E) Na+ - (Cl- + HCO3-)"],a:4,e:"Cations mesurés (Na) - Anions mesurés (Cl + Bicar)."},
+                {q:"Q9. Acidose métabolique à TA normal (hyperchlorémique) :",o:["A) Acidocétose.","B) Salicylés.","C) Perte digestive bicarbonates (diarrhée).","D) Insuffisance rénale.","E) Acide lactique."],a:2,e:"Diarrhée = Perte base, compensée par rétention Cl- (TA reste normal)."},
+                {q:"Q10. Compensation respiratoire d'une acidose métabolique :",o:["A) Baisse PaCO2 (hyperventilation).","B) Hausse PaCO2 >45.","C) Respiration lente.","D) Hausse pH urinaire.","E) Rénine."],a:0,e:"Poumon hyperventile pour évacuer l'acide CO2."},
+                {q:"Q11. Trouble mixte (Acidose métabolique + respiratoire) :",o:["A) Baisse HCO3- et Baisse PaCO2.","B) Hausse HCO3- et Hausse PaCO2.","C) Hausse HCO3- et Baisse PaCO2.","D) Baisse HCO3- et Hausse PaCO2.","E) Baisse chlore."],a:3,e:"Deux troubles de même sens sur le pH s'additionnent."},
+                {q:"Q12. Alcalose respiratoire pure non compensée :",o:["A) pH < 7,35; PaCO2 < 35; HCO3 bas.","B) pH > 7,45; PaCO2 < 35; HCO3 normaux.","C) pH > 7,45; PaCO2 > 45; HCO3 élevés.","D) pH < 7,35; PaCO2 > 45; HCO3 normaux.","E) pH > 7,45; PaCO2 normal; HCO3 élevés."],a:1,e:"Respiratoire = CO2 bas. Non compensée = HCO3 normaux car rein lent."},
+                {q:"Q13. Cause d'Alcalose Respiratoire :",o:["A) BPCO.","B) Vomissements.","C) Insuffisance rénale.","D) Bicarbonate IV.","E) Altitude, douleur, angoisse (hyperventilation)."],a:4,e:"Hyperventilation pure chasse trop de CO2."},
+                {q:"Q14. Diabétique: pH=7.20, PaCO2=28, HCO3=10. Trouble ? :",o:["A) Acidose métabolique.","B) Alcalose compensée.","C) Acidose respiratoire.","D) Alcalose respi.","E) Mixte."],a:0,e:"pH bas + HCO3 bas = Acidose métabolique."},
+                {q:"Q15. PaCO2 (28) chez ce diabétique :",o:["A) Insuffisance respi.","B) Anomalie primaire.","C) Compensation respiratoire adaptée.","D) Erreur.","E) Alcalose associée."],a:2,e:"Le poumon hyperventile (Kussmaul) pour compenser l'acidose."},
+                {q:"Q16. TA diabétique (Na=142, Cl=98, HCO3=10) :",o:["A) 14","B) 34","C) 24","D) 44","E) 54"],a:1,e:"142 - (98 + 10) = 34 mmol/L."},
+                {q:"Q17. Étiologie de ce TA = 34 :",o:["A) Diarrhée.","B) Acidose tubulaire.","C) Vomissements.","D) Acidocétose diabétique.","E) BPCO."],a:3,e:"TA élevé = acides organiques indosés (corps cétoniques)."},
+                {q:"Q18. Panique: pH=7.55, PaCO2=22, HCO3=23 :",o:["A) Alcalose respiratoire aiguë non compensée.","B) Alcalose métabo.","C) Acidose respi.","D) Compense totalement.","E) Mixte."],a:0,e:"Hyperventilation aiguë, le rein n'a pas encore réagi."},
+                {q:"Q19. HCO3 à 23 (normaux) car :",o:["A) Déjà compensé.","B) Défaillance.","C) Problème vient du rein.","D) Tampon phosphate l'empêche.","E) Régulation rénale lente (jours)."],a:4,e:"Le rein est lent (24-48h)."},
+                {q:"Q20. Si panique 3 jours, compensation :",o:["A) Hyperventile plus.","B) Baisse réabsorption rénale HCO3- (baisse HCO3 sérique).","C) Hausse réabsorption HCO3.","D) Baisse chlore.","E) pH > 7.60."],a:1,e:"Le rein va uriner les HCO3- pour ramener le pH à la normale."},
+                {q:"Q21. Traitement angoisse pré-hospitalier :",o:["A) Bicar IV.","B) O2 haut débit.","C) Sérum phy.","D) Respirer dans sac en papier (réinhalation CO2).","E) Dialyse."],a:3,e:"Permet de remonter rapidement la PaCO2."},
+                {q:"Q22. Vomissements: pH=7.52, PaCO2=47, HCO3=38 :",o:["A) Alcalose métabolique.","B) Acidose métabo.","C) Alcalose respi.","D) Acidose respi.","E) Mixte."],a:0,e:"Perte acide = Alcalose métabolique."},
+                {q:"Q23. Mécanisme des vomissements :",o:["A) Perte bicar.","B) Rétention acides.","C) Perte massive acide chlorhydrique (HCl).","D) Hyperventile.","E) Salicylés."],a:2,e:"L'estomac perd son suc acide."},
+                {q:"Q24. PaCO2 à 47 (élevée) :",o:["A) Trouble primitif.","B) Hypoventilation compensatrice.","C) Erreur.","D) Choc.","E) Hyperventilation."],a:1,e:"Compensation respi en retenant le CO2."},
+                {q:"Q25. Alcalose (Cl=85) :",o:["A) Résistante chlore.","B) Hyperchlorémique.","C) Normochlorémique.","D) Hypokaliémique mixte.","E) Sensible au chlore (hypochlorémique)."],a:4,e:"Réversible par NaCl IV."},
+                {q:"Q26. BPCO: pH=7.32, PaCO2=65, HCO3=33 :",o:["A) Alcalose compensée.","B) Acidose métabo.","C) Mixte.","D) Acidose respiratoire partiellement compensée par le rein.","E) Alcalose respi."],a:3,e:"Partiellement car pH reste acide mais rein a commencé à retenir HCO3."},
+                {q:"Q27. Hausse HCO3 (33) :",o:["A) Réponse rénale adaptative.","B) Perte CO2.","C) Médicaments.","D) Hémolyse.","E) Insuline."],a:0,e:"Rein retient HCO3- en réponse au CO2 chronique élevé."},
+                {q:"Q28. Arrêt cardiaque + BPCO :",o:["A) Respi + Métabo alcalose.","B) Alcalose mixte.","C) Acidose mixte (Respiratoire + Lactique).","D) Normalisation.","E) Alcalose pure."],a:2,e:"Double accumulation d'acide (CO2 + Lactate). Mortel."},
+                {q:"Q29. Tampon 'fermé' dans hématie :",o:["A) Bicarbonate.","B) Hémoglobine.","C) Lactique.","D) Ammoniac.","E) Sulfate."],a:1,e:"Hb capte les protons dans le GR."},
+                {q:"Q30. Trouble mixte grave :",o:["A) Sepsis + Vomit = normal.","B) Insuffisance rénale + Hyperventilation.","C) BPCO + Vomit = mort.","D) Angoisse + Diarrhée.","E) Arrêt respiratoire + Choc septique = Acidose mixte grave."],a:4,e:"Double production massive d'acides."},
+                {q:"Q31. Tampon Bicarbonate très efficace car :",o:["A) Ouvert (respiration/rein).","B) pK=7.40.","C) Fermé.","D) Intracellulaire.","E) Seul pour volatils."],a:0,e:"Couplé aux organes d'élimination majeurs."},
+                {q:"Q32. Système 'fermé' :",o:["A) Bicarbonate.","B) Ventilation.","C) Rein.","D) Protéines/Protéinates.","E) Sodium."],a:3,e:"Leur concentration sanguine totale est stable."},
+                {q:"Q33. NE PROVOQUE PAS alcalose respi :",o:["A) Grossesse.","B) Hypoventilation alvéolaire.","C) Douleur.","D) Altitude.","E) Angoisse."],a:1,e:"Hypoventilation retient CO2 = Acidose."},
+                {q:"Q34. Acide lactique/corps cétoniques :",o:["A) Volatils.","B) Bases.","C) Acides fixes (élimination rénale).","D) CO2.","E) Protéines."],a:2,e:"Acides non volatils gérés par le rein."},
+                {q:"Q35. Temps compensation rénale maximale :",o:["A) Plusieurs heures à quelques jours.","B) Secondes.","C) Minutes.","D) 1-2 heures.","E) Semaine."],a:0,e:"Mécanisme très puissant mais très lent."},
+                {q:"Q36. Acidose métabolique TA normal :",o:["A) Lactique.","B) Hypochlorémique.","C) Excès bases.","D) Normochlorémique.","E) Acidose hyperchlorémique."],a:4,e:"Chlore augmente pour remplacer les HCO3- perdus."},
+                {q:"Q37. Acidose métabolique TA ÉLEVÉ :",o:["A) Diarrhée.","B) Fistule.","C) Tubulaire rénale.","D) Insuffisance rénale sévère.","E) Vomissements."],a:3,e:"Accumulation d'anions indosés (sulfates, phosphates)."},
+                {q:"Q38. Alcalose avec baisse chlore :",o:["A) Sensible au chlore.","B) Résistante.","C) Normo.","D) Indépendante.","E) Hyper."],a:0,e:"Corrigeable avec du NaCl."},
+                {q:"Q39. Patient pH=7.42 :",o:["A) Acidémie.","B) Physiologique normale.","C) Alcalémie.","D) Acidose pure.","E) Décompensée."],a:1,e:"Stricto sensu dans 7.35-7.45."},
+                {q:"Q40. PaCO2=20, HCO3=12, pH=7.42 :",o:["A) Alcalose respi pure.","B) Acidose métabo pure.","C) Erreur.","D) Compensation instant.","E) Mixte (Acidose métabo + Alcalose respi)."],a:4,e:"Deux troubles opposés s'annulant sur le pH."},
+                {q:"Q41. Intoxication Aspirine :",o:["A) Hypoventile.","B) Perte chlore.","C) Hyperventilation puis acides organiques.","D) Hémolyse.","E) ADH."],a:2,e:"Stimule centre respi puis bloque cycle de Krebs (lactate)."},
+                {q:"Q42. Aspirine + Arrêt respi :",o:["A) Alcalose.","B) Stable.","C) Rein 5 min.","D) Chute pH dramatique (Acidose mixte).","E) Monte pH."],a:3,e:"Plus de compensation pulmonaire = effondrement."},
+                {q:"Q43. Diarrhée: pH=7.28, PaCO2=30, HCO3=14 :",o:["A) Acidose métabolique.","B) Acidose respi.","C) Alcalose métabo.","D) Alcalose respi.","E) Mixte."],a:0,e:"Baisse HCO3 = acidose métabolique."},
+                {q:"Q44. PaCO2=30 en diarrhée :",o:["A) Étiologie.","B) Hypoventilation.","C) Hyperventilation de compensation.","D) Pneumonie.","E) Erreur."],a:2,e:"Poumon élimine CO2 pour aider."},
+                {q:"Q45. TA (Na=138, Cl=112, HCO3=14) :",o:["A) 10","B) 20","C) 26","D) 32","E) 12"],a:4,e:"138 - 126 = 12 (Normal)."},
+                {q:"Q46. Classification (TA=12, Cl=112) :",o:["A) TA élevé.","B) Mixte.","C) Alcalose.","D) Acidose métabolique hyperchlorémique.","E) Acidose respi."],a:3,e:"Diarrhée type = TA normal + Chlore élevé."},
+                {q:"Q47. Insuff. Rénale: Na=140, Cl=100, HCO3=15. TA? :",o:["A) 25","B) 10","C) 15","D) 35","E) 40"],a:0,e:"140 - (115) = 25 (Élevé)."},
+                {q:"Q48. Raison acidose urémique :",o:["A) Perte digestive.","B) Incapacité éliminer acides fixes (anions indosés).","C) Hyperventile.","D) Aspirine.","E) Lactique."],a:1,e:"Les déchets (sulfates) s'accumulent."},
+                {q:"Q49. Tampon Protéine dans plasma :",o:["A) Libère H+.","B) Acide lactique.","C) Capte ions H+ excédentaires.","D) Élimine CO2.","E) Bicarbonates."],a:2,e:"Capte les protons pour amortir la chute."},
+                {q:"Q50. Action compensatrice vraie :",o:["A) Acidose métabolique -> Hyperventilation pour éliminer CO2.","B) Acidose respi -> Rein baisse HCO3.","C) Alcalose métabo -> Hyperventile.","D) Alcalose respi -> Sécrète H+.","E) Acidose métabo -> Hypoventile."],a:0,e:"Acidose = Poumon aide en chassant l'acide CO2."}
+            ]
+        };
+
+        const categoryNames = { anatomy: "Anatomie", histology: "Histologie", physiology: "Physiologie", biochemistry: "Biochimie" };
+        const categoryTimes = { anatomy: 20*60, histology: 30*60, physiology: 60*60, biochemistry: 50*60 };
+
+        let currentCategory = '';
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        let timerInterval;
+        let timeRemaining = 0;
+
+        const homeView = document.getElementById('home-view');
+        const quizView = document.getElementById('quiz-view');
+        const resultsView = document.getElementById('results-view');
+        const headerTimer = document.getElementById('header-timer');
+        const timerDisplay = document.getElementById('timer-display');
+
+        function startQuiz(category) {
+            currentCategory = category;
+            currentQuestions = quizData[category];
+            currentIndex = 0;
+            score = 0;
+            userAnswers = new Array(currentQuestions.length).fill(null);
+            
+            document.getElementById('quiz-title').textContent = categoryNames[category];
+            timeRemaining = categoryTimes[category];
+            updateTimerDisplay();
+            startTimer();
+            
+            headerTimer.classList.remove('hidden');
+            headerTimer.classList.add('flex');
+            homeView.classList.add('hidden-section');
+            resultsView.classList.add('hidden-section');
+            quizView.classList.remove('hidden-section');
+            renderQuestion();
+        }
+
+        function returnToHome() {
+            clearInterval(timerInterval);
+            headerTimer.classList.add('hidden');
+            headerTimer.classList.remove('flex');
+            quizView.classList.add('hidden-section');
+            resultsView.classList.add('hidden-section');
+            homeView.classList.remove('hidden-section');
+            window.scrollTo(0,0);
+        }
+
+        function renderQuestion() {
+            const q = currentQuestions[currentIndex];
+            document.getElementById('question-counter').textContent = `Question ${currentIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / currentQuestions.length) * 100}%`;
+            document.getElementById('question-text').textContent = q.q;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            q.o.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-3 md:p-4 rounded-xl border-2 border-slate-200 bg-white hover:bg-slate-50 option-btn font-medium text-slate-700 relative overflow-hidden';
+                btn.innerHTML = `<span class="relative z-10">${opt}</span>`;
+                btn.onclick = () => handleOptionClick(index, btn);
+                
+                if (userAnswers[currentIndex] !== null) {
+                    btn.disabled = true;
+                    btn.classList.remove('hover:bg-slate-50');
+                    if (index === q.a) btn.classList.add('option-correct');
+                    else if (index === userAnswers[currentIndex]) btn.classList.add('option-wrong');
+                }
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('prev-btn').disabled = currentIndex === 0;
+            
+            const nextBtn = document.getElementById('next-btn');
+            const finishBtn = document.getElementById('finish-btn');
+            const expBtn = document.getElementById('show-explanation-btn');
+            const expBox = document.getElementById('explanation-box');
+            
+            expBox.classList.add('hidden-section');
+            
+            if (userAnswers[currentIndex] !== null) {
+                expBtn.classList.remove('hidden-section');
+                if (currentIndex === currentQuestions.length - 1) {
+                    nextBtn.classList.add('hidden-section');
+                    finishBtn.classList.remove('hidden-section');
+                } else {
+                    nextBtn.classList.remove('hidden-section');
+                    finishBtn.classList.add('hidden-section');
+                }
+            } else {
+                expBtn.classList.add('hidden-section');
+                nextBtn.classList.remove('hidden-section');
+                finishBtn.classList.add('hidden-section');
+            }
+            document.getElementById('explanation-text').textContent = q.e;
+        }
+
+        function handleOptionClick(selectedIndex, clickedBtn) {
+            const q = currentQuestions[currentIndex];
+            const optionsBtns = document.getElementById('options-container').children;
+
+            for (let btn of optionsBtns) {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-slate-50');
+            }
+            userAnswers[currentIndex] = selectedIndex;
+
+            if (selectedIndex === q.a) {
+                clickedBtn.classList.add('option-correct');
+                score++;
+            } else {
+                clickedBtn.classList.add('option-wrong');
+                optionsBtns[q.a].classList.add('option-correct');
+            }
+
+            document.getElementById('show-explanation-btn').classList.remove('hidden-section');
+            if (currentIndex === currentQuestions.length - 1) {
+                document.getElementById('next-btn').classList.add('hidden-section');
+                document.getElementById('finish-btn').classList.remove('hidden-section');
+            }
+        }
+
+        function toggleExplanation() {
+            const expBox = document.getElementById('explanation-box');
+            expBox.classList.remove('hidden-section');
+            expBox.classList.add('fade-in');
+            document.getElementById('show-explanation-btn').classList.add('hidden-section');
+        }
+
+        function nextQuestion() { if (currentIndex < currentQuestions.length - 1) { currentIndex++; renderQuestion(); } }
+        function prevQuestion() { if (currentIndex > 0) { currentIndex--; renderQuestion(); } }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            quizView.classList.add('hidden-section');
+            headerTimer.classList.add('hidden');
+            headerTimer.classList.remove('flex');
+            
+            document.getElementById('result-category').textContent = categoryNames[currentCategory];
+            document.getElementById('score-display').textContent = score;
+            document.getElementById('total-display').textContent = currentQuestions.length;
+            
+            resultsView.classList.remove('hidden-section');
+            window.scrollTo(0,0);
+        }
+
+        function retryQuiz() { startQuiz(currentCategory); }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Le temps imparti pour cette section est écoulé !");
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeRemaining < 180) {
+                headerTimer.classList.add('border-red-400', 'bg-red-50');
+                headerTimer.classList.remove('bg-slate-100', 'border-slate-200');
+                timerDisplay.classList.add('text-red-600');
+            } else {
+                headerTimer.classList.remove('border-red-400', 'bg-red-50');
+                headerTimer.classList.add('bg-slate-100', 'border-slate-200');
+                timerDisplay.classList.remove('text-red-600');
+            }
+        }
+    </script>
+</body>
+</html>
