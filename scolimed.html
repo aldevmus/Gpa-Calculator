@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Mes notes</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#444;background:#e0dcc8 url('https://entfmed.univ-tlemcen.dz/scolimed/assets/img/13/bg.jpg') center/cover fixed;overflow-x:hidden}
+a{color:#8B1419;text-decoration:none}a:hover{color:#5c0d10}ul{list-style:none}
+#container{display:flex;min-height:100vh}
+#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:8000}#ov.on{display:block}
+#sb{width:240px;min-width:240px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column;z-index:200;flex-shrink:0;overflow-y:auto}
+.sbl{background:#8B1419;padding:14px 10px;text-align:center}.sbl h1{color:#fff;font-size:15px;font-weight:bold}.sbl h2{color:#f5c0c0;font-size:10px;margin-top:2px}
+.sbp{background:#d8d3ad;padding:10px 12px;display:flex;align-items:center;gap:8px}
+.sba{width:38px;height:38px;border-radius:50%;background:#8B1419;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
+.sbn{font-size:12px;font-weight:bold;color:#333;word-break:break-word}.sbk{font-size:11px;margin-top:2px}.sbk a{color:#8B1419;font-size:11px}
+.sbs{height:1px;background:#ddd}
+.sbt{display:flex;background:#f5f5f5;border-bottom:2px solid #ddd}.sbt li{flex:1}.sbt li a{display:block;text-align:center;padding:8px 4px;font-size:12px;color:#666;border-right:1px solid #ddd}.sbt li.active a{background:#8B1419;color:#fff;text-decoration:none}
+.snv{padding:6px 0}.snv ul li a{display:flex;align-items:center;gap:7px;padding:8px 14px;font-size:12px;color:#555;border-left:3px solid transparent;transition:background .15s}
+.snv ul li a:hover{background:#fdf5f5;color:#8B1419;border-left-color:#8B1419;text-decoration:none}
+.snv ul li.ap a{background:#fdf5f5;color:#8B1419;border-left-color:#8B1419;font-weight:bold}
+.snv ul li a i{width:14px;text-align:center;font-size:12px}
+#mn{flex:1;display:flex;flex-direction:column;min-width:0;max-width:100vw;overflow-x:hidden}
+#ht{background:#8B1419;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12px;min-height:44px}
+#mb{color:#fff;font-size:20px;background:none;border:none;cursor:pointer;padding:4px 8px;display:none}
+#hbc{background:#fff;border-bottom:1px solid #ddd;padding:7px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}
+.bc{display:flex;gap:5px;font-size:12px;color:#888}.bc a{color:#8B1419}.bc .d{color:#bbb}
+.ll{font-size:11px;color:#888}
+#hs{background:#f9f9f9;border-bottom:2px solid #e0e0e0;padding:8px 14px;display:flex;align-items:center;justify-content:space-between}
+#hs h2{font-size:17px;color:#333;font-weight:bold}
+.bd{display:inline-flex;align-items:center;gap:5px;background:#dcd3b6;border:1px solid #bbb;padding:5px 12px;border-radius:3px;font-size:12px;color:#444;cursor:pointer;text-decoration:none}.bd:hover{background:#c8c3a0;text-decoration:none}
+#ct{flex:1;overflow-y:auto;overflow-x:hidden}
+.wn{background:rgba(255,255,255,.96);margin:12px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.12);max-width:100%;overflow:hidden}
+.ab{background:#fff;border-bottom:1px solid #eee;padding:8px 12px;font-weight:bold;font-size:13px;color:#555;display:flex;align-items:center;gap:8px}
+.tg{display:inline-block;width:22px;height:16px;background:linear-gradient(to bottom,#888 0,#888 2px,transparent 2px,transparent 5px,#888 5px,#888 7px,transparent 7px,transparent 10px,#888 10px,#888 12px);cursor:pointer;opacity:.6}
+.gb{background:#f0ede0;border-bottom:1px solid #d8d3ad;padding:7px 14px;font-size:12px;color:#555;display:flex;gap:24px;flex-wrap:wrap}.gb b{color:#333}
+.ra{display:flex;align-items:flex-start;max-width:100%}
+.cl{flex:1;min-width:0;padding:12px;max-width:100%;overflow:hidden}
+.cr{width:210px;min-width:210px;flex-shrink:0;border-left:1px solid #eee;padding:0}
+/* RIGHT TABS */
+.rtt{display:flex;border-bottom:2px solid #8B1419}.rt{flex:1;padding:7px 4px;text-align:center;font-size:11px;color:#666;cursor:pointer;background:#f5f5f5;border-right:1px solid #ddd;transition:.15s}.rt:last-child{border-right:none}.rt.ac{background:#8B1419;color:#fff;font-weight:bold}
+.rp{display:none;padding:10px}.rp.ac{display:block}
+
+/* TIMELINE STYLING (MATCHING IMAGE 3) */
+.rn{position:relative;padding:5px 25px 5px 5px}
+.timeline-track{position:absolute;right:10px;top:20px;bottom:20px;width:1px;background:#ccc;z-index:1}
+.timeline-arrow-up{position:absolute;right:3px;top:0;color:#b3b3b3;font-size:15px;background:#fff;z-index:2}
+.timeline-arrow-down{position:absolute;right:3px;bottom:0;color:#b3b3b3;font-size:15px;background:#fff;z-index:2}
+.timeline-dot{position:absolute;right:6.5px;top:30px;width:8px;height:8px;background:#555;border-radius:50%;z-index:3}
+.rn ul{list-style:none;margin:0;padding:0}
+.rn ul li{padding:8px 0;border-bottom:1px solid #e0e0e0;line-height:1.5}
+.rn ul li:last-child{border-bottom:none}
+.green-mod{color:#1e7e34;font-weight:500;font-size:12px;margin-bottom:3px}
+.score-text{color:#555;font-size:12px}
+.score-text b{color:#222;font-weight:bold}
+
+/* CALENDAR (MATCHING IMAGE 2) */
+.ch{display:flex;justify-content:center;align-items:center;gap:10px;background:#f9f9f9;border:1px solid #ddd;border-bottom:none;padding:8px}
+.ch b{font-size:12px;color:#333}
+.ch a{font-size:14px;color:#555;cursor:pointer;text-decoration:none}
+.ca{width:100%;border-collapse:collapse;font-size:11px;text-align:center;margin-bottom:10px;border:1px solid #ddd}
+.ca th{color:#555;font-weight:normal;padding:6px 2px;font-size:10px;border:1px solid #ddd;background:#fff}
+.ca td{border:1px solid #ddd;padding:6px 2px;color:#555}
+.ca td.td{background:#8B1419;color:#fff;font-weight:bold}
+.ca td.ot{color:#ccc;background:#fdfdfd}
+.el{border-top:1px solid #eee;padding-top:15px;margin-top:10px}
+.el h4{font-size:13px;color:#555;font-weight:bold;margin-bottom:12px}
+.el .no-exam{font-size:12px;color:#555;font-weight:bold;text-align:center;padding:15px 0}
+
+/* TABS */
+.ts{border:1px solid #ddd;border-radius:3px;max-width:100%;overflow:hidden}
+.th2{background:#f0f0f0;border-bottom:2px solid #8B1419;display:flex;overflow-x:auto}
+.ti{padding:8px 16px;font-size:12px;color:#666;cursor:pointer;border-right:1px solid #ddd;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s}.ti:hover{background:#fff;color:#8B1419}.ti.ac{background:#fff;color:#8B1419;font-weight:bold;border-bottom:2px solid #8B1419}
+.tp{display:none}.tp.ac{display:block}.tc{padding:0}
+
+/* TABLE CONTAINER & SQUISHED COLS (MATCHING IMAGE 1) */
+.gw{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;display:block}
+.gw::-webkit-scrollbar{height:6px}.gw::-webkit-scrollbar-track{background:#f0f0f0}.gw::-webkit-scrollbar-thumb{background:#bbb;border-radius:3px}.gw::-webkit-scrollbar-thumb:hover{background:#888}
+table.g{width:100%;table-layout:fixed;border-collapse:collapse;font-size:12px;background:#fff}
+table.g th, table.g td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+table.g th{background:#f5f5f5;color:#555;font-size:11px;font-weight:normal;padding:8px 6px;border-bottom:1px solid #ccc;border-right:1px solid #ddd;text-align:left;position:relative;user-select:none}
+table.g th:last-child{border-right:none}
+table.g td{padding:8px 6px;border-bottom:1px solid #eee;border-right:1px solid #f0f0f0;font-size:12px;color:#333}
+table.g td:last-child{border-right:none}
+table.g tr:nth-child(even) td{background:#fcfcfc}
+table.g tr:hover td{background:#fef5f5}
+.rh{position:absolute;right:0;top:0;width:15px;height:100%;cursor:col-resize;z-index:2;transform:translateX(50%)}
+.nv{color:#333}
+.cp{background:none;border:none;font-size:12px;color:#333;cursor:pointer;padding:0;font-family:inherit}
+.pg{background:#f5f5f5;border-top:1px solid #ddd;padding:8px;display:flex;align-items:center;justify-content:flex-end;gap:8px;font-size:11px;color:#555;flex-wrap:wrap}
+.pg select{font-size:11px;padding:2px;border:1px solid #ccc;border-radius:2px;background:#fff}
+.pg a{color:#666;cursor:pointer;padding:0 4px;font-size:14px;text-decoration:none}
+.ra2{color:#2a7a2a;font-weight:bold}.re{color:#e87000;font-weight:bold}
+.mob-right{display:none;margin:0 12px 12px;border:1px solid #ddd;border-radius:3px;overflow:hidden;background:#fff}
+@media(max-width:900px){
+  #mb{display:block}
+  #sb{position:fixed;top:0;left:-245px;height:100%;transition:left .28s ease;z-index:9000;box-shadow:3px 0 12px rgba(0,0,0,.3)}
+  #sb.open{left:0}
+  .cr{display:none}.ra{flex-direction:column}
+  .mob-right{display:block!important}
+}
+</style></head><body>
+<div id="ov"></div>
+<div id="container">
+<aside id="sb">
+  <div class="sbl"><h1>Mon espace</h1><h2>Faculté de Médecine de Tlemcen</h2></div>
+  <div class="sbp"><div class="sba"><i class="fa fa-user"></i></div><div><div class="sbn" id="sn">NAME</div><div class="sbk"><a href="#">Mon profil</a> | <a href="#">Déconnexion</a></div></div></div>
+  <div class="sbs"></div>
+  <ul class="sbt"><li class="active"><a href="#"><i class="fa fa-bars"></i> Menu</a></li></ul>
+  <nav class="snv"><ul>
+    <li><a href="#"><i class="fa fa-dashboard"></i> Tableau de bord</a></li>
+    <li><a href="#"><i class="fa fa-calendar"></i> Mon emploi du temps</a></li>
+    <li><a href="#"><i class="fa fa-calendar-o"></i> Mes prochains examens</a></li>
+    <li class="ap"><a href="#"><i class="fa fa-star-half-o"></i> Mes notes</a></li>
+    <li><a href="#"><i class="fa fa-book"></i> Mes modules</a></li>
+    <li><a href="#"><i class="fa fa-user"></i> Mon profil</a></li>
+    <li><a href="#"><i class="fa fa-comment-o"></i> Mes messages</a></li>
+    <li><a href="#"><i class="fa fa-comments"></i> Mon forum de discussion</a></li>
+    <li><a href="#"><i class="fa fa-file-text-o"></i> Mes documents</a></li>
+    <li><a href="#"><i class="fa fa-file-text"></i> Mes annales</a></li>
+    <li><a href="#"><i class="fa fa-info-circle"></i> Le règlement intérieur</a></li>
+    <li><a href="#"><i class="fa fa-users"></i> Mes groupes</a></li>
+  </ul></nav>
+</aside>
+<div id="mn">
+  <div id="ht"><div></div><button id="mb" onclick="tS()"><i class="fa fa-bars"></i></button></div>
+  <div id="hbc"><ul class="bc"><li><a href="#">&lt;&lt; Accueil</a></li><li class="d">|</li><li><a href="#">Tableau de bord</a></li><li class="d">/</li><li>Mes notes</li></ul><span class="ll" id="ll"></span></div>
+  <div id="hs">
+    <div style="width:100%;display:flex;justify-content:flex-end">
+      <a href="#" class="bd"><i class="fa fa-sign-out"></i> Déconnexion</a>
+    </div>
+  </div>
+  <div id="ct"><div class="wn">
+    <div class="ab"><span id="gt"></span></div>
+    <div class="ra">
+      <div class="cl">
+        <div class="ts"><div class="th2">
+          <div class="ti ac" onclick="st('p1',this)">Mes dernières notes</div>
+          <div class="ti" onclick="st('p4',this)">Deuxième anr... <br><span style="font-size:10px;color:#888">2025/2026</span></div>
+        </div>
+        <div class="tp ac" id="p1"><div class="tc">
+          <div class="gw"><table class="g" id="nt"><thead><tr>
+            <th style="width:12%">Co...<div class="rh"></div></th>
+            <th style="width:23%">Module<div class="rh"></div></th>
+            <th style="width:20%">Date d...<div class="rh"></div></th>
+            <th style="width:10%">N...<div class="rh"></div></th>
+            <th style="width:15%">Examen<div class="rh"></div></th>
+            <th style="width:20%">Copie ...<div class="rh"></div></th>
+          </tr></thead><tbody id="ntb"></tbody></table></div>
+          <div class="pg">Afficher lignes : <select><option>20</option></select> <span id="pi"></span> <a>&#9664;</a> <a>&#9654;</a></div>
+        </div></div>
+        <div class="tp" id="p4"><div class="tc"><div class="gw"><table class="g"><thead><tr>
+            <th style="width:18%">Année<div class="rh"></div></th>
+            <th style="width:25%">Promotion<div class="rh"></div></th>
+            <th style="width:15%">Moyenne<div class="rh"></div></th>
+            <th style="width:15%">Résultat<div class="rh"></div></th>
+            <th style="width:15%">Classement<div class="rh"></div></th>
+            <th style="width:12%">Remarque</th>
+          </tr></thead><tbody id="cu"></tbody></table></div></div></div>
+      </div></div>
+      <div class="cr">
+        <div class="rtt"><div class="rt ac" onclick="rt('r1',this)"><i class="fa fa-calendar"></i> Calendrier</div><div class="rt" onclick="rt('r2',this)"><i class="fa fa-star-half-o"></i> Mes dernières notes</div></div>
+        <div class="rp ac" id="r1"><div id="cla"></div><div class="el"><h4>Mes prochains examens</h4><p class="no-exam">Il n'y a aucun programme pour le moment</p></div></div>
+        <div class="rp" id="r2">
+          <div class="rn">
+            <i class="fa fa-arrow-circle-up timeline-arrow-up"></i>
+            <div class="timeline-track"></div>
+            <div class="timeline-dot"></div>
+            <i class="fa fa-arrow-circle-down timeline-arrow-down"></i>
+            <ul id="ru"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mob-right">
+    <div class="rtt"><div class="rt ac" onclick="rt2('mr1',this)"><i class="fa fa-calendar"></i> Calendrier</div><div class="rt" onclick="rt2('mr2',this)"><i class="fa fa-star-half-o"></i> Mes dernières notes</div></div>
+    <div class="rp ac" id="mr1"><div id="cla2"></div><div class="el"><h4>Mes prochains examens</h4><p class="no-exam">Il n'y a aucun programme pour le moment</p></div></div>
+    <div class="rp" id="mr2">
+      <div class="rn">
+        <i class="fa fa-arrow-circle-up timeline-arrow-up"></i>
+        <div class="timeline-track"></div>
+        <div class="timeline-dot"></div>
+        <i class="fa fa-arrow-circle-down timeline-arrow-down"></i>
+        <ul id="mu"></ul>
+      </div>
+    </div>
+  </div>
+  </div>
+</div></div>
+<script>
+(function(){
+// Original Random Generation Logic restored perfectly
+var N=['James Walker','Michael Clarke','David Lewis','John Adams','Robert King','William Scott','Richard Baker','Thomas Green','Alexander Wright','Daniel Turner','Sophie Martin','Emma Bernard'];
+var G=['1','2','3','4','5','6','7','8'],SG=['A','B','C','D'];
+function rn(){return Math.random()<.72?+(10+Math.random()*9.99).toFixed(2):+(1+Math.random()*8.9).toFixed(2)}
+function ra(){return +(10.5+Math.random()*8.5).toFixed(2)}
+function pk(a){return a[Math.floor(Math.random()*a.length)]}
+
+var nm=pk(N).toUpperCase(),g=pk(G),sg=pk(SG);
+document.getElementById('sn').textContent=nm;
+document.getElementById('gt').textContent='Deuxième année de Médecine (Sous-Groupe '+g+'.'+sg+' (Groupe '+g+'->Sous-Groupe '+g+'.'+sg+') )';
+
+var nw=new Date();
+document.getElementById('ll').textContent='Dernière connexion le '+nw.toLocaleDateString('fr-FR')+' à '+nw.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+
+var M=[
+{c:'M 215',m:'UI3 : Urinaire',d:'07/05/2026',e:'Examen'},
+{c:'M 215',m:'UI3 : Urinaire',d:'07/05/2026',e:'TP'},
+{c:'M 219',m:'Génétique',d:'07/04/2026',e:'Examen'},
+{c:'M 218',m:'Immunologie',d:'07/04/2026',e:'Examen'},
+{c:'M 216',m:'UI4 : Endocrino- Génital',d:'17/02/2026',e:'Examen'},
+{c:'M 216',m:'UI4 : Endocrino- Génital',d:'17/02/2026',e:'TP'},
+{c:'M 214',m:'UI2 : Digestif',d:'11/01/2026',e:'TP'},
+{c:'M 214',m:'UI2 : Digestif',d:'17/12/2025',e:'Examen'},
+{c:'M 213',m:'UI1 : Cardio-respiratoi...',d:'13/11/2025',e:'Examen'},
+{c:'M 213',m:'UI1 : Cardio-respiratoi...',d:'13/11/2025',e:'TP'}];
+var fm={'UI1 : Cardio-respiratoi...':'UI1 : Cardio-respiratoire et organes hématopoïétiques'};
+
+M.forEach(function(x){x.n=rn();});
+document.getElementById('pi').textContent='1-'+M.length+' sur '+M.length;
+var tb=document.getElementById('ntb');
+
+// Generating table dynamically with generated values
+M.forEach(function(x){
+  var tr=document.createElement('tr');
+  var f=fm[x.m]||x.m;
+  tr.innerHTML='<td>'+x.c+'</td><td title="'+f+'">'+x.m+'</td><td>'+x.d+'</td><td class="nv">'+x.n+'</td><td>'+x.e+'</td><td><button class="cp">Ma copie</button></td>';
+  tb.appendChild(tr);
+});
+
+// Generating timeline dynamic content with the new visual layout
+var ru=document.getElementById('ru'),mu=document.getElementById('mu');
+M.forEach(function(x){
+  var f=fm[x.m]||x.m;
+  [ru,mu].forEach(function(ul){
+    var li=document.createElement('li');
+    li.innerHTML='<div class="green-mod">'+x.c+': '+f+'</div><div class="score-text">'+x.e+' - <b>'+x.n+'</b></div>';
+    ul.appendChild(li);
+  });
+});
+
+// Original dynamic Calendar function merged with new layout
+function buildCal(id){
+  var now=new Date(),y=now.getFullYear(),mo=now.getMonth();
+  var mn=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  var dn=['DIM','LUN','MAR','MER','JEU','VEN','SAM'];
+  var first=new Date(y,mo,1).getDay(),days=new Date(y,mo+1,0).getDate();
+  var h='<div class="ch"><a>&laquo;</a><b>'+mn[mo]+' '+y+'</b><a>&raquo;</a></div><table class="ca"><tr>';
+  dn.forEach(function(d){h+='<th>'+d+'</th>';});h+='</tr><tr>';
+  var pD=new Date(y,mo,0).getDate();for(var i=0;i<first;i++)h+='<td class="ot">'+(pD-first+1+i)+'</td>';
+  for(var d=1;d<=days;d++){h+='<td class="'+(d===now.getDate()?'td':'')+'">'+d+'</td>';if((first+d)%7===0&&d<days)h+='</tr><tr>';}
+  var rem=(first+days)%7;if(rem>0)for(var i=1;i<=7-rem;i++)h+='<td class="ot">'+i+'</td>';
+  h+='</tr></table>';document.getElementById(id).innerHTML=h;
+}
+buildCal('cla');buildCal('cla2');
+
+var m1=ra(),rk=Math.floor(Math.random()*80+3)+'/'+Math.floor(Math.random()*60+130);
+var rm=m1>=16?'Très bien':m1>=14?'Bien':m1>=12?'Assez bien':'Passable';
+[{a:'2025/2026',p:'2ème Médecine',m:'—',r:'En cours',ck:'—',rq:'Année en cours'},{a:'2024/2025',p:'1ère Médecine',m:m1,r:'Admis',ck:rk,rq:rm}].forEach(function(y){
+var tr=document.createElement('tr');tr.innerHTML='<td>'+y.a+'</td><td>'+y.p+'</td><td><b>'+y.m+'</b></td><td class="'+(y.r==='Admis'?'ra2':'re')+'">'+y.r+'</td><td>'+y.ck+'</td><td>'+y.rq+'</td>';document.getElementById('cu').appendChild(tr);});
+
+// Resize Logic with Mobile Touch Support
+document.querySelectorAll('table.g').forEach(function(t){
+  t.querySelectorAll('th .rh').forEach(function(h){
+    var th = h.parentElement;
+    function start(e){
+      var isT = e.type === 'touchstart';
+      var sx = isT ? e.touches[0].pageX : e.pageX;
+      
+      var cols = t.querySelectorAll('th');
+      cols.forEach(function(c) {
+        c.style.width = c.offsetWidth + 'px';
+      });
+      
+      var sw = th.offsetWidth;
+      var tw = t.offsetWidth;
+      t.style.width = tw + 'px';
+      
+      var mv = function(ev){
+        var px = isT ? ev.touches[0].pageX : ev.pageX;
+        var diff = px - sx;
+        th.style.width = Math.max(25, sw + diff) + 'px';
+        t.style.width = Math.max(100, tw + diff) + 'px';
+      };
+      var up = function(){
+        document.removeEventListener(isT?'touchmove':'mousemove', mv);
+        document.removeEventListener(isT?'touchend':'mouseup', up);
+      };
+      document.addEventListener(isT?'touchmove':'mousemove', mv, {passive: false});
+      document.addEventListener(isT?'touchend':'mouseup', up);
+      if(!isT) e.preventDefault();
+    }
+    h.addEventListener('mousedown', start);
+    h.addEventListener('touchstart', start, {passive: true});
+  });
+});
+
+window.st=function(id,b){document.querySelectorAll('.tp').forEach(function(p){p.classList.remove('ac')});document.querySelectorAll('.ti').forEach(function(x){x.classList.remove('ac')});document.getElementById(id).classList.add('ac');b.classList.add('ac');};
+window.rt=function(id,b){document.querySelectorAll('.cr .rp').forEach(function(p){p.classList.remove('ac')});document.querySelectorAll('.cr .rt').forEach(function(x){x.classList.remove('ac')});document.getElementById(id).classList.add('ac');b.classList.add('ac');};
+window.rt2=function(id,b){document.querySelectorAll('.mob-right .rp').forEach(function(p){p.classList.remove('ac')});document.querySelectorAll('.mob-right .rt').forEach(function(x){x.classList.remove('ac')});document.getElementById(id).classList.add('ac');b.classList.add('ac');};
+var sb=document.getElementById('sb'),ov=document.getElementById('ov');
+window.tS=function(){sb.classList.toggle('open');ov.classList.toggle('on');document.body.style.overflow=sb.classList.contains('open')?'hidden':'';};
+ov.addEventListener('click',function(){sb.classList.remove('open');ov.classList.remove('on');document.body.style.overflow='';});
+})();
+</script></body></html>
